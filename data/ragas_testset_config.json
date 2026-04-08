@@ -1,0 +1,27 @@
+{
+  "pdf_registry_path": "data/pdf_registry.json",
+  "output_path": "data/test_cases.json",
+  "archive_dir": "artifacts/testsets",
+  "testset_size": 20,
+  "query_type_mix": {
+    "single_hop_specific": 0.5,
+    "multi_hop_specific": 0.3,
+    "multi_hop_abstract": 0.2
+  },
+  "strict_grounding": true,
+  "max_pages_per_pdf": 25,
+  "max_chars_per_page": 4000,
+  "seed_from_registry_sample_questions": true,
+  "llm_context": "Generate realistic enterprise chatbot questions grounded only in the provided PDF context. Prefer business-friendly wording. Do not mention PDF_ID or PDF_NAME tags in the generated question or answer.",
+  "fallback_patterns": [
+    "I don't know",
+    "not in my knowledge base",
+    "outside my scope",
+    "cannot answer"
+  ],
+  "forbidden_patterns": [
+    "I don't know",
+    "cannot help",
+    "no information"
+  ]
+}

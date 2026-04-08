@@ -1,0 +1,28 @@
+{
+  "environment_name": "playready-enterprise",
+  "rag_backend": "azure-search-foundry",
+  "auth_mode": "managed_identity_or_service_principal",
+  "search": {
+    "endpoint": "https://<your-search-service>.search.windows.net",
+    "index_name": "playready-kb-index",
+    "semantic_config": "default",
+    "vector_field": "contentVector",
+    "content_field": "content",
+    "title_field": "title",
+    "source_field": "source"
+  },
+  "models": {
+    "chat_deployment": "gpt-4o-mini",
+    "embedding_deployment": "text-embedding-3-small"
+  },
+  "foundry": {
+    "project_endpoint": "https://<your-foundry-project>.services.ai.azure.com/api/projects/<project-name>",
+    "capture_trace_ids": true,
+    "capture_eval_scores": true
+  },
+  "ui": {
+    "base_url": "https://<your-enterprise-chatbot-url>",
+    "chat_api_url_contains": "/chat|/message|/conversation|/api",
+    "capture_network_contexts": true
+  }
+}

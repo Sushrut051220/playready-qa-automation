@@ -1,0 +1,23 @@
+[
+  {
+    "pdf_id": "pdf_playready_microsoft_learn",
+    "pdf_name": "playready _ Microsoft Learn.pdf",
+    "file_path": "data/kb/playready_microsoft_learn.pdf",
+    "topic": "Microsoft PlayReady DRM and licensing",
+    "expected_keywords": [
+      "playready",
+      "drm",
+      "license",
+      "content protection",
+      "client",
+      "server",
+      "device"
+    ],
+    "sample_questions": [
+      "What is Microsoft PlayReady?",
+      "How does PlayReady protect digital content?",
+      "How are licenses used in PlayReady?",
+      "Which devices or platforms can use PlayReady?"
+    ]
+  }
+]
