@@ -292,6 +292,21 @@ def run_ragas_evaluation(
 
             try:
                 eligible_dataset = Dataset.from_list(uncached_rows)
+
+                # RAGAS 0.4.x expects user_input/response/reference/retrieved_contexts;
+                # remap legacy field names from artifact JSON files.
+                _col_map = {}
+                if "question" in eligible_dataset.column_names and "user_input" not in eligible_dataset.column_names:
+                    _col_map["question"] = "user_input"
+                if "answer" in eligible_dataset.column_names and "response" not in eligible_dataset.column_names:
+                    _col_map["answer"] = "response"
+                if "ground_truth" in eligible_dataset.column_names and "reference" not in eligible_dataset.column_names:
+                    _col_map["ground_truth"] = "reference"
+                if "contexts" in eligible_dataset.column_names and "retrieved_contexts" not in eligible_dataset.column_names:
+                    _col_map["contexts"] = "retrieved_contexts"
+                if _col_map:
+                    eligible_dataset = eligible_dataset.rename_columns(_col_map)
+
                 provider = get_llm_provider()
                 run_config = RunConfig(
                     timeout=int(os.getenv("RAGAS_TIMEOUT_SECONDS", "180")),
