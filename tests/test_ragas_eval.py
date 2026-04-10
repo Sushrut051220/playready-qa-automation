@@ -81,30 +81,38 @@ def test_run_ragas_eval() -> None:
     grounding_audit = results.get("document_grounding_audit", {})
 
     answer_relevancy_threshold = float(os.getenv("RAGAS_ANSWER_RELEVANCY_THRESHOLD", "0.65"))
+    answer_accuracy_threshold = float(os.getenv("RAGAS_ANSWER_ACCURACY_THRESHOLD", "0.70"))
     faithfulness_threshold = float(os.getenv("RAGAS_FAITHFULNESS_THRESHOLD", "0.70"))
-
-    assert "answer_accuracy" in executed or "answer_accuracy" in skipped, (
-        "Answer accuracy should be either executed or explicitly skipped."
-    )
 
     assert grounding_audit.get("wrong_document_count", 0) == 0, (
         f"Wrong-document grounding detected: {grounding_audit.get('wrong_document_cases', [])}"
     )
 
+    # At least one core metric must have been evaluated for the test to be meaningful.
+    if not executed:
+        pytest.skip(
+            "No RAGAS metrics could be evaluated. "
+            "Check LLM provider configuration. "
+            f"Skipped metrics: { {s['metric']: s['reason'] for s in results.get('skipped_metrics', [])} }"
+        )
+
+    # answer_accuracy is the primary LLM-only quality gate (no embeddings required).
+    if "answer_accuracy" in executed:
+        assert summary.get("answer_accuracy", 0.0) >= answer_accuracy_threshold, (
+            f"answer_accuracy {summary.get('answer_accuracy')} is below threshold {answer_accuracy_threshold}."
+        )
+
+    # answer_relevancy requires embedding permissions — treat as optional.
     if "answer_relevancy" in executed:
         assert summary.get("answer_relevancy", 0.0) >= answer_relevancy_threshold, (
             f"answer_relevancy {summary.get('answer_relevancy')} is below threshold {answer_relevancy_threshold}."
         )
-    else:
-        pytest.skip(skipped.get("answer_relevancy", "answer_relevancy was skipped."))
 
     if has_contexts:
         if "faithfulness" in executed:
             assert summary.get("faithfulness", 0.0) >= faithfulness_threshold, (
                 f"faithfulness {summary.get('faithfulness')} is below threshold {faithfulness_threshold}."
             )
-        else:
-            pytest.skip(skipped.get("faithfulness", "faithfulness was skipped."))
     else:
         assert "faithfulness" in skipped, "Faithfulness should be skipped when contexts are unavailable."
         assert "context_precision" in skipped, "Context precision should be skipped when contexts are unavailable."

@@ -20,93 +20,44 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _build_ragas_metric_catalog(ragas_llm: Any | None, ragas_embeddings: Any | None) -> dict[str, Any]:
-    try:
-        from ragas.metrics.collections import (
-            AnswerAccuracy,
-            AnswerRelevancy,
-            ContextEntityRecall,
-            ContextPrecision,
-            ContextRecall,
-            ContextRelevance,
-            ContextUtilization,
-            Faithfulness,
-            NoiseSensitivity,
-            ResponseGroundedness,
-        )
+    # Import directly from old-style private modules — these are proper Metric subclasses
+    # compatible with ragas.evaluate(). The ragas.metrics.collections classes are NOT
+    # compatible with evaluate() in ragas 0.4.x (they require the new @experiment API).
+    from ragas.metrics._faithfulness import Faithfulness
+    from ragas.metrics._answer_relevance import ResponseRelevancy
+    from ragas.metrics._factual_correctness import FactualCorrectness
+    from ragas.metrics._context_precision import LLMContextPrecisionWithReference, ContextUtilization
+    from ragas.metrics._context_recall import LLMContextRecall
+    from ragas.metrics._context_entities_recall import ContextEntityRecall
+    from ragas.metrics._noise_sensitivity import NoiseSensitivity
 
-        context_precision_metric = None
-        if ragas_llm:
-            try:
-                context_precision_metric = ContextPrecision(llm=ragas_llm)
-            except Exception:
-                from ragas.metrics.collections.context_precision import ContextPrecisionWithReference
+    answer_relevancy_strictness = int(os.getenv("RAGAS_ANSWER_RELEVANCY_STRICTNESS", "3"))
 
-                context_precision_metric = ContextPrecisionWithReference(llm=ragas_llm)
-
-        answer_relevancy_strictness = int(os.getenv("RAGAS_ANSWER_RELEVANCY_STRICTNESS", "3"))
-
-        return {
-            "faithfulness": Faithfulness(llm=ragas_llm) if ragas_llm else None,
-            "answer_relevancy": AnswerRelevancy(
-                llm=ragas_llm,
-                embeddings=ragas_embeddings,
-                strictness=answer_relevancy_strictness,
-            )
-            if ragas_llm and ragas_embeddings
-            else None,
-            "answer_accuracy": AnswerAccuracy(llm=ragas_llm) if ragas_llm else None,
-            "context_precision": context_precision_metric,
-            "context_utilization": ContextUtilization(llm=ragas_llm) if ragas_llm else None,
-            "context_recall": ContextRecall(llm=ragas_llm) if ragas_llm else None,
-            "context_relevance": ContextRelevance(llm=ragas_llm) if ragas_llm else None,
-            "response_groundedness": ResponseGroundedness(llm=ragas_llm) if ragas_llm else None,
-            "context_entity_recall": ContextEntityRecall(llm=ragas_llm) if ragas_llm else None,
-            "noise_sensitivity_relevant": NoiseSensitivity(
-                llm=ragas_llm,
-                mode="relevant",
-                name="noise_sensitivity_relevant",
-            ) if ragas_llm else None,
-            "noise_sensitivity_irrelevant": NoiseSensitivity(
-                llm=ragas_llm,
-                mode="irrelevant",
-                name="noise_sensitivity_irrelevant",
-            ) if ragas_llm else None,
-        }
-    except Exception:
-        import ragas.metrics as ragas_metrics
-
-        candidates = {
-            "faithfulness": ["faithfulness", "Faithfulness"],
-            "answer_relevancy": ["answer_relevancy", "answer_relevance", "ResponseRelevancy"],
-            "answer_accuracy": ["answer_accuracy", "AnswerAccuracy"],
-            "context_precision": ["context_precision", "ContextPrecision", "LLMContextPrecisionWithReference"],
-            "context_utilization": ["context_utilization", "ContextUtilization", "LLMContextPrecisionWithoutReference"],
-            "context_recall": ["context_recall", "ContextRecall", "LLMContextRecall"],
-            "context_relevance": ["context_relevance", "ContextRelevance"],
-            "response_groundedness": ["response_groundedness", "ResponseGroundedness"],
-            "context_entity_recall": ["context_entity_recall", "ContextEntityRecall"],
-            "noise_sensitivity_relevant": ["noise_sensitivity", "NoiseSensitivity"],
-            "noise_sensitivity_irrelevant": ["noise_sensitivity", "NoiseSensitivity"],
-        }
-
-        catalog: dict[str, Any] = {}
-        for metric_name, attrs in candidates.items():
-            metric_object = None
-            for attr in attrs:
-                if hasattr(ragas_metrics, attr):
-                    raw_value = getattr(ragas_metrics, attr)
-                    if isinstance(raw_value, type):
-                        if metric_name == "noise_sensitivity_relevant":
-                            metric_object = raw_value(mode="relevant", name="noise_sensitivity_relevant")
-                        elif metric_name == "noise_sensitivity_irrelevant":
-                            metric_object = raw_value(mode="irrelevant", name="noise_sensitivity_irrelevant")
-                        else:
-                            metric_object = raw_value()
-                    else:
-                        metric_object = raw_value
-                    break
-            catalog[metric_name] = metric_object
-        return catalog
+    return {
+        "faithfulness": Faithfulness(llm=ragas_llm) if ragas_llm else None,
+        "answer_relevancy": ResponseRelevancy(
+            llm=ragas_llm,
+            embeddings=ragas_embeddings,
+            strictness=answer_relevancy_strictness,
+        ) if ragas_llm and ragas_embeddings else None,
+        "answer_accuracy": FactualCorrectness(llm=ragas_llm, name="answer_accuracy") if ragas_llm else None,
+        "context_precision": LLMContextPrecisionWithReference(llm=ragas_llm, name="context_precision") if ragas_llm else None,
+        "context_utilization": ContextUtilization(llm=ragas_llm) if ragas_llm else None,
+        "context_recall": LLMContextRecall(llm=ragas_llm) if ragas_llm else None,
+        "context_relevance": None,
+        "response_groundedness": None,
+        "context_entity_recall": ContextEntityRecall(llm=ragas_llm) if ragas_llm else None,
+        "noise_sensitivity_relevant": NoiseSensitivity(
+            llm=ragas_llm,
+            mode="relevant",
+            name="noise_sensitivity_relevant",
+        ) if ragas_llm else None,
+        "noise_sensitivity_irrelevant": NoiseSensitivity(
+            llm=ragas_llm,
+            mode="irrelevant",
+            name="noise_sensitivity_irrelevant",
+        ) if ragas_llm else None,
+    }
 
 
 def _load_metric_cache(cache_path: Path) -> dict[str, Any]:
@@ -361,13 +312,25 @@ def run_ragas_evaluation(
                 )
                 result_df = evaluation_result.to_pandas()
 
+                # ModeMetric subclasses (e.g. FactualCorrectness, NoiseSensitivity) produce
+                # columns named "<metric_name>(mode=<mode>)" in evaluate().  Detect and
+                # normalise the column back to the logical metric_name.
+                actual_col = metric_name
                 if metric_name not in result_df.columns:
-                    payload["skipped_metrics"].append(
-                        {"metric": metric_name, "reason": "Metric result column was missing from the RAGAS output."}
+                    mode_match = next(
+                        (c for c in result_df.columns if c.startswith(f"{metric_name}(mode=")),
+                        None,
                     )
-                    return
+                    if mode_match:
+                        result_df = result_df.rename(columns={mode_match: metric_name})
+                        actual_col = metric_name
+                    else:
+                        payload["skipped_metrics"].append(
+                            {"metric": metric_name, "reason": "Metric result column was missing from the RAGAS output."}
+                        )
+                        return
 
-                valid_scores = result_df[metric_name].dropna()
+                valid_scores = result_df[actual_col].dropna()
                 if valid_scores.empty and not cached_metric_rows:
                     payload["skipped_metrics"].append(
                         {

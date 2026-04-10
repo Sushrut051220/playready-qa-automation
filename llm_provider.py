@@ -32,8 +32,22 @@ def _is_azure_openai_mode() -> bool:
     )
 
 
+def _get_azure_token() -> str:
+    """Fetch a short-lived Bearer token via DefaultAzureCredential (Entra ID)."""
+    try:
+        from azure.identity import DefaultAzureCredential
+        credential = DefaultAzureCredential()
+        token = credential.get_token("https://cognitiveservices.azure.com/.default")
+        return token.token
+    except Exception as exc:
+        return ""
+
+
 def _get_openai_api_key() -> str:
-    return (os.getenv("AZURE_OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY") or "").strip()
+    key = (os.getenv("AZURE_OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY") or "").strip()
+    if not key and _is_azure_openai_mode():
+        key = _get_azure_token()
+    return key
 
 
 def _get_openai_base_url() -> str | None:
@@ -128,10 +142,10 @@ def build_dspy_lm() -> tuple[Any | None, str | None]:
     if provider == "openai":
         api_key = _get_openai_api_key()
         if not api_key:
-            return None, "OPENAI_API_KEY / AZURE_OPENAI_API_KEY is missing; skipping DSPy LM configuration."
+            return None, "OPENAI_API_KEY / AZURE_OPENAI_API_KEY is missing and DefaultAzureCredential token fetch failed; skipping DSPy LM configuration."
 
         try:
-            os.environ.setdefault("OPENAI_API_KEY", api_key)
+            os.environ["OPENAI_API_KEY"] = api_key
             return dspy.LM(
                 model=f"openai/{_get_openai_chat_model()}",
                 api_base=_get_openai_base_url(),
@@ -196,29 +210,67 @@ def build_ragas_dependencies() -> tuple[Any | None, Any | None, str | None, dict
             return None, None, f"Failed to initialize Ollama evaluator dependencies: {exc}", provider_meta
 
     if provider == "openai":
-        api_key = _get_openai_api_key()
-        if not api_key and skip_if_missing:
+        raw_api_key = (os.getenv("AZURE_OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY") or "").strip()
+        use_token_auth = _is_azure_openai_mode() and not raw_api_key
+
+        if not use_token_auth and not raw_api_key and skip_if_missing:
             return None, None, "OPENAI_API_KEY / AZURE_OPENAI_API_KEY missing; skipping LLM-based RAGAS metrics.", provider_meta
-        if not api_key:
+        if not use_token_auth and not raw_api_key:
             return None, None, "OPENAI_API_KEY / AZURE_OPENAI_API_KEY missing.", provider_meta
 
         try:
-            from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+            from ragas.embeddings import LangchainEmbeddingsWrapper
+            from ragas.llms import LangchainLLMWrapper
+            from langchain_openai import AzureChatOpenAI, AzureOpenAIEmbeddings, ChatOpenAI, OpenAIEmbeddings
 
-            os.environ.setdefault("OPENAI_API_KEY", api_key)
-            llm = ChatOpenAI(
-                base_url=_get_openai_base_url(),
-                model=_get_openai_chat_model(),
-                temperature=0,
-            )
-            embeddings = OpenAIEmbeddings(
-                base_url=_get_openai_base_url(),
-                model=_get_openai_embedding_model(),
-            )
+            if _is_azure_openai_mode():
+                base_url = (_get_openai_base_url() or "").rstrip("/")
+                api_version = os.getenv("AZURE_OPENAI_API_VERSION", "2024-08-01-preview")
+                if use_token_auth:
+                    from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+                    credential = DefaultAzureCredential()
+                    token_provider = get_bearer_token_provider(
+                        credential, "https://cognitiveservices.azure.com/.default"
+                    )
+                    llm = AzureChatOpenAI(
+                        azure_endpoint=base_url,
+                        azure_deployment=_get_openai_chat_model(),
+                        api_version=api_version,
+                        azure_ad_token_provider=token_provider,
+                        temperature=0,
+                    )
+                    embeddings = AzureOpenAIEmbeddings(
+                        azure_endpoint=base_url,
+                        azure_deployment=_get_openai_embedding_model(),
+                        api_version=api_version,
+                        azure_ad_token_provider=token_provider,
+                    )
+                else:
+                    os.environ["OPENAI_API_KEY"] = raw_api_key
+                    llm = AzureChatOpenAI(
+                        azure_endpoint=base_url,
+                        azure_deployment=_get_openai_chat_model(),
+                        api_version=api_version,
+                        api_key=raw_api_key,
+                        temperature=0,
+                    )
+                    embeddings = AzureOpenAIEmbeddings(
+                        azure_endpoint=base_url,
+                        azure_deployment=_get_openai_embedding_model(),
+                        api_version=api_version,
+                        api_key=raw_api_key,
+                    )
+            else:
+                os.environ["OPENAI_API_KEY"] = raw_api_key
+                llm = ChatOpenAI(
+                    model=_get_openai_chat_model(),
+                    temperature=0,
+                )
+                embeddings = OpenAIEmbeddings(
+                    model=_get_openai_embedding_model(),
+                )
 
-            if LangchainLLMWrapper and LangchainEmbeddingsWrapper:
-                return LangchainLLMWrapper(llm), LangchainEmbeddingsWrapper(embeddings), None, provider_meta
-            return llm, embeddings, None, provider_meta
+            return LangchainLLMWrapper(llm), LangchainEmbeddingsWrapper(embeddings), None, provider_meta
         except Exception as exc:
             return None, None, f"Failed to initialize OpenAI/Azure OpenAI evaluator dependencies: {exc}", provider_meta
 
