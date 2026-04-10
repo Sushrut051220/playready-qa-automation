@@ -6,10 +6,15 @@ from typing import Any
 
 import pytest
 from dotenv import load_dotenv
-from playwright.sync_api import Browser, BrowserContext, Page, Playwright, sync_playwright
 
-from ui.pages.chatbot_page import ChatbotPage
-from ui.utils.artifacts import attach_screenshot_on_failure, attach_trace_on_failure, get_test_artifact_dir
+try:
+    from playwright.sync_api import Browser, BrowserContext, Page, Playwright, sync_playwright
+    from ui.pages.chatbot_page import ChatbotPage
+    from ui.utils.artifacts import attach_screenshot_on_failure, attach_trace_on_failure, get_test_artifact_dir
+    _PLAYWRIGHT_AVAILABLE = True
+except ModuleNotFoundError:
+    _PLAYWRIGHT_AVAILABLE = False
+    Browser = BrowserContext = Page = Playwright = object  # type: ignore[misc,assignment]
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -43,6 +48,8 @@ def settings() -> dict[str, Any]:
 
 @pytest.fixture(scope="session")
 def playwright_instance() -> Playwright:
+    if not _PLAYWRIGHT_AVAILABLE:
+        pytest.skip("playwright is not installed")
     with sync_playwright() as playwright:
         yield playwright
 
