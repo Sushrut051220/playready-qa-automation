@@ -17,7 +17,8 @@ UI_ARTIFACT_DIR = PROJECT_ROOT / "artifacts" / "ui_runs"
 
 
 def load_test_cases() -> list[dict]:
-    return json.loads(TEST_CASES_FILE.read_text(encoding="utf-8"))
+    # Accept UTF-8 files with or without BOM to avoid collection failures.
+    return json.loads(TEST_CASES_FILE.read_text(encoding="utf-8-sig"))
 
 
 @pytest.mark.ui
@@ -27,7 +28,7 @@ def load_test_cases() -> list[dict]:
 def test_capture_chatbot_output(chatbot_page, case_data: dict, request: pytest.FixtureRequest) -> None:
     base_url = os.getenv("BASE_URL", "").strip()
     if not base_url or "your-app.example.com" in base_url:
-        pytest.skip("Set a real BASE_URL in `.env` before running the UI chatbot stage.")
+        pytest.fail("BASE_URL is not configured. Set a real BASE_URL in `.env` before running the UI chatbot stage.")
 
     request.node._artifact_test_id = case_data["id"]
     tracked_prompt = build_tracked_prompt(case_data["prompt"])

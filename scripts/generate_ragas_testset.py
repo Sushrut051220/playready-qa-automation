@@ -1,466 +1,497 @@
 from __future__ import annotations
 
-import argparse
+import hashlib
 import json
-import re
-import shutil
-import sys
-from datetime import datetime, timezone
+import os
+from datetime import datetime
 from pathlib import Path
-from typing import Any, cast
-
-from dotenv import load_dotenv
+from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+DATA_DIR = PROJECT_ROOT / "data"
+KB_DIR = DATA_DIR / "kb"
 
-DEFAULT_CONFIG_PATH = PROJECT_ROOT / "data" / "ragas_testset_config.json"
-DEFAULT_FALLBACK_PATTERNS = [
-    "I don't know",
-    "not in my knowledge base",
-    "outside my scope",
-    "cannot answer",
+CHUNK_SIZE = 1000
+CHUNK_OVERLAP = 200
+
+SCENARIO_TEMPLATES = [
+    # ---- POSITIVE (1-2): Reduced from 5 ----
+    {
+        "id_suffix": "pos_factual",
+        "category": "positive",
+        "template": "What does {pdf_topic} say about {chunk_topic}?",
+        "description": "Direct factual question — tests basic retrieval",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent cannot answer basic questions from the document",
+        "needs_chunk": True,
+    },
+    {
+        "id_suffix": "pos_detail",
+        "category": "positive",
+        "template": "What are the specific requirements for {chunk_topic} as described in {pdf_topic}?",
+        "description": "Specific detail extraction — tests precision",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent misses specific numbers, dates, or version details",
+        "needs_chunk": True,
+    },
+    # ---- EDGE CASES (3-5): Reduced from 5 ----
+    {
+        "id_suffix": "edge_version",
+        "category": "edge_case",
+        "template": "Does {chunk_topic} apply to all versions of PlayReady, or only specific ones as per {pdf_topic}?",
+        "description": "Version constraint — tests version-awareness",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent ignores version boundaries and gives generic answer",
+        "needs_chunk": True,
+    },
+    {
+        "id_suffix": "edge_negation",
+        "category": "edge_case",
+        "template": "What is NOT allowed regarding {chunk_topic} according to {pdf_topic}?",
+        "description": "Negation question — tests negation understanding",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent ignores negation and lists what IS allowed instead",
+        "needs_chunk": True,
+    },
+    {
+        "id_suffix": "edge_multipart",
+        "category": "edge_case",
+        "template": "According to {pdf_topic}, what is {chunk_topic}, when does it apply, and what are the penalties for non-compliance?",
+        "description": "Multi-part question — tests completeness",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent answers only part of the question",
+        "needs_chunk": True,
+    },
+    # ---- NEGATIVE (6-7): Same ----
+    {
+        "id_suffix": "neg_out_of_scope",
+        "category": "negative",
+        "template": "What does {pdf_topic} say about Netflix DRM implementation?",
+        "description": "Out-of-scope question — tests refusal behavior",
+        "expect_fallback": True,
+        "strict_grounding": False,
+        "bug_it_catches": "Agent hallucinates an answer instead of refusing",
+        "needs_chunk": False,
+    },
+    {
+        "id_suffix": "neg_wrong_doc",
+        "category": "negative",
+        "template": "According to {pdf_topic}, how do I set up a Widevine license server?",
+        "description": "Wrong document reference — tests scope boundary",
+        "expect_fallback": True,
+        "strict_grounding": False,
+        "bug_it_catches": "Agent mixes content from unrelated technologies",
+        "needs_chunk": False,
+    },
+    # ---- HALLUCINATION (8-9): Reduced from 3 ----
+    {
+        "id_suffix": "halluc_false_premise",
+        "category": "hallucination",
+        "template": "Since {pdf_topic} requires AES-256-GCM encryption for all content, how should implementers configure this?",
+        "description": "False premise — tests if agent corrects false claims",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent agrees with false premise instead of correcting it",
+        "needs_chunk": False,
+    },
+    {
+        "id_suffix": "halluc_nonexistent",
+        "category": "hallucination",
+        "template": "What is the maximum retry count for {chunk_topic} as specified in section 99.9 of {pdf_topic}?",
+        "description": "Non-existent section — tests if agent invents data",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent fabricates data from a non-existent section",
+        "needs_chunk": True,
+    },
+    # ---- ROBUSTNESS (10): Same ----
+    {
+        "id_suffix": "robust_paraphrase",
+        "category": "robustness",
+        "template": "Can you explain the rules around {chunk_topic} from the {pdf_topic} document in simple terms?",
+        "description": "Paraphrased question — tests consistency",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent fails on rephrased questions that it answered correctly before",
+        "needs_chunk": True,
+    },
+    # ---- COMPLIANCE (11): Reduced from 2 ----
+    {
+        "id_suffix": "comp_rule",
+        "category": "compliance",
+        "template": "What are the mandatory compliance requirements for {chunk_topic} as stated in {pdf_topic}?",
+        "description": "Compliance rule verification — tests accuracy of rules",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent states wrong compliance rules or misses mandatory ones",
+        "needs_chunk": True,
+    },
+    # ---- GROUNDING (12): Same ----
+    {
+        "id_suffix": "ground_cite",
+        "category": "grounding",
+        "template": "Which specific document or section defines the requirements for {chunk_topic}? Please cite the source.",
+        "description": "Citation verification — tests document grounding",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent cites wrong document or no document at all",
+        "needs_chunk": True,
+    },
+    # ---- CROSS-DOCUMENT (13): Same ----
+    {
+        "id_suffix": "cross_doc",
+        "category": "cross_document",
+        "template": "How does {chunk_topic} from {pdf_topic} relate to the overall PlayReady compliance framework?",
+        "description": "Cross-document reasoning — tests multi-doc synthesis",
+        "expect_fallback": False,
+        "strict_grounding": False,
+        "bug_it_catches": "Agent cannot connect information across multiple documents",
+        "needs_chunk": True,
+    },
+    # ================================================================
+    # NEW: DATA SECURITY / PII / COMPLIANCE (14-18)
+    # Microsoft client strict requirements
+    # ================================================================
+    {
+        "id_suffix": "sec_pii_exposure",
+        "category": "data_security",
+        "template": "Does {pdf_topic} mention how to handle personally identifiable information (PII) in the context of {chunk_topic}? What data protection measures are required?",
+        "description": "PII handling — tests if agent exposes or discusses PII correctly",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent provides incorrect PII handling guidance or exposes sensitive data patterns",
+        "needs_chunk": True,
+    },
+    {
+        "id_suffix": "sec_data_retention",
+        "category": "data_security",
+        "template": "What are the data retention and deletion policies related to {chunk_topic} as described in {pdf_topic}? How long should license data be stored?",
+        "description": "Data retention — tests awareness of data lifecycle requirements",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent gives incorrect data retention guidance or ignores deletion requirements",
+        "needs_chunk": True,
+    },
+    {
+        "id_suffix": "sec_encryption_keys",
+        "category": "data_security",
+        "template": "How should encryption keys related to {chunk_topic} be stored, rotated, and disposed of according to {pdf_topic}? What happens if a key is compromised?",
+        "description": "Key management — tests security-critical key handling knowledge",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent gives insecure key management advice or exposes key handling internals",
+        "needs_chunk": True,
+    },
+    {
+        "id_suffix": "sec_access_control",
+        "category": "data_security",
+        "template": "What access control and authorization requirements does {pdf_topic} specify for {chunk_topic}? Who should have access and who should not?",
+        "description": "Access control — tests RBAC and authorization knowledge",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent recommends overly permissive access or misses authorization requirements",
+        "needs_chunk": True,
+    },
+    {
+        "id_suffix": "sec_audit_logging",
+        "category": "data_security",
+        "template": "What audit logging and monitoring requirements does {pdf_topic} describe for {chunk_topic}? What events must be logged for compliance?",
+        "description": "Audit trail — tests compliance logging awareness",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent misses mandatory audit logging requirements or gives incomplete compliance guidance",
+        "needs_chunk": True,
+    },
+    # ================================================================
+    # NEW: CONVERSATIONAL / TONE (19-20)
+    # Natural language, human-like interaction per PDF topic
+    # ================================================================
+    {
+        "id_suffix": "conv_casual",
+        "category": "conversational",
+        "template": "Hey, I'm new to PlayReady and just started reading {pdf_topic}. Can you give me a quick summary of what {chunk_topic} is about in plain English?",
+        "description": "Casual/friendly tone — tests if agent responds naturally to informal questions",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent gives overly formal or robotic response to casual question, or fails to simplify",
+        "needs_chunk": True,
+    },
+    {
+        "id_suffix": "conv_frustrated",
+        "category": "conversational",
+        "template": "I've been reading {pdf_topic} for hours and I still don't understand {chunk_topic}. This is so confusing! Can you just explain it like I'm five?",
+        "description": "Frustrated user tone — tests empathy and simplification ability",
+        "expect_fallback": False,
+        "strict_grounding": True,
+        "bug_it_catches": "Agent ignores user frustration, gives same complex answer, or responds rudely",
+        "needs_chunk": True,
+    },
 ]
-DEFAULT_FORBIDDEN_PATTERNS = [
-    "I don't know",
-    "cannot help",
-    "no information",
-]
-PDF_ID_PATTERN = re.compile(r"\[PDF_ID:\s*([^\]|]+)", re.IGNORECASE)
 
 
-def _load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
+def _extract_text_from_pdf(pdf_path):
+    try:
+        import fitz
+    except ImportError:
+        print(f"  [WARN] PyMuPDF not installed. Run: pip install PyMuPDF")
+        return ""
+
+    text_parts = []
+    try:
+        doc = fitz.open(str(pdf_path))
+        for page_num, page in enumerate(doc, 1):
+            page_text = page.get_text("text")
+            if page_text.strip():
+                text_parts.append({"page": page_num, "text": page_text.strip()})
+        doc.close()
+    except Exception as e:
+        print(f"  [ERROR] Could not read {pdf_path.name}: {e}")
+        return ""
+
+    return text_parts
 
 
-def _write_json(path: Path, payload: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
+def _create_chunks(page_texts, chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP):
+    full_text = ""
+    page_map = []
+
+    for pt in page_texts:
+        start = len(full_text)
+        full_text += pt["text"] + "\n\n"
+        end = len(full_text)
+        page_map.append({"start": start, "end": end, "page": pt["page"]})
+
+    chunks = []
+    pos = 0
+    chunk_idx = 0
+    while pos < len(full_text):
+        end = min(pos + chunk_size, len(full_text))
+        chunk_text = full_text[pos:end].strip()
+
+        if len(chunk_text) < 50:
+            break
+
+        pages = set()
+        for pm in page_map:
+            if pm["start"] < end and pm["end"] > pos:
+                pages.add(pm["page"])
+
+        chunks.append({
+            "chunk_index": chunk_idx,
+            "chunk_text": chunk_text,
+            "char_start": pos,
+            "char_end": end,
+            "pages": sorted(pages),
+        })
+
+        chunk_idx += 1
+        pos += chunk_size - chunk_overlap
+
+    return chunks
 
 
-def load_config(config_path: Path) -> dict[str, Any]:
-    config = _load_json(config_path)
-    base_dir = config_path.parent
+def _generate_chunk_id(doc_id, doc_version, chunk_index):
+    return f"{doc_id}_v{doc_version}_chunk_{chunk_index:03d}"
 
-    def _resolve(value: str, default: str) -> Path:
-        raw = value or default
-        candidate = Path(raw)
-        return candidate if candidate.is_absolute() else (PROJECT_ROOT / candidate).resolve()
 
-    config["pdf_registry_path"] = _resolve(config.get("pdf_registry_path", "data/pdf_registry.json"), "data/pdf_registry.json")
-    config["output_path"] = _resolve(config.get("output_path", "data/test_cases.json"), "data/test_cases.json")
-    config["archive_dir"] = _resolve(config.get("archive_dir", "artifacts/testsets"), "artifacts/testsets")
-    config.setdefault("testset_size", 20)
-    config.setdefault(
-        "query_type_mix",
+def _generate_chunk_hash(chunk_text):
+    return hashlib.md5(chunk_text.encode("utf-8")).hexdigest()[:12]
+
+
+def _extract_topic_from_chunk(chunk_text):
+    lines = [l.strip() for l in chunk_text.split("\n") if len(l.strip()) > 20]
+    if not lines:
+        return "the documented requirements"
+    first_line = lines[0]
+    if len(first_line) > 80:
+        first_line = first_line[:77] + "..."
+    return first_line
+
+
+def _load_pdf_registry():
+    registry_path = DATA_DIR / "pdf_registry.json"
+    if registry_path.exists():
+        registry = json.loads(registry_path.read_text(encoding="utf-8-sig"))
+        active = [r for r in registry if r.get("active", True)]
+        if active:
+            return active
+
+    pdf_files = sorted(KB_DIR.glob("*.pdf"))
+    return [
         {
-            "single_hop_specific": 0.5,
-            "multi_hop_specific": 0.3,
-            "multi_hop_abstract": 0.2,
-        },
-    )
-    config.setdefault("strict_grounding", True)
-    config.setdefault("fallback_patterns", list(DEFAULT_FALLBACK_PATTERNS))
-    config.setdefault("forbidden_patterns", list(DEFAULT_FORBIDDEN_PATTERNS))
-    config.setdefault(
-        "llm_context",
-        "Generate realistic enterprise support questions grounded only in the provided PDF context. Do not mention source tags such as PDF_ID or PDF_NAME in the question or reference answer.",
-    )
-    config.setdefault("max_pages_per_pdf", 25)
-    config.setdefault("max_chars_per_page", 4000)
-    config.setdefault("seed_from_registry_sample_questions", True)
-    return config
+            "filename": p.name,
+            "doc_id": f"PR-DOC-{i:03d}",
+            "doc_version": "1.0",
+            "kb_version": "2026.04",
+            "category": "general",
+            "active": True,
+        }
+        for i, p in enumerate(pdf_files, 1)
+    ]
 
 
-def load_pdf_registry(registry_path: Path) -> list[dict[str, Any]]:
-    registry = _load_json(registry_path)
-    if not isinstance(registry, list):
-        raise ValueError(f"Expected a list in {registry_path}")
-    return registry
+def generate_test_cases_for_pdf(pdf_entry, pdf_idx, chunk_registry):
+    pdf_file = pdf_entry["filename"]
+    pdf_path = KB_DIR / pdf_file
+    doc_id = pdf_entry.get("doc_id", f"PR-DOC-{pdf_idx:03d}")
+    doc_version = pdf_entry.get("doc_version", "1.0")
+    kb_version = pdf_entry.get("kb_version", "2026.04")
+    pdf_category = pdf_entry.get("category", "general")
 
+    page_texts = _extract_text_from_pdf(pdf_path)
+    if not page_texts:
+        print(f"    [WARN] No text extracted from {pdf_file}")
+        chunks = []
+    else:
+        chunks = _create_chunks(page_texts)
+        print(f"    Extracted {len(chunks)} chunks from {pdf_file}")
 
-def _slugify(value: str) -> str:
-    cleaned = re.sub(r"[^a-zA-Z0-9]+", "_", value.strip().lower()).strip("_")
-    return cleaned or "item"
+    for chunk in chunks:
+        chunk_id = _generate_chunk_id(doc_id, doc_version, chunk["chunk_index"])
+        chunk_hash = _generate_chunk_hash(chunk["chunk_text"])
+        chunk_registry[chunk_id] = {
+            "chunk_id": chunk_id,
+            "doc_id": doc_id,
+            "doc_version": doc_version,
+            "kb_version": kb_version,
+            "source_pdf": pdf_file,
+            "chunk_index": chunk["chunk_index"],
+            "pages": chunk["pages"],
+            "char_start": chunk["char_start"],
+            "char_end": chunk["char_end"],
+            "chunk_hash": chunk_hash,
+            "chunk_text_preview": chunk["chunk_text"][:200],
+            "chunk_text": chunk["chunk_text"],
+        }
 
+    pdf_topic = pdf_path.stem.replace("_", " ").replace("-", " ").strip()
 
-def _sanitize_text(value: Any) -> str:
-    text = str(value or "").strip()
-    text = re.sub(r"\[PDF_ID:[^\]]+\]\s*", "", text, flags=re.IGNORECASE)
-    text = re.sub(r"\[PDF_NAME:[^\]]+\]\s*", "", text, flags=re.IGNORECASE)
-    text = re.sub(r"\[TOPIC:[^\]]+\]\s*", "", text, flags=re.IGNORECASE)
-    return text.strip()
+    cases = []
+    for scenario_idx, scenario in enumerate(SCENARIO_TEMPLATES):
+        case_num = scenario_idx + 1
+        case_id = f"pdf{pdf_idx:03d}_q{case_num:02d}_{scenario['id_suffix']}"
 
+        if scenario["needs_chunk"] and chunks:
+            chunk = chunks[scenario_idx % len(chunks)]
+            chunk_id = _generate_chunk_id(doc_id, doc_version, chunk["chunk_index"])
+            chunk_topic = _extract_topic_from_chunk(chunk["chunk_text"])
+            ground_truth_source = chunk["chunk_text"][:500]
+            reference_contexts = [chunk["chunk_text"]]
+            expected_chunk_ids = [chunk_id]
+            expected_pages = chunk["pages"]
+        else:
+            chunk_id = None
+            chunk_topic = pdf_topic
+            ground_truth_source = ""
+            reference_contexts = []
+            expected_chunk_ids = []
+            expected_pages = []
 
-def build_seed_test_cases(
-    registry: list[dict[str, Any]],
-    desired_count: int,
-    fallback_patterns: list[str] | None = None,
-    forbidden_patterns: list[str] | None = None,
-    strict_grounding: bool = True,
-) -> list[dict[str, Any]]:
-    fallback_patterns = list(fallback_patterns or DEFAULT_FALLBACK_PATTERNS)
-    forbidden_patterns = list(forbidden_patterns or DEFAULT_FORBIDDEN_PATTERNS)
+        if chunks and len(chunks) > 1:
+            alt_chunk = chunks[(scenario_idx + 5) % len(chunks)]
+            secondary_topic = _extract_topic_from_chunk(alt_chunk["chunk_text"])
+        else:
+            secondary_topic = "related requirements"
 
-    seeded_cases: list[dict[str, Any]] = []
-    for entry in registry:
-        pdf_id = entry.get("pdf_id") or _slugify(entry.get("pdf_name", "pdf"))
-        pdf_name = entry.get("pdf_name") or pdf_id
-        topic = entry.get("topic") or pdf_name
-        keywords = list(entry.get("expected_keywords") or [])
-        sample_questions = list(entry.get("sample_questions") or [])
-        for index, question in enumerate(sample_questions, start=1):
-            seeded_cases.append(
-                {
-                    "id": f"seed_{_slugify(pdf_id)}_{index:03d}",
-                    "prompt": question,
-                    "required_keywords": keywords[:5],
-                    "forbidden_patterns": forbidden_patterns,
-                    "expect_fallback": False,
-                    "fallback_patterns": fallback_patterns,
-                    "ground_truth": f"Answer should be grounded in '{pdf_name}' and stay focused on the topic '{topic}'.",
-                    "expected_pdfs": [pdf_id],
-                    "strict_grounding": strict_grounding,
-                    "paraphrase_group": _slugify(topic),
-                    "query_type": "seeded_from_registry",
-                    "notes": f"Seeded from pdf_registry.json for {pdf_name}.",
-                }
-            )
-
-    if not seeded_cases:
-        return []
-
-    expanded: list[dict[str, Any]] = []
-    cursor = 0
-    while len(expanded) < desired_count:
-        template = dict(seeded_cases[cursor % len(seeded_cases)])
-        run_index = len(expanded) + 1
-        template["id"] = f"{template['id']}_r{run_index:03d}"
-        expanded.append(template)
-        cursor += 1
-
-    return expanded[:desired_count]
-
-
-def _extract_text_from_pdf(pdf_path: Path, max_pages_per_pdf: int, max_chars_per_page: int) -> str:
-    from pypdf import PdfReader
-
-    reader = PdfReader(str(pdf_path))
-    parts: list[str] = []
-    for page_index, page in enumerate(reader.pages[:max_pages_per_pdf], start=1):
-        page_text = (page.extract_text() or "").strip()
-        if not page_text:
-            continue
-        parts.append(f"[PAGE {page_index}] {page_text[:max_chars_per_page]}")
-    return "\n\n".join(parts).strip()
-
-
-def build_langchain_documents(
-    registry: list[dict[str, Any]],
-    max_pages_per_pdf: int,
-    max_chars_per_page: int,
-) -> tuple[list[Any], list[str]]:
-    from langchain_core.documents import Document
-
-    documents: list[Any] = []
-    warnings: list[str] = []
-
-    for entry in registry:
-        pdf_id = entry.get("pdf_id") or _slugify(entry.get("pdf_name", "pdf"))
-        pdf_name = entry.get("pdf_name") or pdf_id
-        topic = entry.get("topic") or "general"
-        file_path = Path(entry.get("file_path") or "")
-        if file_path and not file_path.is_absolute():
-            file_path = (PROJECT_ROOT / file_path).resolve()
-
-        if not file_path or not file_path.exists():
-            warnings.append(f"Missing PDF file for {pdf_id}: {file_path}")
-            continue
-
-        try:
-            text = _extract_text_from_pdf(file_path, max_pages_per_pdf=max_pages_per_pdf, max_chars_per_page=max_chars_per_page)
-        except Exception as exc:
-            warnings.append(f"Failed to read {pdf_name}: {exc}")
-            continue
-
-        if not text:
-            warnings.append(f"No extractable text found in {pdf_name}.")
-            continue
-
-        tagged_text = f"[PDF_ID: {pdf_id}] [PDF_NAME: {pdf_name}] [TOPIC: {topic}]\n{text}"
-        documents.append(
-            Document(
-                page_content=tagged_text,
-                metadata={
-                    "pdf_id": pdf_id,
-                    "pdf_name": pdf_name,
-                    "topic": topic,
-                    "source": str(file_path),
-                },
-            )
+        prompt = scenario["template"].format(
+            pdf_topic=pdf_topic,
+            chunk_topic=chunk_topic,
+            secondary_topic=secondary_topic,
         )
 
-    return documents, warnings
-
-
-def _normalize_query_type_mix(query_type_mix: dict[str, Any]) -> dict[str, float]:
-    normalized: dict[str, float] = {}
-    for name, weight in (query_type_mix or {}).items():
-        try:
-            numeric = float(weight)
-        except (TypeError, ValueError):
-            continue
-        if numeric > 0:
-            normalized[str(name).strip().lower()] = numeric
-    total = sum(normalized.values())
-    if total <= 0:
-        return {}
-    return {name: value / total for name, value in normalized.items()}
-
-
-def _canonical_synth_name(name: str) -> str:
-    cleaned = str(name or "").strip().lower()
-    for prefix in (
-        "single_hop_specific",
-        "multi_hop_specific",
-        "multi_hop_abstract",
-    ):
-        if cleaned.startswith(prefix):
-            return prefix
-    return cleaned or "ragas_generated"
-
-
-def _build_query_distribution(ragas_llm: Any, query_type_mix: dict[str, Any], llm_context: str):
-    from ragas.testset.synthesizers import default_query_distribution
-
-    normalized_mix = _normalize_query_type_mix(query_type_mix)
-    distribution = default_query_distribution(ragas_llm, llm_context=llm_context)
-    if not normalized_mix:
-        return distribution
-
-    selected: list[tuple[Any, float]] = []
-    for synthesizer, default_weight in distribution:
-        canonical = _canonical_synth_name(getattr(synthesizer, "name", ""))
-        weight = normalized_mix.get(canonical)
-        if weight is not None and weight > 0:
-            selected.append((synthesizer, weight))
-
-    return selected or distribution
-
-
-def _extract_expected_pdfs(contexts: list[str]) -> list[str]:
-    found: list[str] = []
-    for context in contexts:
-        for match in PDF_ID_PATTERN.findall(str(context or "")):
-            pdf_id = match.strip()
-            if pdf_id and pdf_id not in found:
-                found.append(pdf_id)
-    return found
-
-
-def _keywords_for_pdfs(expected_pdfs: list[str], registry_by_id: dict[str, dict[str, Any]]) -> list[str]:
-    keywords: list[str] = []
-    for pdf_id in expected_pdfs:
-        for keyword in registry_by_id.get(pdf_id, {}).get("expected_keywords", []) or []:
-            if keyword not in keywords:
-                keywords.append(keyword)
-    return keywords[:6]
-
-
-def convert_ragas_samples_to_test_cases(
-    samples: list[dict[str, Any]],
-    registry_by_id: dict[str, dict[str, Any]],
-    fallback_patterns: list[str],
-    forbidden_patterns: list[str],
-    strict_grounding: bool,
-) -> list[dict[str, Any]]:
-    cases: list[dict[str, Any]] = []
-
-    for index, sample in enumerate(samples, start=1):
-        prompt = _sanitize_text(sample.get("user_input") or sample.get("query") or "")
-        if not prompt:
-            continue
-
-        contexts = sample.get("reference_contexts") or sample.get("retrieved_contexts") or []
-        if isinstance(contexts, str):
-            contexts = [contexts]
-        contexts = [_sanitize_text(item) for item in contexts if str(item or "").strip()]
-
-        expected_pdfs = _extract_expected_pdfs(sample.get("reference_contexts") or sample.get("retrieved_contexts") or [])
-        reference = _sanitize_text(sample.get("reference") or sample.get("response") or "")
-        synth_name = sample.get("synthesizer_name") or "ragas_generated"
-        query_type = _canonical_synth_name(synth_name)
-
-        cases.append(
-            {
-                "id": f"generated_{query_type}_{index:03d}",
-                "prompt": prompt,
-                "required_keywords": _keywords_for_pdfs(expected_pdfs, registry_by_id),
-                "forbidden_patterns": list(forbidden_patterns),
-                "expect_fallback": False,
-                "fallback_patterns": list(fallback_patterns),
-                "ground_truth": reference or "Reference answer generated by RAGAS.",
-                "expected_pdfs": expected_pdfs,
-                "strict_grounding": strict_grounding,
-                "paraphrase_group": query_type,
-                "query_type": query_type,
-                "reference_contexts": contexts,
-                "notes": f"Generated by RAGAS using {synth_name}.",
-            }
-        )
+        cases.append({
+            "id": case_id,
+            "prompt": prompt,
+            "ground_truth": ground_truth_source,
+            "reference_contexts": reference_contexts,
+            "expected_pdfs": [pdf_file],
+            "expected_doc_id": doc_id,
+            "expected_doc_version": doc_version,
+            "expected_chunk_ids": expected_chunk_ids,
+            "expected_pages": expected_pages,
+            "kb_version": kb_version,
+            "strict_grounding": scenario["strict_grounding"],
+            "expect_fallback": scenario["expect_fallback"],
+            "query_type": scenario["category"],
+            "scenario_description": scenario["description"],
+            "bug_it_catches": scenario["bug_it_catches"],
+            "source_pdf": pdf_file,
+            "source_category": pdf_category,
+        })
 
     return cases
 
 
-def merge_cases(primary_cases: list[dict[str, Any]], fallback_cases: list[dict[str, Any]], desired_count: int) -> list[dict[str, Any]]:
-    merged: list[dict[str, Any]] = []
-    seen_prompts: set[str] = set()
+def generate_all_test_cases():
+    pdf_entries = _load_pdf_registry()
+    print(f"Found {len(pdf_entries)} active PDFs in registry\n")
 
-    for item in primary_cases + fallback_cases:
-        prompt_key = str(item.get("prompt", "")).strip().lower()
-        if not prompt_key or prompt_key in seen_prompts:
-            continue
-        merged.append(item)
-        seen_prompts.add(prompt_key)
-        if len(merged) >= desired_count:
-            break
+    all_cases = []
+    category_buckets = {}
+    chunk_registry = {}
 
-    return merged
+    for idx, entry in enumerate(pdf_entries, 1):
+        print(f"  [{idx}/{len(pdf_entries)}] Processing: {entry['filename']}")
+        cases = generate_test_cases_for_pdf(entry, idx, chunk_registry)
+        all_cases.extend(cases)
 
+        for case in cases:
+            cat = case["query_type"]
+            category_buckets.setdefault(cat, []).append(case)
 
-def write_output_file(payload: list[dict[str, Any]], output_path: Path, archive_dir: Path) -> None:
-    archive_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    old_path = DATA_DIR / "test_cases.json"
+    if old_path.exists():
+        backup_name = f"test_cases_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        backup_path = DATA_DIR / backup_name
+        backup_path.write_text(old_path.read_text(encoding="utf-8-sig"), encoding="utf-8")
+        print(f"\n  Backed up old test_cases.json -> {backup_name}")
 
-    if output_path.exists():
-        backup_path = archive_dir / f"test_cases_previous_{timestamp}.json"
-        shutil.copy2(output_path, backup_path)
-
-    _write_json(output_path, payload)
-    archive_copy = archive_dir / f"test_cases_generated_{timestamp}.json"
-    shutil.copy2(output_path, archive_copy)
-
-
-def generate_with_ragas(documents: list[Any], config: dict[str, Any]) -> tuple[list[dict[str, Any]], str | None]:
-    from llm_provider import build_ragas_dependencies
-    from ragas.testset import TestsetGenerator
-
-    ragas_llm, ragas_embeddings, issue, provider_meta = build_ragas_dependencies()
-    if ragas_llm is None or ragas_embeddings is None:
-        return [], issue or "RAGAS dependencies are not available."
-
-    generator = TestsetGenerator(
-        llm=ragas_llm,
-        embedding_model=ragas_embeddings,
-        llm_context=config.get("llm_context"),
+    chunk_registry_path = DATA_DIR / "chunk_registry.json"
+    chunk_registry_path.write_text(
+        json.dumps(chunk_registry, indent=2, ensure_ascii=False), encoding="utf-8"
     )
-    query_distribution = _build_query_distribution(
-        ragas_llm=ragas_llm,
-        query_type_mix=config.get("query_type_mix", {}),
-        llm_context=config.get("llm_context", ""),
-    )
+    print(f"\n  Chunk registry: {chunk_registry_path} ({len(chunk_registry)} chunks)")
 
-    try:
-        testset = generator.generate_with_langchain_docs(
-            documents=documents,
-            testset_size=int(config.get("testset_size", 20)),
-            query_distribution=query_distribution,
-            with_debugging_logs=bool(config.get("with_debugging_logs", False)),
-            raise_exceptions=False,
-        )
-        to_list = getattr(testset, "to_list", None)
-        if callable(to_list):
-            generated_rows = cast(list[dict[str, Any]], to_list())
-            return list(generated_rows), None
-        return [], "RAGAS returned an executor instead of a materialized testset."
-    except Exception as exc:
-        return [], f"RAGAS generation failed: {exc}"
+    master_path = DATA_DIR / "test_cases_master.json"
+    master_path.write_text(json.dumps(all_cases, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"  Master file: {master_path} ({len(all_cases)} test cases)")
 
+    for cat_name, cat_cases in sorted(category_buckets.items()):
+        cat_path = DATA_DIR / f"test_cases_{cat_name}.json"
+        cat_path.write_text(json.dumps(cat_cases, indent=2, ensure_ascii=False), encoding="utf-8")
+        print(f"  Category '{cat_name}': {cat_path} ({len(cat_cases)} cases)")
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate RAGAS-based chatbot test cases from the PDF registry.")
-    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG_PATH, help="Path to the JSON config file.")
-    parser.add_argument("--testset-size", type=int, default=None, help="Override the configured number of generated questions.")
-    parser.add_argument("--output", type=Path, default=None, help="Override the configured output path.")
-    parser.add_argument("--seed-only", action="store_true", help="Skip RAGAS generation and only seed cases from pdf_registry sample_questions.")
-    parser.add_argument("--dry-run", action="store_true", help="Print a summary without writing to disk.")
-    return parser.parse_args()
-
-
-def main() -> int:
-    load_dotenv(PROJECT_ROOT / ".env")
-    args = parse_args()
-    config = load_config(args.config)
-
-    if args.testset_size is not None:
-        config["testset_size"] = args.testset_size
-    if args.output is not None:
-        config["output_path"] = args.output if args.output.is_absolute() else (PROJECT_ROOT / args.output).resolve()
-
-    registry = load_pdf_registry(config["pdf_registry_path"])
-    registry_by_id = {item.get("pdf_id") or _slugify(item.get("pdf_name", "pdf")): item for item in registry}
-
-    seed_cases = build_seed_test_cases(
-        registry=registry,
-        desired_count=int(config["testset_size"]),
-        fallback_patterns=list(config.get("fallback_patterns", DEFAULT_FALLBACK_PATTERNS)),
-        forbidden_patterns=list(config.get("forbidden_patterns", DEFAULT_FORBIDDEN_PATTERNS)),
-        strict_grounding=bool(config.get("strict_grounding", True)),
-    )
-
-    ragas_cases: list[dict[str, Any]] = []
-    issue: str | None = None
-    warnings: list[str] = []
-
-    if not args.seed_only:
-        documents, warnings = build_langchain_documents(
-            registry=registry,
-            max_pages_per_pdf=int(config.get("max_pages_per_pdf", 25)),
-            max_chars_per_page=int(config.get("max_chars_per_page", 4000)),
-        )
-        if documents:
-            samples, issue = generate_with_ragas(documents, config)
-            ragas_cases = convert_ragas_samples_to_test_cases(
-                samples=samples,
-                registry_by_id=registry_by_id,
-                fallback_patterns=list(config.get("fallback_patterns", DEFAULT_FALLBACK_PATTERNS)),
-                forbidden_patterns=list(config.get("forbidden_patterns", DEFAULT_FORBIDDEN_PATTERNS)),
-                strict_grounding=bool(config.get("strict_grounding", True)),
-            )
-        else:
-            issue = "No readable PDF documents were found; falling back to sample_questions from the registry."
-
-    merged_cases = merge_cases(ragas_cases, seed_cases, int(config["testset_size"]))
+    default_path = DATA_DIR / "test_cases.json"
+    default_path.write_text(json.dumps(all_cases, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"\n  Pipeline file: {default_path} ({len(all_cases)} cases)")
 
     summary = {
-        "config": str(args.config),
-        "output_path": str(config["output_path"]),
-        "requested_questions": int(config["testset_size"]),
-        "generated_with_ragas": len(ragas_cases),
-        "seeded_from_registry": len(seed_cases),
-        "final_export_count": len(merged_cases),
-        "warnings": warnings,
-        "issue": issue,
+        "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "total_pdfs": len(pdf_entries),
+        "total_test_cases": len(all_cases),
+        "total_chunks": len(chunk_registry),
+        "cases_per_pdf": len(SCENARIO_TEMPLATES),
+        "chunk_size": CHUNK_SIZE,
+        "chunk_overlap": CHUNK_OVERLAP,
+        "categories": {cat: len(cases) for cat, cases in sorted(category_buckets.items())},
+        "scenario_types": [s["id_suffix"] for s in SCENARIO_TEMPLATES],
+        "pdfs_processed": [
+            {"filename": e["filename"], "doc_id": e.get("doc_id"), "doc_version": e.get("doc_version")}
+            for e in pdf_entries
+        ],
     }
+    summary_path = DATA_DIR / "testcase_generation_summary.json"
+    summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"  Summary: {summary_path}")
 
-    print(json.dumps(summary, indent=2))
-
-    if not merged_cases:
-        print("No test cases were produced. Add sample_questions or valid PDF file paths to data/pdf_registry.json.")
-        return 1
-
-    if args.dry_run:
-        return 0
-
-    write_output_file(
-        payload=merged_cases,
-        output_path=Path(config["output_path"]),
-        archive_dir=Path(config["archive_dir"]),
-    )
-    print(f"Saved {len(merged_cases)} generated test cases to {config['output_path']}")
-    return 0
+    print(f"\n✅ Done! {len(all_cases)} test cases from {len(pdf_entries)} PDFs ({len(chunk_registry)} chunks)")
+    return all_cases
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    generate_all_test_cases()

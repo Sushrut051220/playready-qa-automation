@@ -63,6 +63,41 @@ Helpful references:
    pytest -m ragas
    ```
 
+## Test Execution: 3-Step Approach
+
+For real automation testing with LLM evaluation:
+
+### Step 1: Run UI Capture (JSON-driven cases only)
+Runs only the parameterized UI cases from `data/test_cases.json`.
+If the JSON has 20 cases, this runs 20. If updated to 30, this runs 30.
+
+```powershell
+$env:PYTHONPATH="."; .venv\Scripts\python.exe -m pytest tests/test_ui_capture.py -v -s
+```
+
+### Step 2: Run DSPy Deterministic + LLM Quality Evaluation
+Consumes artifacts produced by Step 1 and generates the UI E2E report.
+
+```powershell
+$env:PYTHONPATH="."; .venv\Scripts\python.exe -m pytest tests/test_dspy_eval.py -v -s
+```
+
+### Step 3: Query Foundry Agent (Optional)
+Generate synthetic queries via your configured LLM to stress-test the chatbot.
+
+```powershell
+$env:PYTHONPATH="."; .venv\Scripts\python.exe scripts/query_foundry_agent.py --delay 2
+```
+
+### Step 4: Run Bridge/RAGAS Evaluation
+LLM-as-judge evaluation across 13 RAGAS metrics. Produces `Bridge_Evaluation_Report.xlsx` with scores and pass/fail results.
+
+```powershell
+$env:PYTHONPATH="."; .venv\Scripts\python.exe -m pytest -m ragas -v -s
+```
+
+> **Bridge** = where UI responses, DSPy scores, and RAGAS metrics converge into a single enterprise report.
+
 ## If you are new: how to use this repo day-to-day
 
 ### 1) Choose one environment profile
@@ -286,3 +321,125 @@ Color coding is applied for quick review:
 - `FAIL` = red
 - `NO` = yellow
 
+-----------------------------------------------------------------------------------
+12/04/2026
+ All Commands Used (In Order)
+# 1. Activate environment
+cd C:\Users\v-snistane\playready-qa-automation
+.\.venv\Scripts\activate
+
+# 2. Check LLM + Embeddings
+$env:PYTHONPATH="."
+.venv\Scripts\python.exe -m pytest tests/test_llm_provider_config.py -v -s
+
+# 3. Generate Foundry dataset
+$env:PYTHONPATH="."
+.venv\Scripts\python.exe scripts/query_foundry_agent.py --delay 2
+
+# 4. Run RAGAS evaluation
+Remove-Item -Recurse -Force ragas_layer\__pycache__ -ErrorAction SilentlyContinue
+$env:PYTHONPATH="."
+.venv\Scripts\python.exe -m pytest tests/test_ragas_eval.py -m ragas -v -s
+
+# 5. View results
+Get-Content artifacts\ragas\ragas_results.json | Select-Object -First 50
+code artifacts\ragas\ragas_results.csv
+code artifacts\ragas\threshold_results.csv
+start reports\bridge\Bridge_Evaluation_Report.xlsx
+
+# 6. Verify file contents (debugging)
+Get-Content ragas_layer\ragas_runner.py | Select-Object -First 10
+
+# 7. Daily one-liner
+$env:PYTHONPATH="."; python scripts/query_foundry_agent.py --delay 2; python -m pytest tests/test_ragas_eval.py -m ragas -v -s
+
+PART 2 — README for Foundry API Backend Testing with RAGAS
+
+# PlayReady QA Automation — Foundry API Backend Testing with RAGAS
+
+## Overview
+
+This framework provides **enterprise-grade, automated quality evaluation** of the
+PlayReady AI chatbot by directly querying the **Azure AI Foundry Agent** and
+evaluating responses using the **RAGAS** (Retrieval Augmented Generation Assessment)
+framework.
+
+### What This Does
+
+1. **Calls the real Foundry Agent** — the same agent used in production
+2. **Collects answers + citations** from the agent
+3. **Evaluates quality** using 13 RAGAS metrics (LLM-as-judge)
+4. **Generates audit-ready Excel reports** with PASS/FAIL/SKIPPED status
+
+### Architecture
+
+```text
+data/test_cases.json
+        │
+        ▼
+scripts/query_foundry_agent.py       ← Calls real Azure Foundry Agent
+        │
+        ▼
+data/ragas_eval_dataset.json         ← RAGAS-ready dataset (list of rows)
+        │
+        ▼
+tests/test_ragas_eval.py             ← pytest orchestrator
+        │
+        ▼
+ragas_layer/ragas_runner.py          ← Core RAGAS evaluation engine
+        │
+        ▼
+artifacts/ragas/                     ← JSON + CSV results
+reports/bridge/                      ← Excel report
+
+---------------------------------------------------------------------
+
+
+Prerequisites
+Environment
+
+Python: 3.12+ (tested with 3.14.3)
+OS: Windows 11 (also works on Linux/macOS)
+Azure Access: DefaultAzureCredential with access to Foundry Agent
+------------------------------------------------------------------------------------------------
+Required Packages
+
+pip install ragas datasets pandas openpyxl azure-ai-agents azure-identity python-dotenv langchain-openai
+------------------------------------------------------------------------------------------------------
+
+Project Structure
+playready-qa-automation/
+├── .env                              # Credentials (not committed)
+├── data/
+│   ├── test_cases.json               # Input test questions
+│   └── ragas_eval_dataset.json       # Generated RAGAS dataset
+├── scripts/
+│   ├── query_foundry_agent.py        # Foundry agent caller
+│   └── generate_ragas_testset.py     # Optional: generate test cases from PDFs
+├── ragas_layer/
+│   └── ragas_runner.py               # Core RAGAS evaluation engine
+├── llm_provider.py                   # LLM/embedding provider config
+├── audit/
+│   ├── reporting.py                  # Enterprise Excel report generator
+│   └── compliance_validator.py       # Compliance audit checks
+├── tests/
+│   ├── test_ragas_eval.py            # RAGAS pytest trigger
+│   └── test_llm_provider_config.py   # LLM pre-flight check
+├── artifacts/
+│   └── ragas/
+│       ├── ragas_results.json        # Full evaluation payload
+│       ├── ragas_results.csv         # Per-row scores
+│       └── threshold_results.csv     # PASS/FAIL summary
+└── reports/
+    └── bridge/
+        └── Bridge_Evaluation_Report.xlsx  # Enterprise Excel
+
+
+---
+
+## ✅ Save this README
+
+```powershell
+code README_FOUNDRY_RAGAS.md
+Note ----
+this project structure missing with uploading of pDF and geneartion the test set with all needful to run the automation with foundry 

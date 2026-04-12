@@ -16,3 +16,6 @@ langchain-google-genai>=2.1.5
 langchain-ollama>=0.3.3
 openai>=1.66.0
 azure-identity>=1.16.0
+azure-ai-agents>=1.1.0
+azure-ai-projects>=1.0.0
+azure-ai-evaluation>=1.0.0 

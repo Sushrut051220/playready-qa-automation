@@ -15,13 +15,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 UI_ARTIFACT_DIR = PROJECT_ROOT / "artifacts" / "ui_runs"
 
 
-@pytest.mark.ui
 @pytest.mark.proof
 @pytest.mark.flaky(reruns=1, reruns_delay=2)
 def test_ui_proof_artifact(chatbot_page, request: pytest.FixtureRequest) -> None:
     base_url = os.getenv("BASE_URL", "").strip()
     if not base_url or "your-app.example.com" in base_url:
-        pytest.skip("Set a real BASE_URL in `.env` before running the live UI proof test.")
+        pytest.fail("BASE_URL is not configured. Set a real BASE_URL in `.env` before running the live UI proof test.")
 
     request.node._artifact_test_id = "ui_proof"
     prompt = os.getenv("UI_PROOF_PROMPT", "What is Microsoft PlayReady?").strip()

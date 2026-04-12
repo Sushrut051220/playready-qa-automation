@@ -22,6 +22,66 @@ YELLOW_FILL = PatternFill(fill_type="solid", fgColor="FFEB9C")
 BLUE_FILL = PatternFill(fill_type="solid", fgColor="DDEBF7")
 HEADER_FILL = PatternFill(fill_type="solid", fgColor="D9EAF7")
 HEADER_FONT = Font(bold=True)
+TIMESTAMP_SUFFIX_PATTERN = re.compile(r"_(\d{8}_\d{6}(?:_\d{1,6})?|\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2})$")
+
+
+def _read_bool_env(name: str, default: bool) -> bool:
+    raw_value = os.getenv(name)
+    if raw_value is None:
+        return default
+    return raw_value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _cleanup_report_archives(reports_root: Path, keep_latest_runs: int) -> None:
+    if keep_latest_runs < 1 or not reports_root.exists():
+        return
+
+    run_directories = [path for path in reports_root.iterdir() if path.is_dir()]
+    for stale_run in sorted(run_directories, key=lambda path: path.stat().st_mtime, reverse=True)[keep_latest_runs:]:
+        shutil.rmtree(stale_run, ignore_errors=True)
+
+
+def _cleanup_timestamped_metric_artifacts(directory: Path, canonical_files: set[str]) -> None:
+    if not directory.exists():
+        return
+
+    for file_path in directory.iterdir():
+        if not file_path.is_file() or file_path.name in canonical_files:
+            continue
+        if TIMESTAMP_SUFFIX_PATTERN.search(file_path.stem):
+            file_path.unlink(missing_ok=True)
+
+
+def _apply_artifact_retention_policy(root: Path) -> None:
+    keep_latest_runs = max(1, int(os.getenv("REPORT_RETENTION_RUNS", "1")))
+    cleanup_metric_artifacts = _read_bool_env("CLEAN_TIMESTAMPED_METRIC_ARTIFACTS", True)
+    cleanup_duplicate_artifacts = _read_bool_env("CLEAN_DUPLICATE_ARTIFACTS", True)
+
+    _cleanup_report_archives(root / "artifacts" / "reports", keep_latest_runs=keep_latest_runs)
+
+    if not cleanup_metric_artifacts:
+        cleanup_metric_artifacts = False
+
+    if cleanup_metric_artifacts:
+        _cleanup_timestamped_metric_artifacts(
+            root / "artifacts" / "dspy",
+            canonical_files={"dspy_results.json", "dspy_score_summary.json"},
+        )
+        _cleanup_timestamped_metric_artifacts(
+            root / "artifacts" / "ragas",
+            canonical_files={"ragas_results.json", "ragas_results.csv"},
+        )
+
+    if cleanup_duplicate_artifacts:
+        duplicate_pairs = [
+            (root / "artifacts" / "dspy" / "dspy_results.json", root / "reports" / "dspy_results.json"),
+            (root / "artifacts" / "dspy" / "dspy_score_summary.json", root / "reports" / "dspy_score_summary.json"),
+            (root / "artifacts" / "ragas" / "ragas_results.json", root / "reports" / "ragas_results.json"),
+            (root / "artifacts" / "ragas" / "ragas_results.csv", root / "reports" / "ragas_results.csv"),
+        ]
+        for artifact_file, report_file in duplicate_pairs:
+            if artifact_file.exists() and report_file.exists():
+                artifact_file.unlink(missing_ok=True)
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -54,6 +114,473 @@ def _copy_file_if_exists(src: Path, dest: Path) -> None:
         return
     dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(src, dest)
+
+
+def _generate_bridge_excel_report(bridge_report_dir: Path, ragas_csv_source: Path | None = None) -> None:
+    ragas_json_path = bridge_report_dir / "ragas_results.json"
+    if not ragas_json_path.exists():
+        return
+
+    ragas_payload = _load_json(ragas_json_path)
+    metric_details = ragas_payload.get("metric_details", {}) if isinstance(ragas_payload, dict) else {}
+    thresholds = ragas_payload.get("thresholds", {}) if isinstance(ragas_payload, dict) else {}
+    executed_metrics = set(ragas_payload.get("executed_metrics", [])) if isinstance(ragas_payload, dict) else set()
+    skipped_map = {
+        str(item.get("metric")): str(item.get("reason"))
+        for item in (ragas_payload.get("skipped_metrics", []) if isinstance(ragas_payload, dict) else [])
+        if isinstance(item, dict)
+    }
+    summary = ragas_payload.get("summary", {}) if isinstance(ragas_payload, dict) else {}
+    metric_row_counts = ragas_payload.get("metric_row_counts", {}) if isinstance(ragas_payload, dict) else {}
+
+    ragas_csv_path = ragas_csv_source or (bridge_report_dir / "ragas_results.csv")
+    ragas_csv_df = pd.DataFrame()
+    if ragas_csv_path.exists():
+        try:
+            ragas_csv_df = pd.read_csv(ragas_csv_path)
+        except Exception:
+            ragas_csv_df = pd.DataFrame()
+    if ragas_csv_df.empty:
+        payload_rows = ragas_payload.get("rows", []) if isinstance(ragas_payload, dict) else []
+        if isinstance(payload_rows, list) and payload_rows:
+            ragas_csv_df = pd.DataFrame(payload_rows)
+
+    core_metrics = ["answer_relevancy", "answer_accuracy", "response_correctness", "answer_completeness"]
+    evaluator_order = [
+        "answer_relevancy",
+        "answer_accuracy",
+        "faithfulness",
+        "context_precision",
+        "context_utilization",
+        "context_recall",
+        "context_relevance",
+        "response_groundedness",
+        "context_entity_recall",
+        "noise_sensitivity_relevant",
+        "noise_sensitivity_irrelevant",
+        "response_correctness",
+        "answer_completeness",
+    ]
+
+    metric_operators = {
+        "answer_relevancy": ">=",
+        "answer_accuracy": ">=",
+        "faithfulness": ">=",
+        "context_precision": ">=",
+        "context_utilization": ">=",
+        "context_recall": ">=",
+        "context_relevance": ">=",
+        "response_groundedness": ">=",
+        "context_entity_recall": ">=",
+        "noise_sensitivity_relevant": "<=",
+        "noise_sensitivity_irrelevant": "<=",
+        "response_correctness": ">=",
+        "answer_completeness": ">=",
+    }
+
+    metric_score_by_question: dict[str, dict[str, Any]] = {metric_name: {} for metric_name in evaluator_order}
+    for metric_name in evaluator_order:
+        for item in metric_details.get(metric_name, []) or []:
+            question = str(item.get("user_input") or item.get("question") or "").strip()
+            if not question:
+                continue
+            metric_score_by_question[metric_name][question] = item.get(metric_name)
+
+    bridge_dataset_path = bridge_report_dir / "ragas_eval_dataset.json"
+    bridge_dataset_rows = []
+    if bridge_dataset_path.exists():
+        loaded_rows = _load_json(bridge_dataset_path)
+        if isinstance(loaded_rows, list):
+            bridge_dataset_rows = loaded_rows
+
+    # Build a row-oriented view for the 4 core metrics from bridge dataset first,
+    # then backfill any extra metric-only questions that were not present in dataset.
+    core_rows: list[dict[str, Any]] = []
+    seen_questions: set[str] = set()
+    for item in bridge_dataset_rows:
+        question = str(item.get("question") or item.get("user_input") or "").strip()
+        if not question:
+            continue
+        seen_questions.add(question)
+
+        core_row: dict[str, Any] = {
+            "question": question,
+            "response": item.get("response") or item.get("answer") or "",
+            "ground_truth": item.get("reference") or item.get("ground_truth") or "",
+        }
+
+        metric_results: list[str] = []
+        for metric_name in core_metrics:
+            metric_value = metric_score_by_question.get(metric_name, {}).get(question)
+            core_row[metric_name] = metric_value if metric_value not in (None, "") else "N/A"
+            operator = metric_operators.get(metric_name, ">=")
+            threshold = thresholds.get(metric_name)
+            if threshold is None:
+                metric_result = "N/A"
+            else:
+                metric_result = _classify_metric_result(metric_value, threshold, operator=operator)
+            core_row[f"{metric_name}_result"] = metric_result
+            metric_results.append(metric_result)
+
+        if "FAIL" in metric_results:
+            core_row["overall_result"] = "FAIL"
+        elif "PASS" in metric_results:
+            core_row["overall_result"] = "PASS"
+        else:
+            core_row["overall_result"] = "N/A"
+
+        core_rows.append(core_row)
+
+    for question in sorted({q for metric_name in core_metrics for q in metric_score_by_question.get(metric_name, {}).keys()}):
+        if question in seen_questions:
+            continue
+
+        core_row = {
+            "question": question,
+            "response": "",
+            "ground_truth": "",
+        }
+        metric_results = []
+        for metric_name in core_metrics:
+            metric_value = metric_score_by_question.get(metric_name, {}).get(question)
+            core_row[metric_name] = metric_value if metric_value not in (None, "") else "N/A"
+            operator = metric_operators.get(metric_name, ">=")
+            threshold = thresholds.get(metric_name)
+            if threshold is None:
+                metric_result = "N/A"
+            else:
+                metric_result = _classify_metric_result(metric_value, threshold, operator=operator)
+            core_row[f"{metric_name}_result"] = metric_result
+            metric_results.append(metric_result)
+
+        if "FAIL" in metric_results:
+            core_row["overall_result"] = "FAIL"
+        elif "PASS" in metric_results:
+            core_row["overall_result"] = "PASS"
+        else:
+            core_row["overall_result"] = "N/A"
+
+        core_rows.append(core_row)
+
+    # Build a per-question score view containing all 13 evaluators + bridge evidence columns.
+    question_row_map: dict[str, dict[str, Any]] = {}
+    for item in bridge_dataset_rows:
+        question = str(item.get("question") or item.get("user_input") or "").strip()
+        if not question:
+            continue
+        contexts = item.get("retrieved_contexts") or item.get("contexts") or []
+        citations = item.get("agent_citations") or []
+        citation_quotes = item.get("agent_citation_quotes") or []
+        row = {
+            "id": item.get("id"),
+            "question": question,
+            "response": item.get("response") or item.get("answer"),
+            "ground_truth": item.get("reference") or item.get("ground_truth"),
+            "retrieved_chunks": "\n\n---\n\n".join(str(c) for c in contexts if c),
+            "citations": "\n".join(str(c) for c in citations if c),
+            "citation_quotes": "\n".join(str(c) for c in citation_quotes if c),
+        }
+        for metric_name in evaluator_order:
+            row[metric_name] = None
+        question_row_map[question] = row
+
+    for metric_name in evaluator_order:
+        for item in metric_details.get(metric_name, []) or []:
+            question = str(item.get("user_input") or item.get("question") or "").strip()
+            if not question:
+                continue
+            row = question_row_map.setdefault(
+                question,
+                {
+                    "id": item.get("id"),
+                    "question": question,
+                    "response": item.get("response"),
+                    "ground_truth": item.get("reference") or item.get("ground_truth"),
+                    "retrieved_chunks": "\n\n---\n\n".join(str(c) for c in (item.get("retrieved_contexts") or [])),
+                    "citations": "",
+                    "citation_quotes": "",
+                    **{name: None for name in evaluator_order},
+                },
+            )
+            if not row.get("response") and item.get("response"):
+                row["response"] = item.get("response")
+            if not row.get("ground_truth") and (item.get("reference") or item.get("ground_truth")):
+                row["ground_truth"] = item.get("reference") or item.get("ground_truth")
+            row[metric_name] = item.get(metric_name)
+
+    all_evaluator_rows = list(question_row_map.values())
+
+    threshold_rows = []
+    for metric_name in evaluator_order:
+        operator = "<=" if metric_name in {"noise_sensitivity_relevant", "noise_sensitivity_irrelevant"} else ">="
+        threshold_rows.append(
+            {
+                "evaluator": metric_name,
+                "operator": operator,
+                "threshold": thresholds.get(metric_name) if metric_name in executed_metrics else None,
+                "executed": "YES" if metric_name in executed_metrics else "NO",
+                "average_score": summary.get(metric_name),
+                "rows_evaluated": metric_row_counts.get(metric_name, 0),
+                "skip_reason": skipped_map.get(metric_name, ""),
+            }
+        )
+
+    excel_path = bridge_report_dir / "Bridge_Evaluation_Report.xlsx"
+    with pd.ExcelWriter(excel_path, engine="openpyxl") as writer:
+        pd.DataFrame(
+            core_rows,
+            columns=[
+                "question",
+                "response",
+                "ground_truth",
+                "answer_relevancy",
+                "answer_relevancy_result",
+                "answer_accuracy",
+                "answer_accuracy_result",
+                "response_correctness",
+                "response_correctness_result",
+                "answer_completeness",
+                "answer_completeness_result",
+                "overall_result",
+            ],
+        ).to_excel(writer, sheet_name="Core_4_Metrics", index=False)
+        pd.DataFrame(
+            all_evaluator_rows,
+            columns=[
+                "id",
+                "question",
+                "response",
+                "ground_truth",
+                "retrieved_chunks",
+                "citations",
+                "citation_quotes",
+                *evaluator_order,
+            ],
+        ).to_excel(writer, sheet_name="All_13_Evaluators", index=False)
+        pd.DataFrame(
+            threshold_rows,
+            columns=["evaluator", "operator", "threshold", "executed", "average_score", "rows_evaluated", "skip_reason"],
+        ).to_excel(writer, sheet_name="Thresholds", index=False)
+        ragas_csv_df.to_excel(writer, sheet_name="RAGAS_Results_CSV", index=False)
+
+    workbook = load_workbook(excel_path)
+    for sheet in workbook.worksheets:
+        if sheet.max_row >= 1:
+            sheet.freeze_panes = "A2"
+            for cell in sheet[1]:
+                cell.font = HEADER_FONT
+                cell.fill = HEADER_FILL
+                cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+
+        for column_index, column_cells in enumerate(sheet.iter_cols(1, sheet.max_column), start=1):
+            max_length = max(len(str(cell.value or "")) for cell in column_cells)
+            sheet.column_dimensions[get_column_letter(column_index)].width = min(max(max_length + 2, 14), 80)
+
+    if "Thresholds" in workbook.sheetnames:
+        threshold_sheet = workbook["Thresholds"]
+        headers = {
+            str(threshold_sheet.cell(row=1, column=index).value or ""): index
+            for index in range(1, threshold_sheet.max_column + 1)
+        }
+        for row_index in range(2, threshold_sheet.max_row + 1):
+            executed_cell = threshold_sheet.cell(row=row_index, column=headers.get("executed", 0))
+            if executed_cell.value == "YES":
+                executed_cell.fill = GREEN_FILL
+            else:
+                executed_cell.fill = YELLOW_FILL
+
+    if "All_13_Evaluators" in workbook.sheetnames:
+        eval_sheet = workbook["All_13_Evaluators"]
+        headers = {
+            str(eval_sheet.cell(row=1, column=index).value or ""): index
+            for index in range(1, eval_sheet.max_column + 1)
+        }
+        wrap_headers = ["question", "response", "ground_truth", "retrieved_chunks", "citations", "citation_quotes"]
+        for row_index in range(2, eval_sheet.max_row + 1):
+            for wrap_header in wrap_headers:
+                if wrap_header in headers:
+                    eval_sheet.cell(row=row_index, column=headers[wrap_header]).alignment = Alignment(
+                        wrap_text=True,
+                        vertical="top",
+                    )
+
+            for metric_name in evaluator_order:
+                if metric_name not in headers:
+                    continue
+                score_cell = eval_sheet.cell(row=row_index, column=headers[metric_name])
+                score_value = score_cell.value
+                if score_value in (None, ""):
+                    score_cell.fill = YELLOW_FILL
+                    continue
+
+                threshold_value = thresholds.get(metric_name)
+                if threshold_value is None:
+                    continue
+
+                try:
+                    numeric_score = float(score_value)
+                    numeric_threshold = float(threshold_value)
+                    if metric_name in {"noise_sensitivity_relevant", "noise_sensitivity_irrelevant"}:
+                        score_cell.fill = GREEN_FILL if numeric_score <= numeric_threshold else RED_FILL
+                    else:
+                        score_cell.fill = GREEN_FILL if numeric_score >= numeric_threshold else RED_FILL
+                except Exception:
+                    score_cell.fill = YELLOW_FILL
+
+    if "Core_4_Metrics" in workbook.sheetnames:
+        core_sheet = workbook["Core_4_Metrics"]
+        headers = {str(core_sheet.cell(row=1, column=index).value or ""): index for index in range(1, core_sheet.max_column + 1)}
+        for row_index in range(2, core_sheet.max_row + 1):
+            for wrap_header in ["question", "response", "ground_truth"]:
+                if wrap_header in headers:
+                    core_sheet.cell(row=row_index, column=headers[wrap_header]).alignment = Alignment(wrap_text=True, vertical="top")
+
+            for metric_name in core_metrics:
+                if metric_name in headers:
+                    score_cell = core_sheet.cell(row=row_index, column=headers[metric_name])
+                    score_value = score_cell.value
+                    if score_value in (None, ""):
+                        score_cell.fill = YELLOW_FILL
+                    else:
+                        threshold_value = thresholds.get(metric_name)
+                        if threshold_value is None:
+                            score_cell.fill = YELLOW_FILL
+                        else:
+                            try:
+                                numeric_score = float(score_value)
+                                numeric_threshold = float(threshold_value)
+                                if metric_operators.get(metric_name) == "<=":
+                                    score_cell.fill = GREEN_FILL if numeric_score <= numeric_threshold else RED_FILL
+                                else:
+                                    score_cell.fill = GREEN_FILL if numeric_score >= numeric_threshold else RED_FILL
+                            except Exception:
+                                score_cell.fill = YELLOW_FILL
+
+                result_header = f"{metric_name}_result"
+                if result_header in headers:
+                    result_cell = core_sheet.cell(row=row_index, column=headers[result_header])
+                    if result_cell.value == "PASS":
+                        result_cell.fill = GREEN_FILL
+                    elif result_cell.value == "FAIL":
+                        result_cell.fill = RED_FILL
+                    else:
+                        result_cell.fill = YELLOW_FILL
+
+            if "overall_result" in headers:
+                overall_cell = core_sheet.cell(row=row_index, column=headers["overall_result"])
+                if overall_cell.value == "PASS":
+                    overall_cell.fill = GREEN_FILL
+                elif overall_cell.value == "FAIL":
+                    overall_cell.fill = RED_FILL
+                else:
+                    overall_cell.fill = YELLOW_FILL
+
+    workbook.save(excel_path)
+
+
+def _prune_ui_e2e_report_columns(ui_report_path: Path) -> None:
+    """Remove all RAGAS metric columns from UI E2E report — RAGAS is only for Bridge mode."""
+    if not ui_report_path.exists():
+        return
+
+    workbook = load_workbook(ui_report_path)
+    if "Test Results" not in workbook.sheetnames:
+        workbook.save(ui_report_path)
+        return
+
+    sheet = workbook["Test Results"]
+    headers = [str(sheet.cell(row=1, column=column).value or "") for column in range(1, sheet.max_column + 1)]
+    header_to_index = {header: index + 1 for index, header in enumerate(headers)}
+
+    # All RAGAS columns — remove them entirely from UI E2E mode
+    ragas_metric_names = [
+        "ragas_answer_relevancy",
+        "ragas_answer_accuracy",
+        "ragas_faithfulness",
+        "ragas_context_precision",
+        "ragas_context_utilization",
+        "ragas_context_recall",
+        "ragas_context_relevance",
+        "ragas_response_groundedness",
+        "ragas_context_entity_recall",
+        "ragas_noise_sensitivity_relevant",
+        "ragas_noise_sensitivity_irrelevant",
+        "ragas_response_correctness",
+        "ragas_answer_completeness",
+    ]
+
+    delete_columns: list[int] = []
+    for metric_name in ragas_metric_names:
+        result_header = f"{metric_name}_result"
+        threshold_header_candidates = [f"{metric_name}_pass_if>=", f"{metric_name}_pass_if<="]
+        # Remove metric, result, and threshold columns
+        for header_name in [metric_name, *threshold_header_candidates, result_header]:
+            column_index = header_to_index.get(header_name)
+            if column_index is not None:
+                delete_columns.append(column_index)
+
+    for column_index in sorted(set(delete_columns), reverse=True):
+        sheet.delete_cols(column_index, 1)
+
+    workbook.save(ui_report_path)
+
+
+def _sync_canonical_outputs_to_reports(root: Path, report_mode: str = "all") -> None:
+    """Populate report folders based on *report_mode*.
+
+    report_mode values:
+      "bridge"  – only generate reports/bridge/ outputs (RAGAS / bridge pipeline)
+      "ui_e2e"  – only generate reports/ui_e2e/ outputs (UI + DSPy pipeline)
+      "all"     – generate both (default, backward-compatible)
+    """
+    reports_dir = root / "reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    ui_report_dir = reports_dir / "ui_e2e"
+    bridge_report_dir = reports_dir / "bridge"
+    temp_latest_report = reports_dir / "Latest_Report.xlsx"
+
+    generate_ui_e2e = report_mode in {"ui_e2e", "all"}
+    generate_bridge = report_mode in {"bridge", "all"}
+
+    if generate_ui_e2e:
+        ui_report_dir.mkdir(parents=True, exist_ok=True)
+        # Remove stale sample workbooks so ui_e2e contains only canonical outputs.
+        for stale_sample in ui_report_dir.glob("*_SAMPLE.xlsx"):
+            stale_sample.unlink(missing_ok=True)
+        # All UI/E2E outputs go only into reports/ui_e2e/ — nothing at the reports/ root.
+        ui_report_path = ui_report_dir / "Latest_Report_UI_E2E.xlsx"
+        _copy_file_if_exists(temp_latest_report, ui_report_path)
+        _prune_ui_e2e_report_columns(ui_report_path)
+        # pytest HTML — overall test pass/fail summary for this run.
+        _copy_file_if_exists(root / "artifacts" / "reports" / "pytest_report.html", ui_report_dir / "pytest_report.html")
+        # Playwright trace ZIPs — per-test screenshots, clicks, DOM snapshots (open with: playwright show-trace <file>).
+        traces_src = root / "artifacts" / "ui_runs"
+        traces_dst = ui_report_dir / "playwright_traces"
+        if traces_src.exists():
+            traces_dst.mkdir(parents=True, exist_ok=True)
+            for trace_zip in traces_src.rglob("trace.zip"):
+                dest = traces_dst / trace_zip.parent.name / "trace.zip"
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                _copy_file_if_exists(trace_zip, dest)
+        _copy_file_if_exists(root / "artifacts" / "dspy" / "dspy_results.json", ui_report_dir / "dspy_results.json")
+        _copy_file_if_exists(root / "artifacts" / "dspy" / "dspy_score_summary.json", ui_report_dir / "dspy_score_summary.json")
+
+    if generate_bridge:
+        bridge_report_dir.mkdir(parents=True, exist_ok=True)
+        # All bridge outputs go only into reports/bridge/ — nothing at the reports/ root.
+        # pytest HTML — overall pass/fail for the ragas/bridge test run.
+        _copy_file_if_exists(root / "artifacts" / "reports" / "pytest_report.html", bridge_report_dir / "pytest_report.html")
+        _copy_file_if_exists(root / "artifacts" / "ragas" / "ragas_results.json", bridge_report_dir / "ragas_results.json")
+        _copy_file_if_exists(root / "data" / "ragas_eval_dataset.json", bridge_report_dir / "ragas_eval_dataset.json")
+        _generate_bridge_excel_report(
+            bridge_report_dir,
+            ragas_csv_source=root / "artifacts" / "ragas" / "ragas_results.csv",
+        )
+        # Raw CSV is now embedded into the Excel workbook as a dedicated sheet.
+        (bridge_report_dir / "ragas_results.csv").unlink(missing_ok=True)
+
+    # Always remove intermediate root workbook, even for bridge-only runs.
+    temp_latest_report.unlink(missing_ok=True)
 
 
 def _load_ui_artifacts(ui_dir: Path) -> dict[str, dict[str, Any]]:
@@ -139,6 +666,14 @@ def _build_metric_thresholds(ragas_results: dict[str, Any]) -> dict[str, float]:
             ragas_thresholds.get("noise_sensitivity_irrelevant", os.getenv("RAGAS_NOISE_SENSITIVITY_IRRELEVANT_THRESHOLD", "0.30")),
             0.30,
         ),
+        "ragas_response_correctness": _read_float(
+            ragas_thresholds.get("response_correctness", os.getenv("RAGAS_RESPONSE_CORRECTNESS_THRESHOLD", "0.70")),
+            0.70,
+        ),
+        "ragas_answer_completeness": _read_float(
+            ragas_thresholds.get("answer_completeness", os.getenv("RAGAS_ANSWER_COMPLETENESS_THRESHOLD", "3.0")),
+            3.0,
+        ),
     }
 
 
@@ -160,6 +695,8 @@ def _build_metric_operators() -> dict[str, str]:
         "ragas_context_entity_recall": ">=",
         "ragas_noise_sensitivity_relevant": "<=",
         "ragas_noise_sensitivity_irrelevant": "<=",
+        "ragas_response_correctness": ">=",
+        "ragas_answer_completeness": ">=",
     }
 
 
@@ -211,6 +748,8 @@ def _build_results_rows(
         "ragas_context_entity_recall",
         "ragas_noise_sensitivity_relevant",
         "ragas_noise_sensitivity_irrelevant",
+        "ragas_response_correctness",
+        "ragas_answer_completeness",
     ]
     metric_counters = {metric: {"PASS": 0, "FAIL": 0, "N/A": 0} for metric in metric_order}
 
@@ -220,6 +759,11 @@ def _build_results_rows(
     for test_id, payload in ui_artifacts.items():
         answer_text = str(payload.get("answer_text") or payload.get("answer") or "").strip()
         base_prompt = _strip_nonce(payload.get("base_prompt") or payload.get("prompt"))
+        run_id = str(payload.get("run_id") or "").strip()
+        nonce_token = str(payload.get("nonce_token") or "").strip()
+        prompt_sent = str(payload.get("prompt_sent") or "")
+        run_id_visible_in_prompt = bool(payload.get("run_id_visible_in_prompt", False))
+        run_id_nonce_present = bool(nonce_token and nonce_token in prompt_sent)
         dspy_row = dspy_by_id.get(test_id, {})
         ragas_row = ragas_by_id.get(test_id) or ragas_by_question.get(base_prompt, {})
         test_case = test_cases_by_id.get(test_id, {})
@@ -247,6 +791,8 @@ def _build_results_rows(
             "ragas_context_entity_recall": ragas_row.get("context_entity_recall", ""),
             "ragas_noise_sensitivity_relevant": ragas_row.get("noise_sensitivity_relevant", ""),
             "ragas_noise_sensitivity_irrelevant": ragas_row.get("noise_sensitivity_irrelevant", ""),
+            "ragas_response_correctness": ragas_row.get("response_correctness", ""),
+            "ragas_answer_completeness": ragas_row.get("answer_completeness", ""),
         }
 
         issues = list(dspy_row.get("issues", []) or [])
@@ -258,6 +804,9 @@ def _build_results_rows(
         row: dict[str, Any] = {
             "test_id": test_id,
             "prompt": base_prompt or str(test_case.get("prompt") or payload.get("prompt") or ""),
+            "run_id": run_id,
+            "run_id_visible_in_prompt": "YES" if run_id_visible_in_prompt else "NO",
+            "run_id_nonce_present": "YES" if run_id_nonce_present else "NO",
             "answer_text": answer_text,
             "ground_truth": str(ground_truth),
         }
@@ -285,6 +834,8 @@ def _build_results_rows(
         row["expected_pdfs"] = ", ".join(expected_pdfs) if expected_pdfs else ""
         row["matched_pdfs"] = ", ".join(matched_pdfs) if matched_pdfs else ""
         row["artifact_json_path"] = str(project_root / "artifacts" / "ui_runs" / f"{test_id}.json")
+        row["failure_screenshot_path"] = str(project_root / "artifacts" / "ui_runs" / test_id / "screenshot.png")
+        row["failure_trace_path"] = str(project_root / "artifacts" / "ui_runs" / test_id / "trace.zip")
         results_rows.append(row)
 
         if status == "FAIL":
@@ -293,6 +844,9 @@ def _build_results_rows(
                     "test_id": test_id,
                     "failure_reason": failure_reason,
                     "answer_text_excerpt": answer_text[:250],
+                    "artifact_json_path": row["artifact_json_path"],
+                    "failure_screenshot_path": row["failure_screenshot_path"],
+                    "failure_trace_path": row["failure_trace_path"],
                 }
             )
 
@@ -339,11 +893,17 @@ def _build_summary_rows(results_rows: list[dict[str, Any]], pdf_coverage_rows: l
     failed = sum(1 for row in results_rows if row.get("final_status", row.get("status")) == "FAIL")
     total = len(results_rows)
     pass_rate = round((passed / total) * 100, 2) if total else 0.0
+    run_id_captured = sum(1 for row in results_rows if str(row.get("run_id") or "").strip())
+    run_id_visible = sum(1 for row in results_rows if row.get("run_id_visible_in_prompt") == "YES")
+    run_id_nonce_verified = sum(1 for row in results_rows if row.get("run_id_nonce_present") == "YES")
     return [
         {"metric": "total_tests", "value": total},
         {"metric": "passed", "value": passed},
         {"metric": "failed", "value": failed},
         {"metric": "pass_rate_percent", "value": pass_rate},
+        {"metric": "run_id_captured_cases", "value": run_id_captured},
+        {"metric": "run_id_visible_prompt_cases", "value": run_id_visible},
+        {"metric": "run_id_nonce_verified_cases", "value": run_id_nonce_verified},
         {"metric": "untested_pdfs", "value": sum(1 for row in pdf_coverage_rows if row["tested"] == "NO")},
         {"metric": "execution_timestamp", "value": execution_timestamp},
         {"metric": "traceability", "value": "Each row maps to artifacts/ui_runs/<test_id>.json for the real chatbot answer."},
@@ -353,6 +913,9 @@ def _build_summary_rows(results_rows: list[dict[str, Any]], pdf_coverage_rows: l
 def _build_legend_rows(metric_thresholds: dict[str, float]) -> list[dict[str, Any]]:
     return [
         {"field": "prompt", "description": "The user question sent to the chatbot.", "importance": "Helps reviewers see exactly what was tested."},
+        {"field": "run_id", "description": "Unique run identifier captured for this test case.", "importance": "Confirms request-level traceability for this execution."},
+        {"field": "run_id_visible_in_prompt", "description": "Whether run ID was intentionally appended to the sent prompt.", "importance": "Verifies the run-id visibility mode used during UI execution."},
+        {"field": "run_id_nonce_present", "description": "Whether nonce token was found inside prompt_sent.", "importance": "Validates that run-id nonce was actually injected when visibility is enabled."},
         {"field": "answer_text", "description": "The real chatbot response captured from the UI.", "importance": "This is the business-visible answer for QA and audit review."},
         {"field": "ground_truth", "description": "The expected reference answer or expected behavior for the test case.", "importance": "Lets reviewers compare actual output with the intended expected outcome."},
         {"field": "final_status", "description": "Overall final test decision.", "importance": "Lets managers quickly see whether a test case passed or failed."},
@@ -372,8 +935,12 @@ def _build_legend_rows(metric_thresholds: dict[str, float]) -> list[dict[str, An
         {"field": "ragas_context_entity_recall", "description": f"Measures how many important entities from the reference are covered by the retrieved context. Current threshold: {metric_thresholds['ragas_context_entity_recall']}", "importance": "Useful for fact-heavy scenarios where retrieving the right named entities matters."},
         {"field": "ragas_noise_sensitivity_relevant", "description": f"Measures how often incorrect claims appear when using retrieved relevant context. Lower is better; pass if <= {metric_thresholds['ragas_noise_sensitivity_relevant']}", "importance": "Useful for checking whether the system is being misled into wrong answers even when relevant evidence is present."},
         {"field": "ragas_noise_sensitivity_irrelevant", "description": f"Measures how often incorrect claims appear due to irrelevant/noisy context. Lower is better; pass if <= {metric_thresholds['ragas_noise_sensitivity_irrelevant']}", "importance": "Useful for checking robustness against distractor or noisy retrieval."},
+        {"field": "ragas_response_correctness", "description": f"Combined semantic similarity + factual correctness vs ground truth (weighted F1). Current threshold: {metric_thresholds['ragas_response_correctness']}", "importance": "Measures overall correctness of the response without requiring retrieved contexts."},
+        {"field": "ragas_answer_completeness", "description": f"LLM judge rates how fully the response addresses all aspects of the question (1-5 scale). Current threshold: {metric_thresholds['ragas_answer_completeness']}", "importance": "Useful for detecting partially-answered questions without needing retrieved contexts."},
         {"field": "Green / Red / Yellow", "description": "Green = pass, Red = fail, Yellow = not available / skipped.", "importance": "Allows instant visual scanning of metric health."},
         {"field": "artifact_json_path", "description": "Path to the raw chatbot evidence JSON.", "importance": "Provides traceability for audit and root-cause analysis."},
+        {"field": "failure_screenshot_path", "description": "Path to Playwright screenshot captured on failure.", "importance": "Visual UI evidence for failed test cases."},
+        {"field": "failure_trace_path", "description": "Path to Playwright trace.zip captured on failure.", "importance": "Detailed click/network/DOM replay for root-cause analysis."},
     ]
 
 
@@ -407,7 +974,7 @@ def _style_workbook(excel_path: Path) -> None:
                 elif status_cell.value == "FAIL":
                     status_cell.fill = RED_FILL
 
-            for wrap_header in ["prompt", "answer_text", "ground_truth", "artifact_json_path"]:
+            for wrap_header in ["prompt", "answer_text", "ground_truth", "artifact_json_path", "failure_screenshot_path", "failure_trace_path"]:
                 if wrap_header in headers:
                     results_sheet.cell(row=row_index, column=headers[wrap_header]).alignment = Alignment(wrap_text=True, vertical="top")
 
@@ -480,6 +1047,8 @@ def generate_enterprise_excel_report(
     root = Path(project_root)
     reports_dir = root / "reports"
     reports_dir.mkdir(parents=True, exist_ok=True)
+    # Latest_Report.xlsx is a temporary intermediate file — _sync_canonical_outputs_to_reports
+    # copies it into the correct subfolder (ui_e2e) and it can then be cleaned up.
     excel_path = reports_dir / "Latest_Report.xlsx"
 
     ui_artifacts = _load_ui_artifacts(run_root / "ui_runs")
@@ -494,6 +1063,9 @@ def generate_enterprise_excel_report(
     results_columns = [
         "test_id",
         "prompt",
+        "run_id",
+        "run_id_visible_in_prompt",
+        "run_id_nonce_present",
         "answer_text",
         "ground_truth",
         "final_status",
@@ -545,12 +1117,39 @@ def generate_enterprise_excel_report(
         "ragas_noise_sensitivity_irrelevant",
         "ragas_noise_sensitivity_irrelevant_pass_if<=",
         "ragas_noise_sensitivity_irrelevant_result",
+        "ragas_response_correctness",
+        "ragas_response_correctness_pass_if>=",
+        "ragas_response_correctness_result",
+        "ragas_answer_completeness",
+        "ragas_answer_completeness_pass_if>=",
+        "ragas_answer_completeness_result",
         "expected_pdfs",
         "matched_pdfs",
         "artifact_json_path",
+        "failure_screenshot_path",
+        "failure_trace_path",
     ]
 
     with pd.ExcelWriter(excel_path, engine="openpyxl") as writer:
+        # Extract DSPy evaluation metadata for authentication
+        dspy_metadata = dspy_payload.get("metadata", {}) if isinstance(dspy_payload, dict) else {}
+        metadata_rows = []
+        if dspy_metadata:
+            metadata_rows.append({"attribute": "Evaluation Timestamp", "value": dspy_metadata.get("evaluation_timestamp", "N/A")})
+            metadata_rows.append({"attribute": "LLM Provider", "value": dspy_metadata.get("llm_provider", "N/A")})
+            metadata_rows.append({"attribute": "DSPy Version", "value": dspy_metadata.get("dspy_version", "N/A")})
+            metadata_rows.append({"attribute": "Min Score Threshold", "value": dspy_metadata.get("min_score_threshold", "N/A")})
+            metadata_rows.append({"attribute": "RAGAS Profile", "value": dspy_metadata.get("ragas_profile", "N/A")})
+            metadata_rows.append({"attribute": "Results Path", "value": dspy_metadata.get("artifacts_path", "N/A")})
+            metadata_rows.append({"attribute": "Results File", "value": dspy_metadata.get("dspy_results_file", "N/A")})
+        
+        if metadata_rows:
+            pd.DataFrame(metadata_rows, columns=["attribute", "value"]).to_excel(
+                writer,
+                sheet_name="Evaluation_Metadata",
+                index=False,
+            )
+        
         pd.DataFrame(test_summary_rows, columns=["evaluator", "pass_rule", "pass_threshold", "PASS", "FAIL", "N/A"]).to_excel(
             writer,
             sheet_name="Test Summary",
@@ -566,7 +1165,10 @@ def generate_enterprise_excel_report(
             sheet_name="PDF Coverage",
             index=False,
         )
-        pd.DataFrame(failures_rows, columns=["test_id", "failure_reason", "answer_text_excerpt"]).to_excel(
+        pd.DataFrame(
+            failures_rows,
+            columns=["test_id", "failure_reason", "answer_text_excerpt", "artifact_json_path", "failure_screenshot_path", "failure_trace_path"],
+        ).to_excel(
             writer,
             sheet_name="Failures Only",
             index=False,
@@ -590,6 +1192,7 @@ def create_enterprise_reporting_assets(
     project_root: str | Path,
     dspy_results: dict[str, Any] | None = None,
     ragas_results: dict[str, Any] | None = None,
+    report_mode: str = "all",
 ) -> dict[str, Any]:
     root = Path(project_root)
     execution_timestamp = datetime.now(timezone.utc).strftime(RUN_FOLDER_FORMAT)
@@ -604,11 +1207,18 @@ def create_enterprise_reporting_assets(
 
     excel_path = generate_enterprise_excel_report(root, run_root, dspy_results=dspy_results, ragas_results=ragas_results)
 
+    _sync_canonical_outputs_to_reports(root, report_mode=report_mode)
+
     manifest = {
         "execution_timestamp": execution_timestamp,
         "run_root": str(run_root),
         "latest_excel_report": str(excel_path),
+        "report_mode": report_mode,
         "traceability_note": "Real chatbot responses are preserved in artifacts/reports/<timestamp>/ui_runs/<test_id>.json and mirrored in artifacts/ui_runs/<test_id>.json.",
     }
     (run_root / "run_manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    # Keep report artifacts compact while preserving the latest run and canonical outputs.
+    _apply_artifact_retention_policy(root)
+
     return manifest

@@ -77,8 +77,8 @@ def _get_openai_embedding_model() -> str:
 
 
 def get_metrics_profile() -> str:
-    profile = os.getenv("RAGAS_METRICS_PROFILE", "fast").strip().lower()
-    return profile if profile in {"fast", "full"} else "fast"
+    profile = os.getenv("RAGAS_METRICS_PROFILE", "full").strip().lower()
+    return profile if profile in {"smoke", "fast", "full"} else "fast"
 
 
 def get_model_label() -> str:
@@ -174,7 +174,7 @@ def configure_dspy_lm() -> str | None:
 
 def build_ragas_dependencies() -> tuple[Any | None, Any | None, str | None, dict[str, str]]:
     provider = get_llm_provider()
-    skip_if_missing = _is_truthy(os.getenv("RAGAS_SKIP_LLM_METRICS_IF_NO_KEY", "true"), default=True)
+    skip_if_missing = _is_truthy(os.getenv("RAGAS_SKIP_LLM_METRICS_IF_NO_KEY", "false"), default=False)
     provider_meta = {"provider": provider, "model": get_model_label(), "metrics_profile": get_metrics_profile()}
 
     try:
@@ -210,7 +210,14 @@ def build_ragas_dependencies() -> tuple[Any | None, Any | None, str | None, dict
             return None, None, f"Failed to initialize Ollama evaluator dependencies: {exc}", provider_meta
 
     if provider == "openai":
-        raw_api_key = (os.getenv("AZURE_OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY") or "").strip()
+        # In Azure OpenAI mode, ONLY check AZURE_OPENAI_API_KEY (not OPENAI_API_KEY) to
+        # determine whether to use key auth vs DefaultAzureCredential token auth.
+        # DSPy's build_dspy_lm() sets os.environ["OPENAI_API_KEY"] = JWT_token for its
+        # own use — we must not treat that JWT as a real Azure API key here.
+        if _is_azure_openai_mode():
+            raw_api_key = (os.getenv("AZURE_OPENAI_API_KEY") or "").strip()
+        else:
+            raw_api_key = (os.getenv("AZURE_OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY") or "").strip()
         use_token_auth = _is_azure_openai_mode() and not raw_api_key
 
         if not use_token_auth and not raw_api_key and skip_if_missing:
@@ -221,7 +228,21 @@ def build_ragas_dependencies() -> tuple[Any | None, Any | None, str | None, dict
         try:
             from openai import AzureOpenAI, OpenAI
             from ragas.llms import llm_factory
-            from ragas.embeddings import embedding_factory
+            from ragas.embeddings import OpenAIEmbeddings as _RagasOpenAIEmbeddings
+
+            class _AzureRagasEmbeddings(_RagasOpenAIEmbeddings):
+                """Adds LangChain-style embed_query/embed_documents so RAGAS metrics can call them directly."""
+
+                def embed_query(self, text: str):
+                    return self.embed_text(text)
+
+                def embed_documents(self, texts):
+                    return self.embed_texts(texts)
+
+            # Dedicated embedding client: prefers a short API key on the cognitiveservices
+            # endpoint to avoid "Request Header Fields Too Large" caused by 9KB JWT tokens.
+            embed_api_key = (os.getenv("AZURE_OPENAI_EMBEDDING_API_KEY") or "").strip()
+            embed_base_url = (os.getenv("AZURE_OPENAI_EMBEDDING_BASE_URL") or "").strip().rstrip("/")
 
             if _is_azure_openai_mode():
                 base_url = (_get_openai_base_url() or "").rstrip("/")
@@ -229,9 +250,7 @@ def build_ragas_dependencies() -> tuple[Any | None, Any | None, str | None, dict
                 if use_token_auth:
                     from azure.identity import DefaultAzureCredential, get_bearer_token_provider
                     credential = DefaultAzureCredential()
-                    token_provider = get_bearer_token_provider(
-                        credential, "https://cognitiveservices.azure.com/.default"
-                    )
+                    token_provider = get_bearer_token_provider(credential, "https://cognitiveservices.azure.com/.default")
                     oai_client = AzureOpenAI(
                         azure_endpoint=base_url,
                         api_version=api_version,
@@ -243,11 +262,30 @@ def build_ragas_dependencies() -> tuple[Any | None, Any | None, str | None, dict
                         api_version=api_version,
                         api_key=raw_api_key,
                     )
+
+                if not use_token_auth and embed_api_key and embed_base_url:
+                    # API-key mode: use a dedicated client on the cognitiveservices endpoint.
+                    embed_client = AzureOpenAI(
+                        azure_endpoint=embed_base_url,
+                        api_version="2023-05-15",
+                        api_key=embed_api_key,
+                    )
+                else:
+                    # Token-auth mode: reuse the LLM client (azure_ad_token_provider on
+                    # services.ai.azure.com).  Key auth is disabled on this resource, so
+                    # the AZURE_OPENAI_EMBEDDING_API_KEY env var is intentionally ignored here.
+                    # Authorization: Bearer (not api-key) is required and accepted by that endpoint.
+                    embed_client = oai_client
             else:
                 oai_client = OpenAI(api_key=raw_api_key)
+                embed_client = oai_client
 
-            ragas_llm = llm_factory(_get_openai_chat_model(), client=oai_client)
-            ragas_embeddings = embedding_factory("openai", model=_get_openai_embedding_model(), client=oai_client)
+            ragas_llm = llm_factory(
+                _get_openai_chat_model(),
+                client=oai_client,
+                max_tokens=int(os.getenv("RAGAS_LLM_MAX_TOKENS", "16000")),
+            )
+            ragas_embeddings = _AzureRagasEmbeddings(client=embed_client, model=_get_openai_embedding_model())
             return ragas_llm, ragas_embeddings, None, provider_meta
         except Exception as exc:
             return None, None, f"Failed to initialize OpenAI/Azure OpenAI evaluator dependencies: {exc}", provider_meta

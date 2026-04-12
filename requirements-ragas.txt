@@ -12,3 +12,5 @@ openai>=1.66.0
 azure-identity>=1.16.0
 tenacity>=9.0.0
 dspy-ai>=2.6.0
+azure-ai-evaluation>=1.0.0
+azure-ai-projects>=1.0.0

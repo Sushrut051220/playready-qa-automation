@@ -1,0 +1,15 @@
+{
+  "example_count": 8,
+  "average_score": 0.815,
+  "pass_rate": 0.75,
+  "failures": 8,
+  "strict_grounding_failures": 0,
+  "unverified_grounding_cases": 2,
+  "paraphrase_consistency": {
+    "developing_microsoft_playready_clients_advanced_topics": 0.0102,
+    "playready_ev_certificate_instructions": 0.2218,
+    "microsoft_playready_master_agreement_sample": 0.082
+  },
+  "dspy_evaluate_score_percent": 81.5,
+  "llm_provider": "azure-openai:gpt-4o-mini"
+}

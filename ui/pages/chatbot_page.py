@@ -114,11 +114,44 @@ class ChatbotPage:
                 self._network_contexts = self._dedupe(self._network_contexts)
 
         def handle_websocket(websocket) -> None:
-            if self._network_capture_status != "captured":
-                self._network_capture_status = "ws_not_supported"
+            ws_url = getattr(websocket, "url", "")
+            if self._network_capture_status not in {"captured", "ws_captured"}:
+                self._network_capture_status = "ws_detected"
                 self._network_capture_reason = (
-                    f"WebSocket detected at {websocket.url}; frame payload capture is not enabled in this lightweight harness."
+                    f"WebSocket detected at {ws_url}; attempting to capture text frames for context evidence."
                 )
+
+            def _capture_frame(direction: str, payload: Any) -> None:
+                serialized = self._serialize_network_payload(payload)
+                self._network_events.append(
+                    {
+                        "type": f"websocket_{direction}",
+                        "url": ws_url,
+                        "payload": serialized,
+                    }
+                )
+
+                parsed_payload = self._try_parse_payload(serialized)
+                extracted = self._extract_candidate_contexts(parsed_payload)
+                if extracted:
+                    self._network_contexts.extend(extracted)
+                    self._network_contexts = self._dedupe(self._network_contexts)
+                    self._network_capture_status = "ws_captured"
+                    self._network_capture_reason = "Captured WebSocket frames and extracted candidate contexts."
+                elif self._network_capture_status == "ws_detected":
+                    self._network_capture_reason = (
+                        "WebSocket frames were observed, but no context-like keys were found in frame payloads."
+                    )
+
+            try:
+                websocket.on("framereceived", lambda payload: _capture_frame("received", payload))
+                websocket.on("framesent", lambda payload: _capture_frame("sent", payload))
+            except Exception:
+                if self._network_capture_status != "captured":
+                    self._network_capture_status = "ws_not_supported"
+                    self._network_capture_reason = (
+                        f"WebSocket detected at {ws_url}; frame hooks are unavailable in this browser/runtime."
+                    )
 
         self.page.on("request", handle_request)
         self.page.on("response", handle_response)
@@ -145,6 +178,18 @@ class ChatbotPage:
             serialized = str(payload)
         normalized = " ".join(serialized.split()).strip()
         return normalized[:max_length]
+
+    @staticmethod
+    def _try_parse_payload(payload: Any) -> Any:
+        if isinstance(payload, (dict, list)):
+            return payload
+        text = str(payload or "").strip()
+        if not text:
+            return payload
+        try:
+            return json.loads(text)
+        except Exception:
+            return payload
 
     def _url_matches_capture_pattern(self, url: str) -> bool:
         configured = self.selectors.get("chat_api_url_contains", "") or self.selectors.get("network_keyword", "")

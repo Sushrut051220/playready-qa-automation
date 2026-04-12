@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 from pathlib import Path
 from typing import Any
 
@@ -28,11 +29,56 @@ ARTIFACT_DIRS = [
 ]
 
 
+def _is_truthy(value: str | None, default: bool = False) -> bool:
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _cleanup_ui_pipeline_artifacts_if_needed(config: pytest.Config) -> None:
+    markexpr = str(getattr(config.option, "markexpr", "") or "").lower()
+    ui_included = (not markexpr) or ("ui" in markexpr)
+    should_cleanup = _is_truthy(os.getenv("CLEAN_UI_PIPELINE_ARTIFACTS", "true"), default=True)
+
+    if not (ui_included and should_cleanup):
+        return
+
+    cleanup_targets = [
+        PROJECT_ROOT / "artifacts" / "ui_runs",
+        PROJECT_ROOT / "artifacts" / "dspy",
+    ]
+
+    for target in cleanup_targets:
+        if target.exists():
+            shutil.rmtree(target, ignore_errors=True)
+        target.mkdir(parents=True, exist_ok=True)
+
+
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config: pytest.Config) -> None:
     load_dotenv(PROJECT_ROOT / ".env", override=False)
+    _cleanup_ui_pipeline_artifacts_if_needed(config)
     for directory in ARTIFACT_DIRS:
         directory.mkdir(parents=True, exist_ok=True)
+
+
+def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
+    """Ensure UI capture tests always run before DSPy tests so artifacts exist.
+
+    This allows ``pytest -m "ui or dspy"`` to work as a single end-to-end command
+    without needing to run the two suites separately.
+
+    Priority order:  ui (1)  →  dspy (2)  →  ragas (3)  →  everything else (4)
+    """
+    _PRIORITY = {"ui": 1, "dspy": 2, "ragas": 3}
+
+    def _priority(item: pytest.Item) -> int:
+        for marker in item.iter_markers():
+            if marker.name in _PRIORITY:
+                return _PRIORITY[marker.name]
+        return 4
+
+    items.sort(key=_priority)
 
 
 @pytest.fixture(scope="session")
@@ -49,7 +95,7 @@ def settings() -> dict[str, Any]:
 @pytest.fixture(scope="session")
 def playwright_instance() -> Playwright:
     if not _PLAYWRIGHT_AVAILABLE:
-        pytest.skip("playwright is not installed")
+        pytest.fail("playwright is not installed. Run: pip install playwright && playwright install")
     with sync_playwright() as playwright:
         yield playwright
 

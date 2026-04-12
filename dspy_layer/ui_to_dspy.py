@@ -11,7 +11,7 @@ from typing import Any
 
 import dspy
 
-from llm_provider import configure_dspy_lm, get_model_label
+from llm_provider import get_llm_provider, get_model_label
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -25,6 +25,23 @@ DEFAULT_FALLBACK_PATTERNS = [
     "please contact support",
     "not available",
 ]
+
+# Generic tokens appear in many answers and should not alone determine source grounding.
+GENERIC_GROUNDING_TOKENS = {
+    "playready",
+    "license",
+    "licenses",
+    "rules",
+    "rule",
+    "compliance",
+    "documentation",
+    "document",
+    "pdf",
+    "api",
+    "client",
+    "server",
+    "microsoft",
+}
 
 
 class NormalizeChatbotOutput(dspy.Signature):
@@ -58,13 +75,24 @@ def match_pdfs_from_texts(texts: list[str], pdf_registry: list[dict[str, Any]]) 
 
     matches: list[str] = []
     for record in pdf_registry:
-        candidate_tokens = [
+        strong_tokens = [
             record.get("pdf_id", ""),
             record.get("pdf_name", ""),
             record.get("topic", ""),
-            *(record.get("expected_keywords", []) or []),
         ]
-        if any(_normalize_text(token) and _normalize_text(token) in combined_text for token in candidate_tokens):
+        expected_keywords = [_normalize_text(keyword) for keyword in (record.get("expected_keywords", []) or [])]
+
+        # Strong evidence: explicit id/name/topic mentions in response or captured contexts.
+        has_strong_match = any(_normalize_text(token) and _normalize_text(token) in combined_text for token in strong_tokens)
+
+        # Keyword evidence: require at least two non-generic keyword hits to avoid false positives.
+        keyword_hits = {
+            keyword
+            for keyword in expected_keywords
+            if keyword and keyword not in GENERIC_GROUNDING_TOKENS and keyword in combined_text
+        }
+
+        if has_strong_match or len(keyword_hits) >= 2:
             matches.append(str(record.get("pdf_id", "")))
 
     return list(dict.fromkeys(match for match in matches if match))
@@ -216,13 +244,47 @@ def pdf_grounding_metric(example: dspy.Example, prediction: dspy.Prediction) -> 
     }
 
 
+def llm_answer_quality_metric(example: dspy.Example, prediction: dspy.Prediction) -> dict[str, Any]:
+    """Use LLM to evaluate answer quality and relevance to the question."""
+    question = getattr(example, "question", "")
+    answer = prediction.normalized_answer
+
+    if not question or not answer:
+        return {"score": 0.0, "issues": ["Question or answer is empty."]}
+
+    try:
+        import dspy
+        llm_provider = get_llm_provider()
+        if not llm_provider or llm_provider == "offline":
+            return {"score": 0.5, "issues": ["LLM provider not configured; quality assessment skipped."]}
+
+        class QualityRating(dspy.Signature):
+            question: str = dspy.InputField()
+            answer: str = dspy.InputField()
+            quality_score: int = dspy.OutputField(desc="Rate the answer quality and relevance on a scale 0-5.")
+            reasoning: str = dspy.OutputField(desc="Brief explanation of the score.")
+
+        rater = dspy.ChainOfThought(QualityRating)
+        try:
+            result = rater(question=question, answer=answer)
+            score_raw = int(str(result.quality_score).strip().split()[0])
+            score = max(0.0, min(1.0, score_raw / 5.0))
+            return {"score": round(score, 4), "issues": []}
+        except Exception as inner_exc:
+            return {"score": 0.5, "issues": [f"LLM scoring failed: {str(inner_exc)[:100]}"]}
+    except Exception as exc:
+        return {"score": 0.5, "issues": [f"LLM quality metric error: {str(exc)[:100]}"]}
+
+
 def build_metric_breakdown(example: dspy.Example, prediction: dspy.Prediction) -> dict[str, dict[str, Any]]:
-    return {
+    metrics = {
         "keyword_presence": keyword_presence_metric(example, prediction),
         "fallback_detection": fallback_detection_metric(example, prediction),
         "formatting_constraints": formatting_constraints_metric(example, prediction),
         "pdf_grounding": pdf_grounding_metric(example, prediction),
+        "llm_answer_quality": llm_answer_quality_metric(example, prediction),
     }
+    return metrics
 
 
 def composite_deterministic_metric(example: dspy.Example, prediction: dspy.Prediction, trace=None) -> float:
@@ -273,7 +335,6 @@ def run_dspy_evaluation(
     output_dir = Path(output_path)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    dspy_lm_issue = configure_dspy_lm()
     pdf_registry = load_pdf_registry(pdf_registry_path)
     adapter = UIArtifactAdapter(pdf_registry=pdf_registry)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
@@ -356,10 +417,21 @@ def run_dspy_evaluation(
         "paraphrase_consistency": paraphrase_consistency,
         "dspy_evaluate_score_percent": round(float(getattr(evaluation_result, "score", 0.0)), 4),
         "llm_provider": get_model_label(),
-        "dspy_lm_issue": dspy_lm_issue,
     }
 
-    payload = {"summary": summary, "results": results}
+    # Capture evaluation metadata for authentication
+    metadata = {
+        "evaluation_timestamp": datetime.now().isoformat(),
+        "llm_provider": get_model_label(),
+        "dspy_version": getattr(dspy, "__version__", "unknown"),
+        "min_score_threshold": os.getenv("DSPY_MIN_SCORE", "0.70"),
+        "ragas_profile": os.getenv("RAGAS_METRICS_PROFILE", "full"),
+        "artifacts_path": str(output_dir),
+        "dspy_results_file": "dspy_results.json",
+        "dspy_raw_files": f"dspy_evaluate_raw_{timestamp}.csv/json (if disk permissions allow)",
+    }
+
+    payload = {"summary": summary, "results": results, "metadata": metadata}
     results_json = json.dumps(payload, indent=2, ensure_ascii=False)
     summary_json = json.dumps(summary, indent=2, ensure_ascii=False)
     (output_dir / "dspy_results.json").write_text(results_json, encoding="utf-8")

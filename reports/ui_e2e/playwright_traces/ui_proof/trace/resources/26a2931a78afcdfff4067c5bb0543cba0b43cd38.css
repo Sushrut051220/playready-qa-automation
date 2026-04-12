@@ -1,0 +1,398 @@
+@media only screen and (min-width: 1000px) {
+    #hero-section .carousel-inner .carousel-caption {
+        top: 70px;
+        padding: 0 100px;
+        text-align:left;
+    }
+    #hero-section .banner-txt p, #hero-section .banner-txt p a {
+        max-width:730px;
+        margin: 0;
+    }
+}
+@media only screen and (min-width:1003px) and (max-width:1200px){ 
+	#main-navigation.navbar-default .navbar-nav>li>a {
+		margin: 0 5px;
+	}
+	#product-suite-type-section .product-suite-type-div {
+		padding: 35px 30px 24px;
+	}
+	#playready-details-section .playready-details-div h2 {
+		font-size: 28px;
+	}
+	.page-content-section .button-section button {
+		font-size: 13px;
+		line-height: 34px;
+	}
+	.client-data .client-contact .btn {
+		min-width: 90px;
+		margin-right: 10px;
+		padding: 12px 6px;
+	}
+	.btn-playready {
+		height: 65px;
+	}
+    #pageCarousel .carousel-inner > .item > img {
+        max-width: 100%;
+    }
+    #hero-section .carousel-control {
+        top: 40%;
+    }
+    #hero-section .banner-txt h1 {
+        font-size: 36px;
+    }
+    #hero-section .banner-txt p, #hero-section .banner-txt p a {
+        font-size: 16px;
+        max-width: 600px;
+    }
+    #hero-section .carousel-inner .carousel-caption {
+        top: 18px;
+    }
+    #hero-section .btn-banner {
+        padding: 6px 10px;
+    }
+    #hero-section, 
+    #hero-section .carousel-inner, 
+    #hero-section .item, 
+    #hero-section .carousel-slide {
+        height: 282px;
+    }
+    .carousel-indicators {
+        bottom: 0;
+    }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1002px){
+	#main-navigation.navbar-default .navbar-nav>li>a {
+		margin: 0 10px;
+	}
+	.page-content-section .button-section button {
+		padding: 14px 6px;
+	}
+}
+
+@media only screen and (max-width: 991px){
+	#hero-section .banner-txt {
+		top: 70px;
+		max-width: 590px;
+		margin: 0 auto;
+	}
+	#product-suite-type-section .product-suite-type-div {
+		padding: 35px 15px 24px;
+		min-height: 245px;
+	}
+	#specific-partner-section {
+		padding: 50px;
+	}
+	h1,
+	#product-suite-section h1 {
+		font-size: 40px;
+	}
+	h2 {
+		font-size: 28px;
+	}
+	#product-suite-section ul li {
+		margin-left: 15px;
+	}
+	.page-content-section .button-section button {
+		font-size: 13px;
+		line-height: 34px;
+		padding: 14px 6px;
+	}
+	.button-section .pl-6 {
+		padding-left: 15px;
+	}
+	.button-section .pr-6 {
+		padding-right: 15px;
+	}
+	.button-section .btn {
+		margin-bottom: 15px;
+	}
+	.tab-content-div .section-desc .subsection .subtitle-img {
+		float: none !important;
+		text-align: center;
+		margin-bottom: 15px;
+	}
+	.tab-content-div .button-section {
+		margin-bottom: 0;
+	}
+	.tab-content-div .section-desc .subsection {
+		margin-bottom: 25px;
+	}
+	.tab-content-div .button-wrapper {
+		margin-top: 20px;
+	}
+	.tab-content-div .section-desc .subsection h3 {
+		font-size: 18px;
+	}
+	.tab-content-div h2,
+	.client-data .client-contact .btn {
+		margin-bottom: 15px;
+	}
+	.subsectionMargin {
+		margin-bottom: 25px;
+	}
+	.btn-playready {
+		height: 55px;
+	}
+    #playready-details-section .playready-details-div {
+        min-height: 244px;
+    }
+    .bottom-header .nav li.dropdown .caret {
+        margin-left: 4px;
+    }
+    .footer-bottom ul li {
+        margin: 0 5px;
+    }
+    .tab-content .section-desc .subsection .subtitle-img img {
+        margin-bottom: 10px;
+    }
+    .footer-top h6 {
+        min-height: 40px;
+    }
+    .tab-content p {
+        word-break: break-word;
+    }
+    .product-overview-desc {
+        margin-bottom: 40px;
+    }
+    .dvreq .dvdesc > a, .faq-item .faq-question a, .accordian-heading a {
+        padding: 12px 20px;
+    }
+    .licensee-list .licensee-name {
+        min-height:40px;
+    }
+    ul li a {
+        word-break:break-word;
+    }
+}
+@media only screen and (max-width: 767px){
+
+	#main-navigation.navbar-default .navbar-nav>li:first-child a{
+		margin: 0 10px;
+	}
+	#main-navigation .navbar-collapse {
+		border-top: none;
+	}
+	#main-navigation .navbar-nav {
+		margin: 0 -15px;
+	}
+	#main-navigation.navbar {
+		margin-bottom: 0;
+	}
+	.top-header .navbar-form {
+		padding: 10px 15px;
+		margin-right: 0;
+	}
+	.bottom-header .nav li.dropdown .caret:after {
+		top: 8px;
+		right: 8px;
+	}
+	#playready-details-section .pr-6,
+	#product-suite-type-section .pr-6{
+		padding-right: 15px;
+	}
+	#playready-details-section .pl-6,
+	#product-suite-type-section .pl-6{
+		padding-left: 15px;
+	}
+	#playready-details-section .playready-details-div,
+	#product-suite-type-section .product-suite-type-div {
+		margin-bottom: 15px;
+	}
+	#product-suite-section,
+	.tab-content-div .product-overview-desc,
+	.tab-content-div .product-suite-desc {
+		height: auto;
+		padding: 0;
+		background: #ffffff;
+		margin: 0;
+	}
+	#product-suite-section h1,
+	#product-suite-section p,
+	#product-suite-section ul li a,
+	.tab-content-div .product-desc h2, 
+	.tab-content-div .product-desc p {
+		color: #000100 !important;
+	}
+	#product-suite-type-section .product-suite-type-div {
+		min-height: auto;
+		padding: 35px 15px;
+	}
+	#product-suite-section ul li,
+	#product-suite-section ul li a i {
+		margin-left: 5px;
+	}
+	#product-suite-type-section,
+	#playready-details-section {
+		margin-bottom: 0;
+	}
+	#product-suite-section,
+	#specific-partner-section {
+		margin-top: 0;
+	}
+	#specific-partner-section {
+		padding: 50px 30px;
+	}
+	.footer-top {
+		padding-bottom: 0;
+		text-align: center;
+	}
+	.footer-top .footer-top-div,
+	.client-data {
+		margin-bottom: 30px;
+	}
+	.footer-top .footer-top-div ul li:last-child a{
+		margin-bottom: 0;
+	}
+	.footer-bottom p {
+		text-align: center;
+	}
+	.footer-bottom ul {
+		float: none;
+		text-align: center;
+	}
+	#hero-section .banner-txt {
+		max-width: 480px;
+	}
+	h1,
+	#product-suite-section h1 {
+		font-size: 36px;
+	}
+	#hero-section .bx-wrapper .bx-pager, .bx-wrapper .bx-controls-auto {
+		bottom: 10px;
+	}
+	#hero-section .banner-txt p {
+		font-size: 16px;
+	}
+	.button-section .btn {
+		width: 100%;
+		margin-bottom: 15px;
+	}
+	.inner-page-content {
+		padding: 20px 0 30px;
+	}
+	.page-title-content p,
+	.footer-top ul li a,
+	.page-title h1,
+	.footer-top h6 {
+		margin-bottom: 15px;
+	}
+	.client-data .client-logo,
+	.client-data .client-contact {
+		text-align: center;
+		margin: 10px 0;
+	}
+	.client-data .client-details ul li {
+		margin-right: 15px;
+	}
+	.btn-playready {
+		height: auto;
+	}
+	.mobile-img {
+	    display: block;
+	    margin-bottom: 15px;
+	    max-width: 100%;
+	    height: auto;
+	}
+	#main-navigation .navbar-header .navbar-brand.navbar-microsoft {
+		margin-right: 5px;
+	}
+    #pageCarousel .carousel-inner > .item > img {
+        max-width: 100%;
+        height: 100%;
+        object-fit:cover;
+    }
+    #hero-section .carousel-inner .carousel-caption {
+        top:40px;
+    }
+    #hero-section .btn-banner {
+        padding: 8px 12px;
+        margin-top: 20px;
+    }
+    .playready-product-suite {
+        max-width: 100%;
+        height: auto;
+    }
+    
+    .triple-block .explore-more {
+        margin-bottom: 30px;
+    }
+    .tab-content .section-desc .subsection .subtitle-img img {
+        margin: 10px auto 15px;
+    }
+}
+
+@media only screen and (max-width: 560px) {
+	#product-suite-section .product-suite-div ul li {
+		margin-bottom: 15px;
+	}
+	#specific-partner-section .specific-partner-div {
+		margin-top: 15px;
+	}
+	#hero-section .banner-txt {
+		max-width: 290px;
+		top: 50px;
+	}
+	h1,
+	#product-suite-section h1 {
+	    font-size: 30px;
+	}
+	.bx-wrapper .bx-prev {
+		left: 4px;
+	}
+	.bx-wrapper .bx-next{
+		right: 4px;
+	}
+}
+
+@media only screen and (max-width: 380px) {
+	#hero-section .banner-txt {
+		max-width: 250px;
+		top: 60px;
+	}
+	h1, #product-suite-section h1 {
+		font-size: 28px;
+	}
+	.tab-content-div .button-wrapper button {
+		min-width: 100px;
+		margin-right: 20px;
+	}
+	/* add this */
+	#main-navigation .navbar-header .navbar-brand {
+		padding: 15px 10px;
+	}
+	#main-navigation .navbar-header .navbar-brand.navbar-microsoft {
+		padding-right: 5px;
+		margin-right: 5px;
+	}
+	#main-navigation .navbar-header .navbar-brand.navbar-microsoft:after {
+		right: -1px;
+	}
+}
+
+@media only screen and (max-width: 320px) { 
+	#hero-section .banner-txt {
+		max-width: 200px;
+		top: 50px;
+	}
+	#hero-section .btn-banner {
+		margin-top: 20px;
+		padding: 5px 12px;
+	}
+	h1, #product-suite-section h1 {
+		font-size: 24px;
+	}
+	#hero-section .banner-txt p {
+		font-size: 14px;
+	}
+	.top-header .navbar-form .search-field-container input {
+		width: auto;
+	}
+
+}
+
+@media only screen and (max-width: 300px) { 
+	.top-header .navbar-form .search-field-container input {
+		width: auto;
+	}
+}

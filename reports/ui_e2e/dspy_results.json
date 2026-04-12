@@ -1,0 +1,460 @@
+{
+  "summary": {
+    "example_count": 8,
+    "average_score": 0.815,
+    "pass_rate": 0.75,
+    "failures": 8,
+    "strict_grounding_failures": 0,
+    "unverified_grounding_cases": 2,
+    "paraphrase_consistency": {
+      "developing_microsoft_playready_clients_advanced_topics": 0.0102,
+      "playready_ev_certificate_instructions": 0.2218,
+      "microsoft_playready_master_agreement_sample": 0.082
+    },
+    "dspy_evaluate_score_percent": 81.5,
+    "llm_provider": "azure-openai:gpt-4o-mini"
+  },
+  "results": [
+    {
+      "id": "seed_pdf_developing_clients_13_end_001_r013",
+      "question": "What are the advanced steps in PlayReady client development?",
+      "answer": "! Error Failed to call API",
+      "normalized_answer": "! Error Failed to call API",
+      "contexts": [],
+      "ground_truths": [
+        "Advanced PlayReady client development topics include implementing a secure clock for time-restricted licenses, integrating metering for usage reporting, supporting chained licenses (root and leaf), implementing secure stop to report session termination to servers, configuring license pre-delivery, and handling embedded licenses stored within the encrypted content file."
+      ],
+      "required_keywords": [
+        "client",
+        "playready",
+        "license acquisition",
+        "porting",
+        "implementation"
+      ],
+      "forbidden_patterns": [
+        "I don't know",
+        "cannot help",
+        "no information"
+      ],
+      "expect_fallback": false,
+      "fallback_patterns": [
+        "I don't know",
+        "not in my knowledge base",
+        "outside my scope",
+        "cannot answer"
+      ],
+      "expected_pdfs": [
+        "pdf_developing_clients_13_end",
+        "pdf_playready_doc_222_254"
+      ],
+      "strict_grounding": true,
+      "matched_pdfs": [],
+      "source_match_status": "no_grounding_evidence",
+      "paraphrase_group": "developing_microsoft_playready_clients_advanced_topics",
+      "detected_fallback": false,
+      "context_count": 0,
+      "deterministic_scores": {
+        "keyword_presence": 0.0,
+        "fallback_detection": 1.0,
+        "formatting_constraints": 1.0,
+        "pdf_grounding": 0.5,
+        "llm_answer_quality": 0.5,
+        "total": 0.6
+      },
+      "issues": [
+        "Missing required keyword: client",
+        "Missing required keyword: playready",
+        "Missing required keyword: license acquisition",
+        "Missing required keyword: porting",
+        "Missing required keyword: implementation",
+        "Strict grounding requested but the UI/network did not expose enough PDF evidence to verify the source.",
+        "LLM scoring failed: No LM is loaded. Please configure the LM using `dspy.configure(lm=dspy.LM(...))`. e.g, `dspy.configu"
+      ]
+    },
+    {
+      "id": "seed_pdf_developing_clients_13_end_002_r014",
+      "question": "How does a PlayReady client acquire a license?",
+      "answer": "AI Agent A PlayReady client acquires a license through the following process: The client obtains media to be played. It initiates a license request to the PlayReady License Server. The request can be proactive (before playback) or reactive (after discovering a license is required). The License Server processes the request and sends back a response. The response contains the key to unlock the encrypted media and a set of rights and restrictions for the content. The client receives the license response, parses the rights and restrictions, and begins playback.",
+      "normalized_answer": "AI Agent A PlayReady client acquires a license through the following process: The client obtains media to be played. It initiates a license request to the PlayReady License Server. The request can be proactive (before playback) or reactive (after discovering a license is required). The License Server processes the request and sends back a response. The response contains the key to unlock the encrypted media and a set of rights and restrictions for the content. The client receives the license response, parses the rights and restrictions, and begins playback.",
+      "contexts": [],
+      "ground_truths": [
+        "A PlayReady client acquires a license by sending a license acquisition request (LAReq) to the license server URL embedded in the content's PlayReady object header. The request includes the device certificate and the key IDs for the requested content. The server authenticates the device and responds with a license acquisition response (LAResp) containing encrypted content keys and the playback rights policy."
+      ],
+      "required_keywords": [
+        "client",
+        "playready",
+        "license acquisition",
+        "porting",
+        "implementation"
+      ],
+      "forbidden_patterns": [
+        "I don't know",
+        "cannot help",
+        "no information"
+      ],
+      "expect_fallback": false,
+      "fallback_patterns": [
+        "I don't know",
+        "not in my knowledge base",
+        "outside my scope",
+        "cannot answer"
+      ],
+      "expected_pdfs": [
+        "pdf_developing_clients_13_end"
+      ],
+      "strict_grounding": true,
+      "matched_pdfs": [],
+      "source_match_status": "no_grounding_evidence",
+      "paraphrase_group": "developing_microsoft_playready_clients_advanced_topics",
+      "detected_fallback": false,
+      "context_count": 0,
+      "deterministic_scores": {
+        "keyword_presence": 0.4,
+        "fallback_detection": 1.0,
+        "formatting_constraints": 1.0,
+        "pdf_grounding": 0.5,
+        "llm_answer_quality": 0.5,
+        "total": 0.68
+      },
+      "issues": [
+        "Missing required keyword: license acquisition",
+        "Missing required keyword: porting",
+        "Missing required keyword: implementation",
+        "Strict grounding requested but the UI/network did not expose enough PDF evidence to verify the source.",
+        "LLM scoring failed: No LM is loaded. Please configure the LM using `dspy.configure(lm=dspy.LM(...))`. e.g, `dspy.configu"
+      ]
+    },
+    {
+      "id": "seed_pdf_developing_clients_1_12_002_r012",
+      "question": "What SDK is used to build PlayReady clients?",
+      "answer": "AI Agent The SDKs used to build PlayReady clients include the following: PlayReady Device Porting Kit (PK) - This kit is specifically designed for developing PlayReady clients on various platforms. PlayReady PC SDK - Used for Windows desktop applications. PlayReady Server SDK - Utilizes both.NET Legacy and.NET Core for developing server applications that interact with PlayReady.",
+      "normalized_answer": "AI Agent The SDKs used to build PlayReady clients include the following: PlayReady Device Porting Kit (PK) - This kit is specifically designed for developing PlayReady clients on various platforms. PlayReady PC SDK - Used for Windows desktop applications. PlayReady Server SDK - Utilizes both.NET Legacy and.NET Core for developing server applications that interact with PlayReady.",
+      "contexts": [],
+      "ground_truths": [
+        "PlayReady clients are built using the PlayReady Device Porting Kit (PK), the official SDK provided by Microsoft to licensed developers. The PK includes C source code for the core DRM engine, reference implementations of cryptographic operations, sample OAL code for common platforms, and documentation for porting to custom hardware and operating systems."
+      ],
+      "required_keywords": [
+        "client",
+        "playready",
+        "development",
+        "porting",
+        "SDK"
+      ],
+      "forbidden_patterns": [
+        "I don't know",
+        "cannot help",
+        "no information"
+      ],
+      "expect_fallback": false,
+      "fallback_patterns": [
+        "I don't know",
+        "not in my knowledge base",
+        "outside my scope",
+        "cannot answer"
+      ],
+      "expected_pdfs": [
+        "pdf_developing_clients_1_12"
+      ],
+      "strict_grounding": true,
+      "matched_pdfs": [
+        "pdf_developing_clients_1_12",
+        "pdf_playready_development"
+      ],
+      "source_match_status": "matched_expected_pdf",
+      "paraphrase_group": "developing_microsoft_playready_clients",
+      "detected_fallback": false,
+      "context_count": 0,
+      "deterministic_scores": {
+        "keyword_presence": 0.8,
+        "fallback_detection": 1.0,
+        "formatting_constraints": 1.0,
+        "pdf_grounding": 1.0,
+        "llm_answer_quality": 0.5,
+        "total": 0.86
+      },
+      "issues": [
+        "Missing required keyword: development",
+        "LLM scoring failed: No LM is loaded. Please configure the LM using `dspy.configure(lm=dspy.LM(...))`. e.g, `dspy.configu"
+      ]
+    },
+    {
+      "id": "seed_pdf_ev_cert_instructions_001_r015",
+      "question": "How do you obtain an EV certificate for PlayReady?",
+      "answer": "AI Agent To obtain an Extended Validation (EV) certificate for PlayReady, follow these steps: You must provide an Extended Validation Code Signing Certificate to Microsoft for company verification. This certificate must be obtained from an accepted certification authority. Recommended providers include: Symantec GlobalSign Thawte DigiCert Complete the necessary steps to acquire the certificate from one of the authorities listed. Once you have the certificate, you'll also need two files: WMLA.ocx and Signcode.exe, which can be found in the WMLA.zip folder available from Microsoft. Use the signcode.exe tool to sign the WMLA.ocx file with the EV certificate. Send the signed OCX file to Microsoft (ipla@microsoft.com) within a compressed.ZIP folder or upload it to a shared location and provide access. After submitting the signed file, you will receive a Microsoft PlayReady Server Agreement via DocuSign along with further instructions.",
+      "normalized_answer": "AI Agent To obtain an Extended Validation (EV) certificate for PlayReady, follow these steps: You must provide an Extended Validation Code Signing Certificate to Microsoft for company verification. This certificate must be obtained from an accepted certification authority. Recommended providers include: Symantec GlobalSign Thawte DigiCert Complete the necessary steps to acquire the certificate from one of the authorities listed. Once you have the certificate, you'll also need two files: WMLA.ocx and Signcode.exe, which can be found in the WMLA.zip folder available from Microsoft. Use the signcode.exe tool to sign the WMLA.ocx file with the EV certificate. Send the signed OCX file to Microsoft (ipla@microsoft.com) within a compressed.ZIP folder or upload it to a shared location and provide access. After submitting the signed file, you will receive a Microsoft PlayReady Server Agreement via DocuSign along with further instructions.",
+      "contexts": [],
+      "ground_truths": [
+        "To obtain an EV certificate for the PlayReady OCX control, a licensee must procure a valid Extended Validation (EV) code signing certificate from an approved certificate authority, submit the certificate information through the Microsoft IPLA portal, and use the Microsoft-provided signing tool to sign the OCX binary so that browsers accept the ActiveX control without security warnings."
+      ],
+      "required_keywords": [
+        "certificate",
+        "EV cert",
+        "playready",
+        "OCX",
+        "instructions"
+      ],
+      "forbidden_patterns": [
+        "I don't know",
+        "cannot help",
+        "no information"
+      ],
+      "expect_fallback": false,
+      "fallback_patterns": [
+        "I don't know",
+        "not in my knowledge base",
+        "outside my scope",
+        "cannot answer"
+      ],
+      "expected_pdfs": [
+        "pdf_ev_cert_instructions"
+      ],
+      "strict_grounding": true,
+      "matched_pdfs": [
+        "pdf_ev_cert_instructions",
+        "pdf_server_agreement_sample"
+      ],
+      "source_match_status": "matched_expected_pdf",
+      "paraphrase_group": "playready_ev_certificate_instructions",
+      "detected_fallback": false,
+      "context_count": 0,
+      "deterministic_scores": {
+        "keyword_presence": 1.0,
+        "fallback_detection": 1.0,
+        "formatting_constraints": 1.0,
+        "pdf_grounding": 1.0,
+        "llm_answer_quality": 0.5,
+        "total": 0.9
+      },
+      "issues": [
+        "LLM scoring failed: No LM is loaded. Please configure the LM using `dspy.configure(lm=dspy.LM(...))`. e.g, `dspy.configu"
+      ]
+    },
+    {
+      "id": "seed_pdf_ev_cert_instructions_002_r016",
+      "question": "What are the instructions for PlayReady EV cert OCX?",
+      "answer": "AI Agent To obtain and use the Extended Validation Code Signing Certificate (EV Certificate) for PlayReady, please follow these instructions: Required Files: You will need two files to sign an EV Certificate: WMLA.ocx Signcode.exe Both files are located in the WMLA.zip folder, which you can download here. Obtain the Certificate: Acquire an EV Certificate from one of the following trusted certification authorities: Symantec: Microsoft Authenticode Certificate GlobalSign: ObjectSign Certificate Thawte: Microsoft Authenticode Certificate DigiCert: Extended Validation (EV) Code Signing Certificate Signing the File: Use the signcode.exe tool to sign the WMLA.ocx file with your EV Certificate. After signing, send the signed OCX file to ipla@microsoft.com within a compressed.ZIP folder or upload it to a shared folder (e.g., OneDrive) and send a link. Verification: To confirm that your signature is valid, you can right-click on the signed file, select Properties, and view the Digital Signatures tab. Final Steps: Once your certificate has been received, the IP Licensing team will send you the Microsoft PlayReady Server Agreement via DocuSign, along with additional instructions to complete the licensing process.",
+      "normalized_answer": "AI Agent To obtain and use the Extended Validation Code Signing Certificate (EV Certificate) for PlayReady, please follow these instructions: Required Files: You will need two files to sign an EV Certificate: WMLA.ocx Signcode.exe Both files are located in the WMLA.zip folder, which you can download here. Obtain the Certificate: Acquire an EV Certificate from one of the following trusted certification authorities: Symantec: Microsoft Authenticode Certificate GlobalSign: ObjectSign Certificate Thawte: Microsoft Authenticode Certificate DigiCert: Extended Validation (EV) Code Signing Certificate Signing the File: Use the signcode.exe tool to sign the WMLA.ocx file with your EV Certificate. After signing, send the signed OCX file to ipla@microsoft.com within a compressed.ZIP folder or upload it to a shared folder (e.g., OneDrive) and send a link. Verification: To confirm that your signature is valid, you can right-click on the signed file, select Properties, and view the Digital Signatures tab. Final Steps: Once your certificate has been received, the IP Licensing team will send you the Microsoft PlayReady Server Agreement via DocuSign, along with additional instructions to complete the licensing process.",
+      "contexts": [],
+      "ground_truths": [
+        "The PlayReady OCX EV certificate process requires: obtaining an EV code signing certificate from an approved CA, signing the PlayReady OCX binary using the certificate with Microsoft's signing tool, submitting the signed OCX to Microsoft for validation through the IPLA portal, and distributing the validated signed OCX to end users so it installs without browser security prompts."
+      ],
+      "required_keywords": [
+        "certificate",
+        "EV cert",
+        "playready",
+        "OCX",
+        "instructions"
+      ],
+      "forbidden_patterns": [
+        "I don't know",
+        "cannot help",
+        "no information"
+      ],
+      "expect_fallback": false,
+      "fallback_patterns": [
+        "I don't know",
+        "not in my knowledge base",
+        "outside my scope",
+        "cannot answer"
+      ],
+      "expected_pdfs": [
+        "pdf_ev_cert_instructions"
+      ],
+      "strict_grounding": true,
+      "matched_pdfs": [
+        "pdf_ev_cert_instructions",
+        "pdf_ipla_faq",
+        "pdf_server_agreement_sample",
+        "pdf_pr_final_product_license"
+      ],
+      "source_match_status": "matched_expected_pdf",
+      "paraphrase_group": "playready_ev_certificate_instructions",
+      "detected_fallback": false,
+      "context_count": 0,
+      "deterministic_scores": {
+        "keyword_presence": 1.0,
+        "fallback_detection": 1.0,
+        "formatting_constraints": 1.0,
+        "pdf_grounding": 1.0,
+        "llm_answer_quality": 0.5,
+        "total": 0.9
+      },
+      "issues": [
+        "LLM scoring failed: No LM is loaded. Please configure the LM using `dspy.configure(lm=dspy.LM(...))`. e.g, `dspy.configu"
+      ]
+    },
+    {
+      "id": "seed_pdf_ipla_faq_002_r018",
+      "question": "How do I use the PlayReady IPLA portal?",
+      "answer": "AI Agent To use the PlayReady IPLA portal, follow these steps: Sign In: Click the Sign In button at wmlalicensing.com to access the portal. Account Creation: First-time users must create an account. Click on 'Sign up now' to set up a new Microsoft Azure B2C account. Email Verification: Use your work email registered with wmla@microsoft.com or ipla@microsoft.com to receive a verification code. Send the code back to the portal and create a password. Login: Once your account is created and confirmed, you can log into the Microsoft Licensing Portal. Modify Contacts: Use the Actions menu to view or modify your contact list. You can also add or remove license agreement contacts through the Agreements page. For additional support, contact IPLA@microsoft.com for licensing questions or PlayReady@microsoft.com for PlayReady specific inquiries.",
+      "normalized_answer": "AI Agent To use the PlayReady IPLA portal, follow these steps: Sign In: Click the Sign In button at wmlalicensing.com to access the portal. Account Creation: First-time users must create an account. Click on 'Sign up now' to set up a new Microsoft Azure B2C account. Email Verification: Use your work email registered with wmla@microsoft.com or ipla@microsoft.com to receive a verification code. Send the code back to the portal and create a password. Login: Once your account is created and confirmed, you can log into the Microsoft Licensing Portal. Modify Contacts: Use the Actions menu to view or modify your contact list. You can also add or remove license agreement contacts through the Agreements page. For additional support, contact IPLA@microsoft.com for licensing questions or PlayReady@microsoft.com for PlayReady specific inquiries.",
+      "contexts": [],
+      "ground_truths": [
+        "To use the IPLA portal, licensees sign in with the Microsoft account associated with their signed licensing agreement, navigate to the PlayReady section, and can download the Device Porting Kit, submit new product registrations for compliance review, request device model certificates, track the status of submissions, and access FAQ and compliance documentation."
+      ],
+      "required_keywords": [
+        "IPLA",
+        "licensing",
+        "portal",
+        "FAQ",
+        "playready"
+      ],
+      "forbidden_patterns": [
+        "I don't know",
+        "cannot help",
+        "no information"
+      ],
+      "expect_fallback": false,
+      "fallback_patterns": [
+        "I don't know",
+        "not in my knowledge base",
+        "outside my scope",
+        "cannot answer"
+      ],
+      "expected_pdfs": [
+        "pdf_ipla_faq"
+      ],
+      "strict_grounding": true,
+      "matched_pdfs": [
+        "pdf_ipla_faq"
+      ],
+      "source_match_status": "matched_expected_pdf",
+      "paraphrase_group": "ipla_playready_licensing_portal_faq",
+      "detected_fallback": false,
+      "context_count": 0,
+      "deterministic_scores": {
+        "keyword_presence": 0.8,
+        "fallback_detection": 1.0,
+        "formatting_constraints": 1.0,
+        "pdf_grounding": 1.0,
+        "llm_answer_quality": 0.5,
+        "total": 0.86
+      },
+      "issues": [
+        "Missing required keyword: faq",
+        "LLM scoring failed: No LM is loaded. Please configure the LM using `dspy.configure(lm=dspy.LM(...))`. e.g, `dspy.configu"
+      ]
+    },
+    {
+      "id": "seed_pdf_master_agreement_sample_001_r019",
+      "question": "What does the PlayReady master agreement cover?",
+      "answer": "AI Agent The Microsoft PlayReady Master Agreement, also known as the PlayReady \"Parent\" or \"Umbrella\" Agreement, serves as a foundational document that establishes the general terms and conditions governing the licensing of Microsoft's PlayReady technology. It is not a standalone agreement and must be in place to enable the execution of associated child agreements, such as the PlayReady Intermediate Product License and the PlayReady Final Product License. The Master Agreement outlines the licenses available as of the effective date, covering various aspects of intellectual property rights, compliance, and the overall framework for other PlayReady agreements.",
+      "normalized_answer": "AI Agent The Microsoft PlayReady Master Agreement, also known as the PlayReady \"Parent\" or \"Umbrella\" Agreement, serves as a foundational document that establishes the general terms and conditions governing the licensing of Microsoft's PlayReady technology. It is not a standalone agreement and must be in place to enable the execution of associated child agreements, such as the PlayReady Intermediate Product License and the PlayReady Final Product License. The Master Agreement outlines the licenses available as of the effective date, covering various aspects of intellectual property rights, compliance, and the overall framework for other PlayReady agreements.",
+      "contexts": [],
+      "ground_truths": [
+        "The PlayReady Master Agreement is the contract under which Microsoft licenses PlayReady DRM technology to device manufacturers and content service operators. It covers the license grant scope (permitted products and territories), royalty structures and payment schedules, compliance and robustness rule obligations, Microsoft's audit rights, confidentiality requirements, and the right to revoke licenses for non-compliance."
+      ],
+      "required_keywords": [
+        "master agreement",
+        "playready",
+        "licensing",
+        "Microsoft",
+        "sample"
+      ],
+      "forbidden_patterns": [
+        "I don't know",
+        "cannot help",
+        "no information"
+      ],
+      "expect_fallback": false,
+      "fallback_patterns": [
+        "I don't know",
+        "not in my knowledge base",
+        "outside my scope",
+        "cannot answer"
+      ],
+      "expected_pdfs": [
+        "pdf_master_agreement_sample"
+      ],
+      "strict_grounding": true,
+      "matched_pdfs": [
+        "pdf_master_agreement_sample",
+        "pdf_pr_final_product_license",
+        "pdf_pr_intermediate_product_license"
+      ],
+      "source_match_status": "matched_expected_pdf",
+      "paraphrase_group": "microsoft_playready_master_agreement_sample",
+      "detected_fallback": false,
+      "context_count": 0,
+      "deterministic_scores": {
+        "keyword_presence": 0.8,
+        "fallback_detection": 1.0,
+        "formatting_constraints": 1.0,
+        "pdf_grounding": 1.0,
+        "llm_answer_quality": 0.5,
+        "total": 0.86
+      },
+      "issues": [
+        "Missing required keyword: sample",
+        "LLM scoring failed: No LM is loaded. Please configure the LM using `dspy.configure(lm=dspy.LM(...))`. e.g, `dspy.configu"
+      ]
+    },
+    {
+      "id": "seed_pdf_master_agreement_sample_002_r020",
+      "question": "What are the key terms in the PlayReady licensing agreement?",
+      "answer": "AI Agent The key terms in the PlayReady licensing agreement include: Licenses Granted: Different types of licenses such as the Microsoft PlayReady Server Agreement, Microsoft PlayReady Master Agreement, and others for developing and distributing PlayReady applications. Distribution Rights: Licensees can distribute source code implementations of PlayReady to Intermediate Product licensees and object code implementations to both Intermediate and Final Product licensees. Compliance Rules: Licensees must adhere to compliance rules set by Microsoft for the licensed technology, ensuring all services conform to these standards. Security: Licensees are responsible for implementing adequate security measures to protect the licensed technology and PlayReady content. Confidentiality: Both parties must keep the other's confidential information secure and not disclose it to third parties without consent. Indemnification: Each party agrees to indemnify the other against claims related to intellectual property infringement arising from the use of the licensed technology. For more detailed information, including obligations, rights, and specific terms, please refer to the Microsoft PlayReady Server Agreement.",
+      "normalized_answer": "AI Agent The key terms in the PlayReady licensing agreement include: Licenses Granted: Different types of licenses such as the Microsoft PlayReady Server Agreement, Microsoft PlayReady Master Agreement, and others for developing and distributing PlayReady applications. Distribution Rights: Licensees can distribute source code implementations of PlayReady to Intermediate Product licensees and object code implementations to both Intermediate and Final Product licensees. Compliance Rules: Licensees must adhere to compliance rules set by Microsoft for the licensed technology, ensuring all services conform to these standards. Security: Licensees are responsible for implementing adequate security measures to protect the licensed technology and PlayReady content. Confidentiality: Both parties must keep the other's confidential information secure and not disclose it to third parties without consent. Indemnification: Each party agrees to indemnify the other against claims related to intellectual property infringement arising from the use of the licensed technology. For more detailed information, including obligations, rights, and specific terms, please refer to the Microsoft PlayReady Server Agreement.",
+      "contexts": [],
+      "ground_truths": [
+        "Key terms in the PlayReady licensing agreement include: the license grant defining which products and geographies are covered, royalty rates and payment reporting schedules, obligations to comply with compliance and robustness rules, audit rights allowing Microsoft to verify compliance, confidentiality obligations, term and termination conditions, and Microsoft's right to update compliance rules with advance notice to licensees."
+      ],
+      "required_keywords": [
+        "master agreement",
+        "playready",
+        "licensing",
+        "Microsoft",
+        "sample"
+      ],
+      "forbidden_patterns": [
+        "I don't know",
+        "cannot help",
+        "no information"
+      ],
+      "expect_fallback": false,
+      "fallback_patterns": [
+        "I don't know",
+        "not in my knowledge base",
+        "outside my scope",
+        "cannot answer"
+      ],
+      "expected_pdfs": [
+        "pdf_master_agreement_sample"
+      ],
+      "strict_grounding": true,
+      "matched_pdfs": [
+        "pdf_master_agreement_sample",
+        "pdf_server_agreement_sample",
+        "pdf_playready_distribution",
+        "pdf_playready_doc_297_end",
+        "pdf_pr_final_product_license",
+        "pdf_pr_intermediate_product_license"
+      ],
+      "source_match_status": "matched_expected_pdf",
+      "paraphrase_group": "microsoft_playready_master_agreement_sample",
+      "detected_fallback": false,
+      "context_count": 0,
+      "deterministic_scores": {
+        "keyword_presence": 0.8,
+        "fallback_detection": 1.0,
+        "formatting_constraints": 1.0,
+        "pdf_grounding": 1.0,
+        "llm_answer_quality": 0.5,
+        "total": 0.86
+      },
+      "issues": [
+        "Missing required keyword: sample",
+        "LLM scoring failed: No LM is loaded. Please configure the LM using `dspy.configure(lm=dspy.LM(...))`. e.g, `dspy.configu"
+      ]
+    }
+  ],
+  "metadata": {
+    "evaluation_timestamp": "2026-04-11T20:04:51.195899",
+    "llm_provider": "azure-openai:gpt-4o-mini",
+    "dspy_version": "3.1.3",
+    "min_score_threshold": "0.70",
+    "ragas_profile": "full ",
+    "artifacts_path": "C:\\Users\\v-snistane\\playready-qa-automation\\artifacts\\dspy",
+    "dspy_results_file": "dspy_results.json",
+    "dspy_raw_files": "dspy_evaluate_raw_20260411_200450_902058.csv/json (if disk permissions allow)"
+  }
+}
