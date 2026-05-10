@@ -1,0 +1,2548 @@
+[
+  {
+    "id": "pdf001_q01_pos_factual",
+    "prompt": "When was the Compliance Rules for PlayReady Products document published?",
+    "ground_truth": "The Compliance Rules for PlayReady Products document was published on 1st November 2021.",
+    "reference_contexts": [
+      "Compliance Rules for PlayReady® Products \n \nMicrosoft Corporation \n1st  November 2021\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n \n1 November 2021 \n \n Contents \n1 \nIntroduction ...............................................................................................................................1 \n1.1 \nDefinitions ..................................................................................................................................... 1 \n1.2 \nFormatting Conventions ............................................................................................................... 1 \n1.3 \nUsing this Document ..................................................................................................................... 1 \n2 \nRequirements For All PlayReady Products ...................................................................................2 \n2.1 \nScope ......................................................."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1,
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf001_q02_pos_detail",
+    "prompt": "What are the main sections covered under the 'Requirements For All PlayReady Products' in the document PR_Compliance_Rules_Part01_v2021.pdf?",
+    "ground_truth": "The main sections include Scope, Functionality, No Circumvention, Unspecified Policy, Root Public Keys, and Privacy.",
+    "reference_contexts": [
+      ". 1 \n2 \nRequirements For All PlayReady Products ...................................................................................2 \n2.1 \nScope ............................................................................................................................................. 2 \n2.2 \nFunctionality ................................................................................................................................. 2 \n2.3 \nNo Circumvention ......................................................................................................................... 2 \n2.4 \nUnspecified Policy ......................................................................................................................... 2 \n2.5 \nRoot Public Keys ............................................................................................................................ 3 \n2.6 \nPrivacy ..................................................................................................."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf002_q01_pos_factual",
+    "prompt": "Under what conditions can a PlayReady Product pass decrypted A/V Content through local outputs?",
+    "ground_truth": "A PlayReady Product can pass decrypted A/V Content through local outputs only if the associated PlayReady License, PlayReady-ND License, or WMDRM-ND License contains a Play Policy Container Object, or if the WMDRM-PD License contains a RIGHTS\\ONACTION node with a type attribute of 'Play'.",
+    "reference_contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n5 \n1 November 2021 \n3 Passing A/V Content \nA PlayReady Product must comply with this Section 3 (Passing A/V Content) when Passing decrypted A/V \nContent. \n3.1 \nPlayback \nA PlayReady Product may Pass decrypted A/V Content through the local Outputs described in Section \n3.4 (Restricted Outputs) and Section 3.7 (Other Outputs) only if: (i) the PlayReady License, PlayReady-ND \nLicense, or WMDRM-ND License associated with such A/V Content contains a Play Policy Container \nObject or (ii) the WMDRM-PD License associated with such A/V Content contains a RIGHTS\\ONACTION \nnode with a type attribute of “Play”. For the avoidance of doubt, Playback does not authorize any \naction other than those expressly permitted under this Section 3, including transcoding decrypted A/V \nContent, or functioning as a Transmitter. \n3.2 \nStop State \nFor A/V Content, Stop State occurs when decrypted A/V Content is no long"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf002_q02_pos_detail",
+    "prompt": "What triggers the Stop State for A/V Content in PlayReady, and what must a PlayReady Product do after entering the Stop State?",
+    "ground_truth": "Stop State occurs when decrypted A/V Content is no longer being Passed, such as when the user selects stop playback, the final portion of content has been Passed, or content stops being Passed in preparation for different content. After entering Stop State, the PlayReady Product must re-initialize PlayReady before Passing any decrypted A/V Content.",
+    "reference_contexts": [
+      "ermitted under this Section 3, including transcoding decrypted A/V \nContent, or functioning as a Transmitter. \n3.2 \nStop State \nFor A/V Content, Stop State occurs when decrypted A/V Content is no longer being Passed, for example \nbut without limitation as a result of one of the following: (i) the end user has selected a stop playback \nfunction, (ii) the final portion of decrypted A/V Content has been Passed, or (iii) decrypted A/V Content \nstops being Passed in preparation for Passing different decrypted A/V Content. After the PlayReady \nProduct enters the Stop State for any reason, it must re-initialize PlayReady before Passing any \ndecrypted A/V Content. \n3.3 \nSecure Stop  \nIf the Secure Stop Object, whether with or without the Secure Stop 2 Object, is specified in a PlayReady \nLicense, a PlayReady Product must comply with all requirements in this Section 3.3 (Secure Stop)  \n3.3.1 \nA PlayReady Product must implement Secure Stop in a manner Consistent with the \nMicrosoft Implementatio"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf003_q01_pos_factual",
+    "prompt": "What syntax must a PlayReady Product follow when creating PlayReady Licenses?",
+    "ground_truth": "A PlayReady Product must create PlayReady Licenses that follow the syntax defined in the \"PlayReady DRM Extensible Media Rights Specification.\"",
+    "reference_contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n23 \n1 November 2021 \n6 Creating PlayReady Licenses  \nA PlayReady Product may create PlayReady Licenses only if all requirements in this Section 6 (Creating \nPlayReady Licenses) are met. \n6.1 \nExtensible Media Rights Specification  \nA PlayReady Product must create only PlayReady Licenses that follow the syntax defined in the \n“PlayReady DRM Extensible Media Rights Specification”. \n6.2 \nEmbedded License Setting  \nThe Embedded License Settings Object must be specified in the PlayReady License. The allowed values \nfor the License Processing Indicator field must be set to values listed in Table 6.2 (Allowed License \nProcessing Indicator Values) according to the License type. \nTable 6.2: Allowed License Processing Indicator Values \nLicense Type \nAllowed Value \nDescription \nRoot License \n1 \nLicense will not be embedded. \nDevice Bound License \n1 \nLicense will not be embedded. \nLeaf License \n2 \nLice"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf003_q02_pos_detail",
+    "prompt": "What are the allowed values for the License Type in PlayReady licenses and what do they signify?",
+    "ground_truth": "The allowed values for License Type are 1 and 2. Value 1 indicates a Root License or Device Bound License where the license will not be embedded. Value 2 indicates a Leaf License or Domain Bound License where the license will be embedded.",
+    "reference_contexts": [
+      "nse Processing Indicator Values \nLicense Type \nAllowed Value \nDescription \nRoot License \n1 \nLicense will not be embedded. \nDevice Bound License \n1 \nLicense will not be embedded. \nLeaf License \n2 \nLicense will be embedded. \nDomain Bound License \n2 \nLicense will be embedded. \n6.3 \nPlay Enabler Type  \nIf the Play Enabler Type Object is specified in the PlayReady License then the allowed values for the Play \nEnabler Type field must be limited to values described in Section 3.9 (Output Control for Unknown \nOutputs) or Section 10.4 (Content Provider Authorized Exports). \n6.4 \nExplicit Digital Audio Output Protection  \nIf the Digital Audio Output Configuration Protection Restriction Object is specified in the PlayReady \nLicense the field values must be limited to values listed in Table 6.4 (Allowed Explicit Digital Audio \nOutput Protection Level Values). \nTable 6.4: Allowed Explicit Digital Audio Output Protection Level Values \nAudio Output Protection ID Field \nBinary Configuration Data \nFiel"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf004_q01_pos_factual",
+    "prompt": "What must a PlayReady Product do when creating WMDRM-ND Licenses as a Network Device Transmitter regarding the Cannot Persist bit?",
+    "ground_truth": "If the PlayReady Product is functioning as a Network Device Transmitter, it must set the Cannot Persist bit in the Rights field of the Rights Settings Object to a value of 1.",
+    "reference_contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n41 \n1 November 2021 \n8 Creating WMDRM-ND Licenses  \nA PlayReady Product may create WMDRM-ND Licenses only if all requirements in this Section 8 \n(Creating WMDRM-ND Licenses) are met. \n8.1 \nExtensible Media Rights Specification  \nA PlayReady Product must create only WMDRM-ND objects that follow the syntax defined in the \n“Windows Media DRM Extensible Media Rights Specification”. \n8.2 \nRights Settings  \nIf the PlayReady Product is functioning as a Network Device Transmitter, it must set the Cannot Persist \nbit in the Rights field of the Rights Settings Object to a value of 1. \n8.3 \nCopy Policy Container \n8.3.1 \nThe Copy Policy 2 Container Object must not be specified if the Copy Policy Container \nObject is specified in the WMDRM-ND License.  \n8.3.2 \nThe Copy Policy 2 Container Object may be specified in a WMDRM-ND License only if \nthe PlayReady Product is a Network Device Transmitter as a Mic"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-004_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf004_q02_pos_detail",
+    "prompt": "What are the allowed minimum copy protection level values specified in the WMDRM-ND License for the Copy Protection Level Restriction Object?",
+    "ground_truth": "The allowed minimum copy protection level values are 300 and 400. Value 300 allows copying to PD-DRM devices, WMDRM-PD devices, and PlayReady Portable Devices, while value 400 allows copying to WMDRM-PD devices and PlayReady Portable Devices.",
+    "reference_contexts": [
+      "Object is specified in the WMDRM-ND License.  \n8.3.2 \nThe Copy Policy 2 Container Object may be specified in a WMDRM-ND License only if \nthe PlayReady Product is a Network Device Transmitter as a Microsoft PBDA. \n8.4 \nCopy Count  \nIf the Copy Count 2 Restriction Object is specified in the WMDRM-ND License then the allowed values \nfor Copy Enabler Type Object’s Copy Enabler Type field must be limited to values described in Section \n10.4 (Content Provider Authorized Exports). \n8.5 \nCopy Protection Level  \nIf the Copy Protection Level Restriction Object is specified in the WMDRM-ND License, then the allowed \nvalues for the Minimum Copy Protection Level field must be limited to values listed in Table 8.5 \n(Allowed Minimum Copy Protection Level Values). \nTable 8.5: Allowed Minimum Copy Protection Level Values \nAllowed Value \nDescription \n300 \nCopy to PD-DRM devices, WMDRM-PD devices and PlayReady Portable \nDevices \n400 \nCopy to WMDRM-PD devices and PlayReady Portable Devices \n8.6 \nCopy Ena"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-004_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf005_q01_pos_factual",
+    "prompt": "What key usage must a PlayReady-ND Receiver's Device Certificate contain for a PlayReady Product to transmit to it?",
+    "ground_truth": "The Device Certificate must contain the PlayReady-ND Encrypt key usage and the Receiver feature for a PlayReady Product to transmit to a PlayReady-ND Receiver.",
+    "reference_contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n60 \n1 November 2021 \n11 Transmitting to PlayReady-ND Receiver \nA PlayReady Product must comply with this Section 11 (Transmitting to PlayReady-ND Receiver) when \nTransmitting to a PlayReady-ND Receiver. \n11.1 \nKey Usage \nA PlayReady Product must not Transmit to a PlayReady-ND Receiver whose Device Certificate \ndoes not contain the PlayReady-ND Encrypt key usage or whose Device Certificate does not \ncontain the Receiver feature. \n11.2 \nTimer  \nThe PlayReady Product must implement a timer with a resolution of no coarser than one (1) \nmillisecond. \n11.3 \nSecurity Level Verification \nA PlayReady Product must verify that the Certificate Security Level in the Device Certificate of \nthe associated PlayReady-ND Receiver is not less than the minimum License Security Level of the \nPlayReady License for the requested PlayReady A/V Content. If this verification fails, the \nPlayReady Product must not Tr"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-005_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf005_q02_pos_detail",
+    "prompt": "What are the specific requirements for proximity detection in PlayReady regarding RTT, TTL, and Hop Count?",
+    "ground_truth": "The PlayReady Product must verify that the Round Trip Time (RTT) is no more than seven (7) milliseconds. It must set the Time To Live (TTL) to three (3) in the IPv4 header and set the Hop Count to three (3) in the IPv6 header of the proximity challenge message.",
+    "reference_contexts": [
+      "yReady-ND Receiver is not less than the minimum License Security Level of the \nPlayReady License for the requested PlayReady A/V Content. If this verification fails, the \nPlayReady Product must not Transmit to the associated PlayReady-ND Receiver. \n11.4 \nProximity Detection Policy \n11.4.1 Round Trip Time (RTT) Verification  \nA PlayReady Product must verify that the RTT between the PlayReady Product and the \nassociated PlayReady-ND Receiver, as measured, is no more than seven (7) \nmilliseconds computed with a timer as described in Section 11.2 (Timer). \n11.4.2 Time To Live (TTL) \nA PlayReady Product must set the TTL to three (3) in the IPv4 header of the proximity \nchallenge message when Transmitting over IPv4 networks. \n11.4.3 Hop Count \nA PlayReady Product must set the Hop Count to three (3) in the IPv6 header of the \nproximity challenge message when Transmitting over IPv6 networks. \n11.4.4 Revalidation of PlayReady-ND Receivers \nA PlayReady Product may Transmit to a PlayReady-ND Rece"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-005_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "positive",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "positive"
+  },
+  {
+    "id": "pdf001_q03_edge_version",
+    "prompt": "Do the compliance rules in PlayReady apply to all versions or only to specific versions?",
+    "ground_truth": "The provided text does not specify whether the compliance rules apply to all versions of PlayReady or only to specific versions.",
+    "reference_contexts": [
+      ".................................................................................... 3 \n2.6 \nPrivacy ........................................................................................................................................... 4 \n3 \nPassing A/V Content ...................................................................................................................5 \n3.1 \nPlayback ........................................................................................................................................ 5 \n3.2 \nStop State ...................................................................................................................................... 5 \n3.3 \nSecure Stop ................................................................................................................................... 5 \n3.4 \nRestricted Outputs ........................................................................................................................ 5 \n3.5 \nRe"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_002"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf001_q04_edge_negation",
+    "prompt": "What output actions are NOT permitted for Bluetooth audio profiles according to PlayReady compliance rules?",
+    "ground_truth": "The document specifies that there are restrictions for output to Bluetooth audio profiles. Although the exact actions not permitted are not detailed in the provided text, it indicates that certain output controls and restrictions apply specifically to Bluetooth audio outputs.",
+    "reference_contexts": [
+      "......................................... 5 \n3.4 \nRestricted Outputs ........................................................................................................................ 5 \n3.5 \nRestrictions for Output to Bluetooth Audio Profiles..................................................................... 6 \n3.6 \nOutput Controls ............................................................................................................................ 7 \n3.7 \nOther Outputs ............................................................................................................................. 18 \n3.8 \nWatermark Non-Interference ..................................................................................................... 18 \n3.9 \nOutput Control for Unknown Outputs ........................................................................................ 19 \n4 \nRunning Software Content ................................................................................."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_003"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf001_q05_edge_multipart",
+    "prompt": "What are the requirements for running PlayReady software content, when do these requirements apply, and what are the consequences of non-compliance?",
+    "ground_truth": "The requirements for running PlayReady software content include adhering to content provider restrictions and managing the stop state as described. These requirements apply whenever PlayReady software content is being run. The consequences of non-compliance are implied by the need to follow these restrictions, though specific penalties are not detailed in the provided text.",
+    "reference_contexts": [
+      "...................................................................................... 19 \n4 \nRunning Software Content ........................................................................................................ 21 \n4.1 \nRunning PlayReady Software Content ........................................................................................ 21 \n4.2 \nContent Provider Restrictions ..................................................................................................... 21 \n4.3 \nStop State .................................................................................................................................... 21 \n5 \nDisplaying Digital Literary Content ............................................................................................ 22 \n5.1 \nDisplaying Digital Literary Content ............................................................................................. 22 \n5.2 \nConverting Text to Speech ......................................."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_004"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf002_q03_edge_version",
+    "prompt": "Do the Secure Stop requirements in the PlayReady compliance rules apply to all PlayReady Products or only specific versions?",
+    "ground_truth": "The Secure Stop requirements in Section 3.3 apply to all PlayReady Products, as it states a PlayReady Product must comply with all requirements in that section without specifying any version limitations.",
+    "reference_contexts": [
+      "a PlayReady Product must comply with all requirements in this Section 3.3 (Secure Stop)  \n3.3.1 \nA PlayReady Product must implement Secure Stop in a manner Consistent with the \nMicrosoft Implementation. \n3.3.2 \nA PlayReady Product must track Secure Stop data. \n3.3.3 \nA PlayReady Product must close and destroy all PlayReady decryptor objects when \nStop State occurs \n3.3.4 \nA PlayReady Product may only create a copy of a PlayReady decryptor object by using \nAPIs exposed by PlayReady for this purpose.  \n3.3.1 \nA PlayReady Product must fail decryption upon detecting that the secure stop entry \nfor the license it is decrypting with has been marked as stopped or has been sent.  \n3.4 \nRestricted Outputs\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n6 \n1 November 2021 \nA PlayReady Product may Pass decrypted A/V Content to the following local Outputs only if the \nrequirements in Sections 3.4 (Restricted Outputs), 3.5 (Restrictions for Output t"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_002"
+    ],
+    "expected_pages": [
+      1,
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf002_q04_edge_negation",
+    "prompt": "What types of local outputs is a PlayReady Product NOT allowed to pass decrypted A/V Content to?",
+    "ground_truth": "A PlayReady Product is only allowed to pass decrypted A/V Content to specific local outputs such as Analog Component Video Outputs, Analog Computer Monitor Outputs, Analog Television Outputs, Digital Audio Outputs, and Digital Video Outputs, provided certain requirements are met. It is not permitted to pass decrypted A/V Content to any other local outputs not listed in these sections.",
+    "reference_contexts": [
+      "d. \n6 \n1 November 2021 \nA PlayReady Product may Pass decrypted A/V Content to the following local Outputs only if the \nrequirements in Sections 3.4 (Restricted Outputs), 3.5 (Restrictions for Output to Bluetooth Audio \nProfiles), and 3.6 (Output Controls) are met.   \n3.4.1 \nAnalog Component Video Outputs.  A PlayReady Product may Pass the video portion \nof uncompressed decrypted A/V Content to Analog Component Video Outputs. \n3.4.2 \nAnalog Computer Monitor Outputs.  A PlayReady Product may Pass the video portion \nof uncompressed decrypted A/V Content to Analog Computer Monitor Outputs. \n3.4.3 \nAnalog Television Outputs.  A PlayReady Product may Pass the video portion of \nuncompressed decrypted A/V Content to Analog Television Outputs. \n3.4.4 \nDigital Audio Outputs.  A PlayReady Product may Pass the audio portion of \nuncompressed decrypted A/V Content to Digital Audio Outputs. \n3.4.5 \nDigital Video Outputs.  A PlayReady Product may Pass the video portion of \nuncompressed decrypted A/V C"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_003"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf002_q05_edge_multipart",
+    "prompt": "What is the requirement for passing decrypted A/V content to Miracast outputs, when does this requirement apply, and what are the consequences if this requirement is not met?",
+    "ground_truth": "The requirement is that a PlayReady Product may only pass decrypted A/V Content to Miracast Outputs if it successfully engages HDCP 2.0 or newer over the Miracast link. This requirement applies whenever decrypted A/V Content is being passed to Miracast Outputs. The text does not specify the consequences of non-compliance with this requirement.",
+    "reference_contexts": [
+      "Pass the audio portion of \nuncompressed decrypted A/V Content to Digital Audio Outputs. \n3.4.5 \nDigital Video Outputs.  A PlayReady Product may Pass the video portion of \nuncompressed decrypted A/V Content to Digital Video Outputs. \n3.4.6 \nBluetooth Audio Outputs.  A PlayReady Product may Pass the audio portion of \ndecrypted A/V Content to Bluetooth Audio Outputs, subject to Section 3.5 \n(Restrictions for Output to Bluetooth Audio Profiles). \n3.4.7 \nWirelessHD Outputs.  A PlayReady Product may Pass (i) the audio portion of decrypted \nA/V Content, and/or (ii) the video portion of uncompressed decrypted A/V Content to \nWirelessHD Outputs. \n3.4.8 \nMiracast Outputs.  A PlayReady Product may Pass (i) the audio portion of decrypted \nA/V Content, and/or (ii) the video portion of decrypted A/V Content to Miracast \nOutputs. A PlayReady Product may only Pass decrypted A/V Content to Miracast \nOutputs if the PlayReady Product successfully engages HDCP 2.0 or newer over the \nMiracast link. \n3.4.9"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_004"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf003_q03_edge_version",
+    "prompt": "Do the explicit digital audio and analog video output protection level requirements apply to all versions of PlayReady products or only specific versions?",
+    "ground_truth": "The document specifies compliance rules for PlayReady products as of 2021, but it does not state whether these explicit digital audio and analog video output protection level requirements apply to all versions or only specific versions of PlayReady.",
+    "reference_contexts": [
+      "ed Explicit Digital Audio \nOutput Protection Level Values). \nTable 6.4: Allowed Explicit Digital Audio Output Protection Level Values \nAudio Output Protection ID Field \nBinary Configuration Data \nField \nOutput Protection \nDescription \n{6D5CFA59-C250-4426-930E-\nFAC72C8FCFA6} \n00, 01, 10, 11 \nSCMS. See Table 3.6.2.8 \n(SCMS Control Bits)\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n24 \n1 November 2021 \n6.5 \nExplicit Analog Video Output Protection  \n6.5.1 \nIf the Analog Video Output Configuration Protection Restriction Object is specified in \nthe PlayReady License the field values must be limited to values listed in Table \n6.5.1(Allowed Explicit Analog Video Output Protection Level Values). \nTable 6.5.1: Allowed Explicit Analog Video Output Protection Level Values \nVideo Output Protection ID Field \nBinary Configuration Data Field \nOutput Protection \nDescription \n{C3FD11C6-F8B7-4D20-B008-\n1DB17D61F2DA} \n0, 1, 2, 3 \nAGC and Color Stripe \n{"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_002"
+    ],
+    "expected_pages": [
+      1,
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf003_q04_edge_negation",
+    "prompt": "What is NOT allowed when specifying the Analog Video Output Configuration Protection Restriction Object with the Video Output Protection ID {2098DE8D-7DDD-4BAB-96C6-32EBB6FABEA3} in a PlayReady License?",
+    "ground_truth": "It is NOT allowed to specify the Analog Video Output Configuration Protection Restriction Object with the Video Output Protection ID {2098DE8D-7DDD-4BAB-96C6-32EBB6FABEA3} in a PlayReady License without also specifying another Analog Video Output Configuration Protection Restriction Object with a Video Output Protection ID.",
+    "reference_contexts": [
+      "Protection Level Values \nVideo Output Protection ID Field \nBinary Configuration Data Field \nOutput Protection \nDescription \n{C3FD11C6-F8B7-4D20-B008-\n1DB17D61F2DA} \n0, 1, 2, 3 \nAGC and Color Stripe \n{2098DE8D-7DDD-4BAB-96C6-\n32EBB6FABEA3} \n0, 1, 2, 3 \nExplicit Analog Television Output \nRestriction \n{225CD36F-F132-49EF-BA8C-\nC91EA28E4369} \n0, 1, 2, 3 \nBest Effort Explicit Analog \nTelevision Output Restriction \n{811C5110-46C8-4C6E-8163- \nC0482A15D47E} \n520000 \nImage constraint for Analog \nComponent Video Output \n{D783A191-E083-4BAF-B2DA-\nE69F910B3772} \n520000 \nImage constraint for Analog \nComputer Monitor Output \n{760AE755-682A-41E0-B1B3-\nDCDF836A7306} \n0 \nDigital Video Only Content \n6.5.2 \nThe Analog Video Output Configuration Protection Restriction Object with a Video \nOutput Protection ID field value of {2098DE8D-7DDD-4BAB-96C6-32EBB6FABEA3} \nmay be specified in a PlayReady License only if another Analog Video Output \nConfiguration Protection Restriction Object with a Video Output Pro"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_003"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf003_q05_edge_multipart",
+    "prompt": "What is the requirement for specifying the field value of {2098DE8D-7DDD-4BAB-96C6-32EBB6FABEA3} in a PlayReady License, when does this requirement apply, and what are the consequences if it is not followed?",
+    "ground_truth": "The field value of {2098DE8D-7DDD-4BAB-96C6-32EBB6FABEA3} may only be specified in a PlayReady License if another Analog Video Output Configuration Protection Restriction Object with a Video Output Protection ID field value of {225CD36F-F132-49EF-BA8C-C91EA28E4369} is not specified. This requirement applies when configuring Analog Video Output Protection Restrictions in the license. The document does not explicitly state the consequences of non-compliance, but the compliance rules imply that violating this would result in a non-compliant PlayReady License configuration.",
+    "reference_contexts": [
+      "field value of {2098DE8D-7DDD-4BAB-96C6-32EBB6FABEA3} \nmay be specified in a PlayReady License only if another Analog Video Output \nConfiguration Protection Restriction Object with a Video Output Protection ID field \nvalue of {225CD36F-F132-49EF-BA8C-C91EA28E4369} is not specified. \n6.6 \nExplicit Digital Video Output Restriction \n6.6.1 \nIf the Digital Video Output Restriction Object is specified in a PlayReady License, the \nfield values must be limited to values listed in Table 6.6.1 (Allowed Explicit Digital \nVideo Output Restriction Level Values).\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n25 \n1 November 2021 \nTable 6.6.1: Allowed Explicit Digital Video Output Restriction  Level Values: \nVideo Output Restriction ID Field \nBinary Configuration Data Field \nOutput Restriction \nDescription \n{9645E831- E01D-4FFF-8342-\n0A720E3E028F} \nMaximum Frame Width in \nPixels, Maximum Frame Height \nin Pixels \nMaximum Effective \nResolution Decode"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_004"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf004_q03_edge_version",
+    "prompt": "Do the Copy Enabler Type rules apply to all versions of PlayReady licenses or only specific types?",
+    "ground_truth": "The Copy Enabler Type rules apply specifically to the WMDRM-ND License. The allowed values for the Copy Enabler Type field must be limited to those described in Section 10.4 or Table 8.6.1, which lists specific GUID values allowed in WMDRM-ND Licenses.",
+    "reference_contexts": [
+      "ion Level Values \nAllowed Value \nDescription \n300 \nCopy to PD-DRM devices, WMDRM-PD devices and PlayReady Portable \nDevices \n400 \nCopy to WMDRM-PD devices and PlayReady Portable Devices \n8.6 \nCopy Enabler Type\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n42 \n1 November 2021 \n8.6.1 \nIf the Copy Enabler Type Object is specified in the WMDRM-ND License, then the \nallowed values for the Copy Enabler Type field must be limited to values described in \nSection 10.4 (Content Provider Authorized Exports) or values listed in Table 8.6.1 \n(Allowed Copy Enabler Type Values). \nTable 8.6.1: Allowed Copy Enabler Type Values \nAllowed Value \nDescription \n{CE480EDE-516B-40b3-90E1-D6CFC47630C5} \nCopy to PC \n{6848955D-516B-4eb0-90E8-8F6D5A77B85F} \nCopy to device \n8.6.2 \nIf the Copy Enabler Type Object is specified in the WMDRM-ND License then the Copy \nEnabler Type field value of {C3CF56E0-7FF2-4491-809F-53E21D3ABF07} may be \nspecified only if (i) the P"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-004_v1.0_chunk_002"
+    ],
+    "expected_pages": [
+      1,
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "edge_case",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "edge_case"
+  },
+  {
+    "id": "pdf001_q16_neg_out_of_scope",
+    "prompt": "What does PR Compliance Rules Part01 v2021 say about Netflix DRM implementation?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf001_q17_neg_wrong_doc",
+    "prompt": "According to PR Compliance Rules Part01 v2021, how do I set up a Widevine license server?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf002_q16_neg_out_of_scope",
+    "prompt": "What does PR Compliance Rules Part02 v2021 say about Netflix DRM implementation?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf002_q17_neg_wrong_doc",
+    "prompt": "According to PR Compliance Rules Part02 v2021, how do I set up a Widevine license server?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf003_q16_neg_out_of_scope",
+    "prompt": "What does PR Compliance Rules Part03 v2021 say about Netflix DRM implementation?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf003_q17_neg_wrong_doc",
+    "prompt": "According to PR Compliance Rules Part03 v2021, how do I set up a Widevine license server?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf004_q16_neg_out_of_scope",
+    "prompt": "What does PR Compliance Rules Part04 v2021 say about Netflix DRM implementation?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf004_q17_neg_wrong_doc",
+    "prompt": "According to PR Compliance Rules Part04 v2021, how do I set up a Widevine license server?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf005_q16_neg_out_of_scope",
+    "prompt": "What does PR Compliance Rules Part05 v2021 say about Netflix DRM implementation?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf005_q17_neg_wrong_doc",
+    "prompt": "According to PR Compliance Rules Part05 v2021, how do I set up a Widevine license server?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": true,
+    "query_type": "negative",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "negative"
+  },
+  {
+    "id": "pdf001_q06_halluc_nonexistent",
+    "prompt": "What are the requirements outlined in section 7.5 regarding multi-device license synchronization in PlayReady products?",
+    "ground_truth": "The provided text does not include any information about section 7.5 or requirements for multi-device license synchronization in PlayReady products.",
+    "reference_contexts": [
+      "laying Digital Literary Content ............................................................................................. 22 \n5.2 \nConverting Text to Speech .......................................................................................................... 22 \n5.3 \nStop State .................................................................................................................................... 22 \n6 \nCreating PlayReady Licenses ..................................................................................................... 23 \n6.1 \nExtensible Media Rights Specification ........................................................................................ 23\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n \n1 November 2021 \n6.2 \nEmbedded License Setting .......................................................................................................... 23 \n6.3 \nPlay Enabler Type ......................"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf001_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part01 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf002_q06_halluc_nonexistent",
+    "prompt": "Does the PlayReady product have any special requirements for outputting decrypted A/V content to HDMI 3.1 outputs?",
+    "ground_truth": "The provided text does not mention any requirements or restrictions related to HDMI 3.1 outputs for PlayReady products. It only specifies that PlayReady products must engage HDCP 2.0 or newer for Miracast and Indirect Display Outputs, and outlines restrictions for output to Bluetooth Audio Profiles.",
+    "reference_contexts": [
+      "ntent to Miracast \nOutputs. A PlayReady Product may only Pass decrypted A/V Content to Miracast \nOutputs if the PlayReady Product successfully engages HDCP 2.0 or newer over the \nMiracast link. \n3.4.9 \nIndirect Display Outputs.  A PlayReady Product may Pass (i) the audio portion of \ndecrypted A/V Content, and/or (ii) the video portion of decrypted A/V Content to \nIndirect Display Outputs. A PlayReady Product may only Pass decrypted A/V Content \nto Indirect Display Outputs if the PlayReady Product successfully engages HDCP 2.0 or \nnewer over the Indirect Display link. \n3.5 \nRestrictions for Output to Bluetooth Audio Profiles \nA PlayReady Product may Pass the audio portion of decrypted A/V Content to Bluetooth Audio Profiles \nonly if the PlayReady Product follows restrictions as specified in the License and this Section 3.5 \n(Restrictions for Output to Bluetooth Audio Profiles). A PlayReady Product may Pass the audio portion of \ndecrypted A/V Content to Bluetooth Audio Profiles only if t"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf002_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part02 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf003_q06_halluc_nonexistent",
+    "prompt": "What is the purpose of the Video Output Encryption Level described in section 7.1.4 of the PlayReady Compliance Rules?",
+    "ground_truth": "The provided text does not mention any Video Output Encryption Level or section 7.1.4, so no information about this topic is available from the document excerpt.",
+    "reference_contexts": [
+      "figuration Data Field \nOutput Restriction \nDescription \n{9645E831- E01D-4FFF-8342-\n0A720E3E028F} \nMaximum Frame Width in \nPixels, Maximum Frame Height \nin Pixels \nMaximum Effective \nResolution Decode Size \n{ABB2C6F1-E663-4625-A945-\n972D17B231E7} \n{2076ECD5-044F-4047-BFCF-              \n7A75D0E4E269} \n \n{6CDA453D-BFBB-45d1-AEB7-\n37287B2403AE} \n1 \n \n1 \n \nSee section 6.6.5 \nHDCP Type Restriction \n \nInternal Video Output Only \n \nWatermarking Signalling \n \n \n \n6.6.2 \nA Binary Configuration Data Field for the Digital Video Output Restriction Object \nwith a Video Restriction ID field value of {9645E831- E01D-4FFF-8342-0A720E3E028F} \nmust be defined as a set of two 32 bit values, each in Big Endian format. The first 32 \nbit field defines the Maximum Frame Width in Pixels, the second 32 bit field defines \nthe Maximum Frame Height in Pixels \n6.6.3 \nThe Digital Video Output Restriction Object with a Video Restriction ID field value of \n{ABB2C6F1-E663-4625-A945-972D17B231E7} may be specified in a"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf003_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part03 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf004_q06_halluc_nonexistent",
+    "prompt": "What are the requirements for PlayReady Products under Section 8.15 regarding Digital Audio Output Protection?",
+    "ground_truth": "The provided text does not contain any information about requirements under Section 8.15 regarding Digital Audio Output Protection.",
+    "reference_contexts": [
+      "9-C250-4426-930E-\nFAC72C8FCFA6} \n00, 01, 10, 11 \nSCMS. See Table 3.6.2.8 \n(SCMS Control Bits) \n8.9 \nExplicit Analog Video Output Protection \n8.9.1 \nIf the PlayReady Product is a WMDRM-ND Tuner, then it is allowed to specify an \nAnalog Video Output Configuration Restriction Object with a Video Output \nProtection ID field containing the value {2098DE8D-7DDD-4BAB-96C6-\n32EBB6FABEA3}. \n8.9.2 \nIf the PlayReady Product is a Network Device Transmitter as a Microsoft PBDA and the \nAnalog Video Output Configuration Protection Restriction Object is specified in the \nWMDRM-ND License then field values must be limited to values listed in Table 8.9.3 \n(Allowed Explicit Analog Video Output Protection Values). \n8.9.3 \nIf a PlayReady Product is required under Section 8.12 (Source ID) to set the Source ID \nfield of the Source ID Object to a value of 266, then the PlayReady Product must also \ninclude in the WMDRM-ND License an Explicit Analog Video Output Protection \nContainer Object with both: (i) an A"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-004_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf004_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part04 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf005_q06_halluc_nonexistent",
+    "prompt": "What are the requirements for processing a PlayReady-ND License that includes a 'User Authentication Restriction' as mentioned in section 12.2?",
+    "ground_truth": "The provided text does not mention any requirements related to a 'User Authentication Restriction' or a section 12.2. It only covers requirements for Metering, Expire After First Play, and Domain ID restrictions in section 12.1.",
+    "reference_contexts": [
+      "yReady-ND Receiver.\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n62 \n1 November 2021 \n12 Receiving from PlayReady-ND Transmitter \n12.1 \nRequirements for Complying with Policy  \nThe following Compliance Rules are applicable to the Policy as specified in a PlayReady-ND License: \n12.1.1 Metering \nWhen processing a Root License or a Simple License, a PlayReady Product must fail to \nprocess it if it contains a Metering Restriction Object. \nWhen processing a Leaf License, a PlayReady Product must ignore the Metering \nRestriction Object. \n12.1.2 Expire After First Play \nWhen processing a Root License or a Simple License, a PlayReady Product must fail to \nprocess it if it contains an Expiration After First Play Restriction Object. \nWhen processing a Leaf License, a PlayReady Product must ignore the Expiration After \nFirst Play Restriction Object. \n12.1.3 Domain ID \nWhen processing a License, a PlayReady Product must fail to process it if it"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-005_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf005_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part05 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "hallucination"
+  },
+  {
+    "id": "pdf001_q07_robust_paraphrase",
+    "prompt": "Can you explain what the different output protection settings are in PlayReady?",
+    "ground_truth": "The document covers several output protection settings including Explicit Digital Audio Output Protection, Explicit Analog Video Output Protection, Explicit Digital Video Output Restriction, and Output Protection Level. These settings help control how audio and video content is protected when played back, ensuring compliance with digital rights management rules.",
+    "reference_contexts": [
+      "ovember 2021 \n6.2 \nEmbedded License Setting .......................................................................................................... 23 \n6.3 \nPlay Enabler Type ........................................................................................................................ 23 \n6.4 \nExplicit Digital Audio Output Protection ..................................................................................... 23 \n6.5 \nExplicit Analog Video Output Protection .................................................................................... 24 \n6.6 \nExplicit Digital Video Output Restriction ..................................................................................... 24 \n6.7 \nOutput Protection Level .............................................................................................................. 27 \n6.8 \nCopy Count .................................................................................................................................."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_006"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf002_q07_robust_paraphrase",
+    "prompt": "Can a PlayReady device send more than two audio streams of the same content to Bluetooth at the same time?",
+    "ground_truth": "No, a PlayReady Product must not simultaneously pass more than two streams of the same audio/video content to Bluetooth Audio Profiles.",
+    "reference_contexts": [
+      "the License and this Section 3.5 \n(Restrictions for Output to Bluetooth Audio Profiles). A PlayReady Product may Pass the audio portion of \ndecrypted A/V Content to Bluetooth Audio Profiles only if the audio quality does not exceed 48 kilohertz \n(kHz) and 16 bits per sample. A PlayReady Product must not Pass decrypted A/V Content to Bluetooth\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n7 \n1 November 2021 \nAudio Profiles at a rate higher than the normal rendering bandwidth. A PlayReady Product must not \nsimultaneously Pass more than two streams of the same A/V Content to Bluetooth Audio Profiles. \n3.6 \nOutput Controls \nA PlayReady Product must detect and accurately respond to the Output Controls for A/V Content in \naccordance with this Section 3.6 (Output Controls). \n3.6.1 \nMultiple Simultaneous Streams \nA PlayReady Product that Passes multiple instances of decrypted A/V Content \nsimultaneously to the same Output as described in thi"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_006"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf003_q07_robust_paraphrase",
+    "prompt": "Hey, if a PlayReady License has that specific video restriction ID ABB2C6F1-E663-4625-A945-972D17B231E7, is there something special about the digital video output protection it needs to have?",
+    "ground_truth": "Yes, if a PlayReady License includes the Digital Video Output Restriction Object with the Video Restriction ID {ABB2C6F1-E663-4625-A945-972D17B231E7}, it must also specify an Uncompressed Digital Video Output Protection Level with a value greater than or equal to 271. Additionally, the Binary Configuration Data Field for this ID must be defined as the number 1 as a 32-bit value in Big Endian format.",
+    "reference_contexts": [
+      "efines \nthe Maximum Frame Height in Pixels \n6.6.3 \nThe Digital Video Output Restriction Object with a Video Restriction ID field value of \n{ABB2C6F1-E663-4625-A945-972D17B231E7} may be specified in a PlayReady License \nonly if the PlayReady License also specifies an Uncompressed Digital Video Output \nProtection Level with a value greater than or equal to 271.  If such a Video Restriction \nID field is included, its Binary Configuration Data Field must be defined as the \nnumber 1 as a 32 bit value in Big Endian format. \n6.6.4 \nIf the Digital Video Output Restriction Object with a Video Restriction ID field value of \n{2076ECD5-044F-4047-BFCF-7A75D0E4E269} is specified in a PlayReady License, its \nBinary Configuration Data Field must be a single byte that takes the value 1. \n6.6.5 \nIf the Digital Video Output Restriction Object with a Video Restriction ID field value of \n{6CDA453D-BFBB-45d1-AEB7-37287B2403AE} is specified in a PlayReady License, its \nfield values and their associated enfor"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_006"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf004_q07_robust_paraphrase",
+    "prompt": "Hey, if the Source ID Object is set to 266, what extra stuff does the PlayReady Product have to include for analog video output protection?",
+    "ground_truth": "If the Source ID Object is set to 266, the PlayReady Product must include in the WMDRM-ND License an Explicit Analog Video Output Protection Container Object with two Analog Video Output Configuration Restriction Objects. One must have a Video Output Protection ID of {811C5110-46C8-4C6E-8163-C0482A15D47E} with Binary Configuration Data of 520000, and the other must have a Video Output Protection ID of {D783A191-E083-4BAF-B2DA-E69F910B3772} also with Binary Configuration Data of 520000.",
+    "reference_contexts": [
+      "field of the Source ID Object to a value of 266, then the PlayReady Product must also \ninclude in the WMDRM-ND License an Explicit Analog Video Output Protection \nContainer Object with both: (i) an Analog Video Output Configuration Restriction \nObject with a Video Output Protection ID field containing the value {811C5110-46C8-\n4C6E-8163-C0482A15D47E} and a Binary Configuration Data field containing the \nvalue 520000, and (ii) an Analog Video Output Configuration Restriction Object with \na Video Output Protection ID field containing the value {D783A191-E083-4BAF-B2DA-\nE69F910B3772} and a Binary Configuration Data field containing the value 520000. \nTable 8.9.3: Allowed Explicit Analog Video Output Protection Values \nVideo Output Protection ID Field \nBinary Configuration Data Field \nOutput Protection \nDescription \n{C3FD11C6-F8B7-4d20-B008-\n1DB17D61F2DA} \n0, 1, 2, 3 \nAGC and Color Stripe \n{2098DE8D-7DDD-4bab-96C6-\n32EBB6FABEA3} \n0, 1, 2, 3 \nExplicit Analog Television \nOutput Restriction"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-004_v1.0_chunk_006"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf005_q07_robust_paraphrase",
+    "prompt": "Hey, when a PlayReady device gets a license with a Domain Restriction, what should it do?",
+    "ground_truth": "When processing a License, a PlayReady Product must fail to process it if it contains a Domain Restriction Object.",
+    "reference_contexts": [
+      "ng a Leaf License, a PlayReady Product must ignore the Expiration After \nFirst Play Restriction Object. \n12.1.3 Domain ID \nWhen processing a License, a PlayReady Product must fail to process it if it contains a \nDomain Restriction Object. \n12.2 \nTransmitting Received Content \nA PlayReady-ND Receiver may not Transmit content it Receives from a PlayReady-ND \nTransmitter.\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n63 \n1 November 2021 \n13 Transmitting to WMDRM-ND Receiver \nA PlayReady Product must comply with this Section 13 (Transmitting to WMDRM-ND Receiver) when \nTransmitting to a WMDRM-ND Receiver. \n13.1 \nTimer  \nThe PlayReady Product must implement a timer with at least one (1) millisecond resolution. \n13.2 \nSecurity Level Verification \nA PlayReady Product must verify that the Certificate Security Level in the Device Certificate of the \nassociated WMDRM-ND Receiver is not less than the License Security Level of the PlayReady Licen"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-005_v1.0_chunk_006"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf006_q07_robust_paraphrase",
+    "prompt": "Why do content owners need strong DRM systems nowadays?",
+    "ground_truth": "Content is getting more expensive to produce and a lot of that money can be lost to piracy, so content owners need strong DRM systems to protect their investment. Also, with more devices, more content consumption, and higher quality content, protecting and monetizing content is more important than ever.",
+    "reference_contexts": [
+      "e to consumers and people are choosing to watch TV how and where \nthey want.   \nAs content becomes more expensive to produce and more of that investment is lost to piracy, \nrobust DRM systems become even more important to content owners for protecting their \ninvestment. \nChallenges \nFrom the perspective of the digital media ecosystem, there are currently three main challenges: \n \nThe number of digital media devices is growing. \n \nConsumers are consuming more content on these devices. \n \nContent providers are delivering higher quality and resolution of content. \n \nTactics to protect and monetize content are more crucial today than in years past. \nCustomers want connectivity everywhere, and they want interactive personalized experiences on \ntheir device of choice, with their preferred applications. To meet the demands of consumers, \nnetwork operators must deliver a huge amount of data in order to deliver compelling \nexperiences with high quality. Because these content experiences are"
+    ],
+    "expected_pdfs": [
+      "PR_Content_Protection_Whitepaper_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-006",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-006_v1.0_chunk_006"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Content_Protection_Whitepaper_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf007_q07_robust_paraphrase",
+    "prompt": "What is Microsoft PlayReady and what is it used for?",
+    "ground_truth": "Microsoft PlayReady is a content protection and management solution designed mainly for entertainment products and services across all platforms and devices. It has more than 15 years of development, a strong patent portfolio, proven robustness, and support from a dedicated breach response team, making it a leading digital rights management solution.",
+    "reference_contexts": [
+      ".. 29 \nRelease Requirements ................................................................................................................................................ 29 \nCompliance and Robustness ............................................................................................................................... 29 \nLicensing Options......................................................................................................................................................... 30\n\nMicrosoft PlayReady \nDeveloping PlayReady Clients \n \n \n2 \nIntroduction \nMicrosoft PlayReady is a comprehensive content protection and management solution for multi-\nindustry (mainly entertainment) products and services across all platforms and types of devices. \nWith more than 15 years and $2 billion of research and development, a full IP patent portfolio, \nproven robustness, and backing by a dedicated breach response team, PlayReady has become \nthe industry-leading, digital rights man"
+    ],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part01_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-007",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-007_v1.0_chunk_006"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Dev_Clients_Part01_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf008_q07_robust_paraphrase",
+    "prompt": "Which Microsoft devices and systems already have PlayReady built in?",
+    "ground_truth": "PlayReady is natively supported on Microsoft platforms including Windows 7 and later, all versions of Windows Phone, and Xbox One and Xbox 360. For other platforms like Android or iOS, you can build a PlayReady client using a specific PlayReady SDK or the PlayReady Device Porting Kit.",
+    "reference_contexts": [
+      "on of factors — native PlayReady support \non many platforms, the PlayReady client SDKs and Device Porting Kit for other platforms, and \nPlayReady support for the latest web standards and technologies. Another significant factor is \nthe PlayReady architecture and development model. PlayReady makes extensive use of the \nmedia framework, interfaces, and APIs of the host platform and combines them with PlayReady \nAPIs that add layers of content protection. Consequently, you can build a client that uses the \napplication model, features, and APIs that you want for your specific business needs.\n\nMicrosoft PlayReady \nDeveloping PlayReady Clients \n \n \n14 \nThe following Microsoft platforms provide native support for PlayReady: \n \nWindows 7 and later \n \nWindows Phone, all versions \n \nXbox One and Xbox 360® \nFor other platforms, you can build a PlayReady client by using a PlayReady SDK that is designed \nspecifically for that platform (Android or iOS) or the PlayReady Device Porting Kit. The por"
+    ],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part02_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-008",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-008_v1.0_chunk_006"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Dev_Clients_Part02_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf009_q07_robust_paraphrase",
+    "prompt": "Where can I find the main resources and info about PlayReady stuff?",
+    "ground_truth": "You can find PlayReady resources and information organized by features, licensing, documents, and other sections such as partners and news. Key links include technical documents, white papers, sample agreements, licensee lists, and compliance rules, all accessible through the PlayReady website at various URLs provided.",
+    "reference_contexts": [
+      "atures/productSuite)\nEnhanced Content Protection (/playready/features/EnhancedContentProtection)\nClient Options (/playready/features/clientOptions)\nHTML5 (/playready/features/html5)\nMicrosoft End Points (/playready/features/microsoftEndpoints)\nSupported Standards (/playready/features/supportedStandards)\nGet Started!\nGet PlayReady (/playready/licensing/getplayready)\nLicensing Options (/playready/licensing/licensingOptions)\nLicensing Process\nDocuments\nTechnical Documents (https://docs.microsoft.com/en-us/playready/)\nWhite Papers (/playready/documents)\nSample Agreements (/playready/sampleAgreements)\nLicensee Information\nLicensee List (https://iplapublic.powerappsportals.com/page/Licensee-Lists/)\nWatermarking Vendors (/playready/watermarking)\nCompliance & Robustness Rules (/playready/licensing/compliance)\nFAQ (/playready/licensing/faq)\nOther\nPartners (/playready/partners)\nLicensee Portal (https://aka.ms/IPLA)\nNews (/playready/newsroom)\n\n© 2024 Microsoft. All Rights Reserved.\nContact Us (ht"
+    ],
+    "expected_pdfs": [
+      "PR_Development_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-009",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-009_v1.0_chunk_002"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Development_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf010_q07_robust_paraphrase",
+    "prompt": "Where can I find the PlayReady licensing options and technical documents?",
+    "ground_truth": "You can find PlayReady licensing options under the Licensing Options section (/playready/licensing/licensingOptions). Technical documents are available at https://docs.microsoft.com/en-us/playready/. Additionally, there are sample agreements and white papers available in the Documents section.",
+    "reference_contexts": [
+      "/features/microsoftEndpoints)\nSupported Standards (/playready/features/supportedStandards)\nGet Started!\nGet PlayReady (/playready/licensing/getplayready)\nLicensing Options (/playready/licensing/licensingOptions)\nLicensing Process\nDocuments\nTechnical Documents (https://docs.microsoft.com/en-us/playready/)\nWhite Papers (/playready/documents)\nSample Agreements (/playready/sampleAgreements)\nLicensee Information\nLicensee List (https://iplapublic.powerappsportals.com/page/Licensee-Lists/)\nWatermarking Vendors (/playready/watermarking)\nCompliance & Robustness Rules (/playready/licensing/compliance)\nFAQ (/playready/licensing/faq)\nOther\nPartners (/playready/partners)\nLicensee Portal (https://aka.ms/IPLA)\nNews (/playready/newsroom)\n© 2024 Microsoft. All Rights Reserved.\n\nContact Us (http://go.microsoft.com/?linkid=2028325)\nTerms of Use (http://go.microsoft.com/?linkid=4412892)\nTrademarks (https://www.microsoft.com/trademarks)\nPrivacy Statement (http://go.microsoft.com/fwlink/?LinkId=81184)\nConsu"
+    ],
+    "expected_pdfs": [
+      "PR_Distribution_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-010",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-010_v1.0_chunk_002"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "robustness",
+    "source_pdf": "PR_Distribution_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "robustness"
+  },
+  {
+    "id": "pdf001_q08_comp_rule",
+    "prompt": "What are the mandatory compliance requirements related to Copy Count and License Security Level in PlayReady?",
+    "ground_truth": "The document outlines Copy Count and License Security Level as specific sections in the compliance rules, indicating that managing the number of allowable copies and maintaining a defined License Security Level are mandatory obligations. These requirements ensure controlled copying and secure license handling as part of the PlayReady compliance framework.",
+    "reference_contexts": [
+      "................................................. 27 \n6.8 \nCopy Count .................................................................................................................................. 28 \n6.9 \nCopy Enabler Type ...................................................................................................................... 28 \n6.10 \nMove Enabler Type ..................................................................................................................... 28 \n6.11 \nLicense Security Level ................................................................................................................. 29 \n6.12 \nSource ID ..................................................................................................................................... 29 \n6.13 \nRestricted Source ID .................................................................................................................... 30 \n6.14 \nPlayReady Revocation Information Version ......."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_007"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf002_q08_comp_rule",
+    "prompt": "What must a PlayReady Product do when passing multiple instances of decrypted audio/video content simultaneously to the same output?",
+    "ground_truth": "A PlayReady Product that passes multiple instances of decrypted A/V Content simultaneously to the same output must select the most restrictive Output Control associated with all the instances of A/V Content for that output.",
+    "reference_contexts": [
+      "Section 3.6 (Output Controls). \n3.6.1 \nMultiple Simultaneous Streams \nA PlayReady Product that Passes multiple instances of decrypted A/V Content \nsimultaneously to the same Output as described in this Section 3.6 (Output Controls) \nmust select the most restrictive Output Control associated with all the instances of A/V \nContent for that Output. \n3.6.2 \nOutput Control for Compressed Digital Audio Content \nIf a PlayReady Product Passes the audio portion of compressed decrypted A/V Content, \nthe PlayReady Product must follow restrictions as specified in the License and this \nSection 3.6.2 (Output Control for Compressed Digital Audio Content). A PlayReady \nProduct may Pass the audio portion of compressed decrypted A/V Content to Secure \nCodecs only if the uncompressed Digital Audio Content is handled consistently with \nSection 3.6.3 (Output Control for Uncompressed Digital Audio Content). In PlayReady \nLicenses and WMDRM-ND Licenses, the Output Protection Level is specified in the \nMinimu"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_007"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf003_q08_comp_rule",
+    "prompt": "What are the mandatory requirements for a PlayReady product when the first byte of the Binary Configuration Data field in a Video Output Restriction Object is set to 0 or 1?",
+    "ground_truth": "If the first byte is set to 0, no additional bytes may be specified, and the PlayReady product must disengage Watermarking before passing uncompressed decrypted A/V content to Digital Outputs. If the first byte is set to 1, at least 19 total bytes must be specified, and the product must engage the Watermarking system in the Fourth through Nineteenth Bytes before passing the video portion to Digital Outputs.",
+    "reference_contexts": [
+      "tal Video Output Restriction Object with a Video Restriction ID field value of \n{6CDA453D-BFBB-45d1-AEB7-37287B2403AE} is specified in a PlayReady License, its \nfield values and their associated enforcement requirements are as follows: \nFirst byte of multi-byte field \nIf the first byte of the Binary Configuration Data field is set to 0, no additional bytes \nmay be specified.  In this case, before a PlayReady Product may Pass the video portion\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n26 \n1 November 2021 \nof uncompressed decrypted A/V Content to Digital Outputs, it must disengage \nWatermarking. \nIf the first byte of the Binary Configuration Data field is set to 1, at least 19 total bytes \nmust be specified.  In this case, before a PlayReady Product may Pass the video portion \nof uncompressed decrypted A/V Content to Digital Outputs, it must engage the \nWatermarking system in the Fourth through Nineteenth Bytes according to the \nrem"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_007"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf004_q08_comp_rule",
+    "prompt": "What are the allowed values for the Output Protection Level Restriction Object in a WMDRM-ND License for PlayReady products?",
+    "ground_truth": "The Output Protection Level Restriction Object in a WMDRM-ND License must have field values limited to those listed in Table 8.10. The allowed values for both Minimum Compressed and Minimum Uncompressed Digital Audio Output Protection Level are 100, 150, 200, 250, and 300.",
+    "reference_contexts": [
+      "Protection \nDescription \n{C3FD11C6-F8B7-4d20-B008-\n1DB17D61F2DA} \n0, 1, 2, 3 \nAGC and Color Stripe \n{2098DE8D-7DDD-4bab-96C6-\n32EBB6FABEA3} \n0, 1, 2, 3 \nExplicit Analog Television \nOutput Restriction \n{811C5110-46C8-4C6e-8163- \nC0482A15D47E} \n520000 \nImage constraint for Analog \nComponent Video Output \n{D783A191-E083-4BAF-B2DA-\nE69F910B3772} \n520000 \nImage constraint for Analog \nComputer Monitor Output\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n44 \n1 November 2021 \n8.10 \nOutput Protection Level  \nIf the Output Protection Level Restriction Object is specified in the WMDRM-ND License then field \nvalues must be limited to values listed in Table 8.10 (Allowed Output Protection Level Values). \nTable 8.10: Allowed Output Protection Level Values \nField \nAllowed Values \nMinimum Compressed Digital Audio Output Protection Level \n100, 150, 200, 250, 300 \nMinimum Uncompressed Digital Audio Output Protection Level \n100, 150, 200, 250, 300 \nMini"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-004_v1.0_chunk_007"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf005_q08_comp_rule",
+    "prompt": "What are the mandatory requirements for a PlayReady Product when verifying proximity and security levels before transmitting to a WMDRM-ND Receiver?",
+    "ground_truth": "A PlayReady Product must verify that the Certificate Security Level in the Device Certificate of the associated WMDRM-ND Receiver is not less than the License Security Level of the PlayReady License. It must not transmit if this verification fails. Additionally, the Product must verify that the Round Trip Time (RTT) between itself and the WMDRM-ND Receiver is no more than seven milliseconds. It must also set the TTL to three in the IPv4 header or the Hop Count to three in the IPv6 header of the proximity challenge message when transmitting over respective networks.",
+    "reference_contexts": [
+      "n \nA PlayReady Product must verify that the Certificate Security Level in the Device Certificate of the \nassociated WMDRM-ND Receiver is not less than the License Security Level of the PlayReady License for \nthe requested PlayReady A/V Content. If this verification fails, the PlayReady Product must not Transmit \nto the associated WMDRM-ND Receiver. \n13.3 \nProximity Detection Policy \n13.3.1 Round Trip Time (RTT) Verification  \nA PlayReady Product must verify that the RTT between the PlayReady Product and the \nassociated WMDRM-ND Receiver, as measured, is no more than seven (7) \nmilliseconds computed with a timer as described in Section 13.1 (Timer). \n13.3.2 Time To Live (TTL) \nA PlayReady Product must set the TTL to three (3) in the IPv4 header of the proximity \nchallenge message when Transmitting over IPv4 networks. \n13.3.3 Hop Count \nA PlayReady Product must set the Hop Count to three (3) in the IPv6 header of the \nproximity challenge message when Transmitting over IPv6 networks. \n13."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-005_v1.0_chunk_007"
+    ],
+    "expected_pages": [
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf006_q08_comp_rule",
+    "prompt": "What are the mandatory requirements for content protection systems in the digital media ecosystem?",
+    "ground_truth": "Content protection systems must be able to scale to the growing number of devices, be versatile enough to handle an increasing variety of consumption platforms, and maintain the robustness required to provide reliable security across all services and devices. They must also be flexible enough to handle various business scenarios in the expanding digital media ecosystem.",
+    "reference_contexts": [
+      "plications. To meet the demands of consumers, \nnetwork operators must deliver a huge amount of data in order to deliver compelling \nexperiences with high quality. Because these content experiences are moving to multiple \nconsumption outlets — some of which are unmanaged — well-understood business models for \nmonetizing content are no longer the rule. For example, high-value movie content is often now \navailable via over-the-top (OTT) services on the same day as it appears in movie theaters.\n\nMicrosoft PlayReady \nContent Protection Technology \n \n \n3 \nContent protection systems must be able to scale to the growing number of devices. Also, these \ncontent systems must be versatile enough to handle an increasing variety of consumption \nplatforms while also maintaining the robustness required to provide reliable security across all \nservices and devices. Content protection systems must be flexible enough to handle the various \nbusiness scenarios that the expanding digital media ecosystem wil"
+    ],
+    "expected_pdfs": [
+      "PR_Content_Protection_Whitepaper_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-006",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-006_v1.0_chunk_007"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Content_Protection_Whitepaper_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf007_q08_comp_rule",
+    "prompt": "What are the mandatory compliance requirements for devices to use PlayReady DRM technology?",
+    "ground_truth": "Devices must be certified to use PlayReady DRM technology to ensure scalable, secure, and user-friendly protection of media content. Compliance includes supporting multiple media content distribution models, delivery options, and adhering to emerging and established international and industry standards such as MPEG-DASH, HTML5 media extensions, Smooth Streaming, and Apple HTTP Live Streaming (HLS).",
+    "reference_contexts": [
+      "$2 billion of research and development, a full IP patent portfolio, \nproven robustness, and backing by a dedicated breach response team, PlayReady has become \nthe industry-leading, digital rights management (DRM) system for protecting media content on \ncertified devices. It provides scalable, secure, user-friendly protection of content for a wide \nrange of distribution and consumption options. PlayReady supports: \n \nMultiple media content distribution models, including subscription, video on demand, \nrental, ad-based, and purchase (download to own). \n \nMultiple media delivery options, including live and on-demand streaming, and basic and \nprogressive download. \n \nEmerging and established international and industry standards, including MPEG-DASH, \nHTML5 media extensions, Smooth Streaming, and Apple HTTP Live Streaming (HLS). \n \nA broad range of consumer devices, including phones, laptops, tablets, set-top boxes, \nSmart TVs, and connected Blu-ray™ players. \n \nAll major client platf"
+    ],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part01_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-007",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-007_v1.0_chunk_007"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Dev_Clients_Part01_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf008_q08_comp_rule",
+    "prompt": "What must developers do to build a PlayReady client for platforms other than Xbox 360?",
+    "ground_truth": "Developers must use a PlayReady SDK designed specifically for the target platform, such as Android or iOS, or utilize the PlayReady Device Porting Kit, which provides portable, platform-independent source code and a comprehensive API for calling PlayReady functions.",
+    "reference_contexts": [
+      "Xbox 360® \nFor other platforms, you can build a PlayReady client by using a PlayReady SDK that is designed \nspecifically for that platform (Android or iOS) or the PlayReady Device Porting Kit. The porting \nkit provides portable, platform-independent source code and a comprehensive API for calling \nPlayReady functions. To help you optimize a PlayReady client for a specific platform, both the \nsource code and functions are designed to accommodate differing device capabilities and \nconfigurations. To learn more about the PlayReady kits, see Development Tools and Options.  \nMoving away from specific platforms, you also have the option of leveraging the latest web \nstandards and technologies to build a PlayReady client that works on multiple platforms. Both \nSilverlight and MPEG-DASH (MPEG Dynamic Adaptive Streaming over HTTP) provide cross-\nplatform solutions for delivering protected media content. Silverlight provides built-in PlayReady \nsupport for multiple media formats and it works on"
+    ],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part02_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-008",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-008_v1.0_chunk_007"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Dev_Clients_Part02_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf009_q08_comp_rule",
+    "prompt": "What mandatory compliance requirements must partners adhere to when working with PlayReady?",
+    "ground_truth": "Partners must comply with all PlayReady licensing terms and conditions as outlined in the compliance section. They are obligated to follow the specified rules to maintain their licensing and partnership status.",
+    "reference_contexts": [
+      "/compliance)\nFAQ (/playready/licensing/faq)\nOther\nPartners (/playready/partners)\nLicensee Portal (https://aka.ms/IPLA)\nNews (/playready/newsroom)\n\n© 2024 Microsoft. All Rights Reserved.\nContact Us (http://go.microsoft.com/?linkid=2028325)\nTerms of Use (http://go.microsoft.com/?linkid=4412892)\nTrademarks (https://www.microsoft.com/trademarks)\nPrivacy Statement (http://go.microsoft.com/fwlink/?LinkId=81184)\nConsumer Health Privacy (https://go.microsoft.com/fwlink/?linkid=2259814)"
+    ],
+    "expected_pdfs": [
+      "PR_Development_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-009",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-009_v1.0_chunk_003"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Development_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf010_q08_comp_rule",
+    "prompt": "What mandatory compliance requirements or obligations are mentioned in the terms of use and privacy statements linked in the document?",
+    "ground_truth": "The document references several links including Terms of Use, Trademarks, Privacy Statement, and Consumer Health Privacy, which imply mandatory compliance with the rules and obligations stated in those links. Users must adhere to the Terms of Use, respect trademark guidelines, and comply with privacy policies as outlined in the provided URLs.",
+    "reference_contexts": [
+      "oft.com/?linkid=2028325)\nTerms of Use (http://go.microsoft.com/?linkid=4412892)\nTrademarks (https://www.microsoft.com/trademarks)\nPrivacy Statement (http://go.microsoft.com/fwlink/?LinkId=81184)\nConsumer Health Privacy (https://go.microsoft.com/fwlink/?linkid=2259814)"
+    ],
+    "expected_pdfs": [
+      "PR_Distribution_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-010",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-010_v1.0_chunk_003"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "compliance",
+    "source_pdf": "PR_Distribution_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "compliance"
+  },
+  {
+    "id": "pdf001_q09_ground_cite",
+    "prompt": "Which section of the PlayReady Compliance Rules document defines the requirements for the Execute Restriction Object?",
+    "ground_truth": "The requirements for the Execute Restriction Object are defined in section 6.15 of the PlayReady Compliance Rules document.",
+    "reference_contexts": [
+      "13 \nRestricted Source ID .................................................................................................................... 30 \n6.14 \nPlayReady Revocation Information Version ............................................................................... 31 \n6.15 \nExecute Restriction Object .......................................................................................................... 31 \n6.16 \nContent Rights ............................................................................................................................. 31 \n6.17         Secure Stop .................................................................................................................................. 37 \n6.18          Key Exchange Right ..................................................................................................................... 37 \n7 \nCreating PlayReady-ND Licenses ..............................................................................."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_008"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf002_q09_ground_cite",
+    "prompt": "Which document section defines the rules for Output Control for Uncompressed Digital Audio Content in PlayReady licenses?",
+    "ground_truth": "The rules for Output Control for Uncompressed Digital Audio Content are defined in Section 3.6.3.",
+    "reference_contexts": [
+      "handled consistently with \nSection 3.6.3 (Output Control for Uncompressed Digital Audio Content). In PlayReady \nLicenses and WMDRM-ND Licenses, the Output Protection Level is specified in the \nMinimum Compressed Digital Audio Output Protection Level field of the Output \nProtection Level Restriction Object. In WMDRM-PD Licenses, this Output Protection \nLevel is specified in the RESTRICTIONS\\COMPRESSEDDIGITALAUDIO node. \n3.6.2.1 \nLevel 0 to 100  \nIf the Output Protection Level is not specified or the Output Protection Level \nspecified in the License is less than or equal to 100, a PlayReady Product may \ndirect the audio portion of compressed decrypted A/V Content to flow to Audio \nOutputs. \n3.6.2.2 \nLevel 101 to 150  \nIf the Output Protection Level specified in the License is greater than or equal to \n101 and less than or equal to 150, a PlayReady Product may Pass the audio \nportion of compressed decrypted A/V Content to Stream Rendering \nApplications, and via Secure Audio Device Driver"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_008"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf003_q09_ground_cite",
+    "prompt": "Which specific document and section define the requirements for engaging the Watermarking system when passing uncompressed decrypted A/V Content to Digital Outputs?",
+    "ground_truth": "The requirements for engaging the Watermarking system when passing uncompressed decrypted A/V Content to Digital Outputs are defined in the document PR_Compliance_Rules_Part03_v2021.pdf.",
+    "reference_contexts": [
+      "Ready Product may Pass the video portion \nof uncompressed decrypted A/V Content to Digital Outputs, it must engage the \nWatermarking system in the Fourth through Nineteenth Bytes according to the \nremaining specified bytes as indicated below. \nIf the first byte of the Binary Configuration Data field is set to 2, no additional bytes \nmay be specified.  In this case, if Watermarking is currently engaged, a PlayReady \nProduct must attempt to disengage Watermarking before it may Pass the video portion \nof uncompressed decrypted A/V Content to Digital Outputs.  If Watermarking is not \ncurrently engaged or the PlayReady Product is unable to disengage Watermarking, the \nPlayReady Product may Pass the video portion of uncompressed decrypted A/V Content \nto Digital Outputs.  \nIf the first byte of the Binary Configuration Data field is set to 3, at least 19 total bytes \nmust be specified. In this case, a PlayReady Product must attempt to engage the \nWatermarking system in the Fourth through Nine"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_008"
+    ],
+    "expected_pages": [
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf004_q09_ground_cite",
+    "prompt": "Which document and section specify the allowed values for the Minimum Security Level field in the WMDRM-ND License?",
+    "ground_truth": "The allowed values for the Minimum Security Level field must be specified in the WMDRM-ND License as per Table 8.11 in the document PR_Compliance_Rules_Part04_v2021.pdf, section 8.11 License Security Level.",
+    "reference_contexts": [
+      "ues \nField \nAllowed Values \nMinimum Compressed Digital Audio Output Protection Level \n100, 150, 200, 250, 300 \nMinimum Uncompressed Digital Audio Output Protection Level \n100, 150, 200, 250, 300 \nMinimum Compressed Digital Video Output Protection Level \n400, 500 \nMinimum Uncompressed Digital Video Output Protection Level \n100, 150, 200 250, 270, 300 \nMinimum Analog Video Output Protection Level \n100, 125, 150, 200 \n8.11 \nLicense Security Level  \nThe Minimum Environment Object must be specified in the WMDRM-ND License. The allowed values \nfor the Minimum Security Level field must be limited to values listed in Table 8.11 (Allowed License \nSecurity Level Values). \nTable 8.11: Allowed License Security Level Values \nAllowed Value \nDescription \n150 \nA License Security Level of 150 indicates the associated WMDRM Content is \nof non-commercial quality. The associated WMDRM Content can be accessed \nonly by players and devices with a Certificate Security Level of 150 or higher. \n1000 \nA License"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-004_v1.0_chunk_008"
+    ],
+    "expected_pages": [
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf005_q09_ground_cite",
+    "prompt": "Which section of the PlayReady compliance rules specifies the requirement for setting the Hop Count in the IPv6 header of the proximity challenge message?",
+    "ground_truth": "Section 13.3.3 of the PlayReady compliance rules specifies that a PlayReady Product must set the Hop Count to three (3) in the IPv6 header of the proximity challenge message when transmitting over IPv6 networks.",
+    "reference_contexts": [
+      "mitting over IPv4 networks. \n13.3.3 Hop Count \nA PlayReady Product must set the Hop Count to three (3) in the IPv6 header of the \nproximity challenge message when Transmitting over IPv6 networks. \n13.3.4 Revalidation of WMDRM-ND Receivers \nA PlayReady Product may Transmit to a WMDRM-ND Receiver only if the associated \nWMDRM-ND Receiver has successfully completed a proximity challenge at least once \nin the preceding forty-eight (48) hour period. \n13.4 \nRevocation Data Freshness  \nA WMDRM-ND Transmitter as a Microsoft OCUR may Transmit to the associated WMDRM-ND Receiver \nonly if the Issued Time on the Revocation Data Timestamp is no more than ninety (90) days prior to the \ncurrent date/time received from a Secure Time Source. For the avoidance of doubt, when the condition \nin this Section 13.4 (Revocation Data Freshness) is not met, a PlayReady Product implementing both \nWMDRM-ND Transmitter and WMDRM-ND Transmitter as a Microsoft OCUR may Transmit if the\n\nCompliance Rules for PlayReady"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-005_v1.0_chunk_008"
+    ],
+    "expected_pages": [
+      4,
+      5
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf006_q09_ground_cite",
+    "prompt": "Which document outlines the future shifts in digital media ecosystem security requirements such as the move to hardware-based security and HTML5 playback?",
+    "ground_truth": "The document titled 'PR_Content_Protection_Whitepaper_v2015.pdf' outlines the future shifts in digital media ecosystem security requirements, including the move to hardware-based security, standards-based HTML5 playback, and hybrid content delivery models.",
+    "reference_contexts": [
+      "provide reliable security across all \nservices and devices. Content protection systems must be flexible enough to handle the various \nbusiness scenarios that the expanding digital media ecosystem will inevitably produce. \nThe Future \nThe future holds several important shifts in the digital media ecosystem. Security is moving into \nhardware, apps are giving way to browsers, networks are becoming mere pipes for OTT content, \nand content delivery is moving to the cloud: \nToday \nTomorrow \nSoftware-based security \nSoftware and Hardware-based security \nDedicated applications \nStandards-based HTML5 playback \nManaged networks \nOTT streaming, and managed networks \nOn-premises based delivery \nHybrid (Cloud and on-premises) based delivery \nContent protection systems must evolve to support these changes, embrace new standards such \nas HTML5 Encrypted Media Extensions (EME), move to open technologies such as Dynamic \nAdaptive Streaming over HTTP (DASH), and anticipate the shift to ultra-high resol"
+    ],
+    "expected_pdfs": [
+      "PR_Content_Protection_Whitepaper_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-006",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-006_v1.0_chunk_008"
+    ],
+    "expected_pages": [
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Content_Protection_Whitepaper_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf007_q09_ground_cite",
+    "prompt": "Which document and section define the requirements for developing PlayReady clients?",
+    "ground_truth": "The document titled 'PR_Dev_Clients_Part01_v2015.pdf' includes information on developing PlayReady clients, particularly in the section labeled 'Developing PlayReady Clients'.",
+    "reference_contexts": [
+      "g, and Apple HTTP Live Streaming (HLS). \n \nA broad range of consumer devices, including phones, laptops, tablets, set-top boxes, \nSmart TVs, and connected Blu-ray™ players. \n \nAll major client platforms, including Android, iOS, Windows®, Windows Phone®, and \nXbox®. \nPlayReady is also approved and adopted by major Hollywood studios, the Digital Entertainment \nContent Ecosystem, UltraViolet™, Smart TV Alliance, and HbbTV®. \nAs a content protection system, PlayReady is fundamentally designed to secure the distribution \nof digital content and to enable rights to be specified and enforced for that content, primarily \nthrough the use of digital encryption keys (content keys) and licenses. With its cross-functional \nand cross-platform capabilities, PlayReady is also a versatile component of any larger digital\n\nMicrosoft PlayReady \nDeveloping PlayReady Clients \n \n \n3 \nmedia ecosystem. The following diagram identifies major phases and components of the digital \nmedia ecosystem and PlayReady s"
+    ],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part01_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-007",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-007_v1.0_chunk_008"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Dev_Clients_Part01_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf008_q09_ground_cite",
+    "prompt": "Which document or section defines the requirements for PlayReady support in MPEG-DASH and HTML5 Media Source Extensions?",
+    "ground_truth": "The document PR_Dev_Clients_Part02_v2015.pdf describes PlayReady's support for MPEG-DASH, MSE, and EME, including that PlayReady fully supports these standards and that Windows 8.1 introduced built-in support for EME APIs.",
+    "reference_contexts": [
+      "mic Adaptive Streaming over HTTP) provide cross-\nplatform solutions for delivering protected media content. Silverlight provides built-in PlayReady \nsupport for multiple media formats and it works on Windows, Mac OS X, and Windows Phone \ndevices. On Windows and Mac OS X devices, Silverlight can be used if a free specialized plug-in \nis installed and it can be used for both in- and out-of-browser scenarios. PlayReady supports \nboth types of scenarios. \nMPEG-DASH, when used with HTML5 Media Source Extensions (MSE) and Encrypted Media \nExtensions (EME), also provides an end-to-end framework for delivering protected content to \nmultiple platforms. Like Silverlight, it can be used for both in- and out-of-browser scenarios. \nUnlike Silverlight however, it doesn’t require any specialized plug-ins and it consists of only ISO \nand W3C standards. PlayReady fully supports MPEG-DASH, MSE, and EME. In addition, Windows \n8.1 introduced built-in support for EME APIs. \nSupported Media Formats \nPlayRea"
+    ],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part02_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-008",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-008_v1.0_chunk_008"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Dev_Clients_Part02_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf009_q09_ground_cite",
+    "prompt": "Which specific agreements must be executed to develop a device or software application that supports PlayReady?",
+    "ground_truth": "To develop a device or software application with support for PlayReady, you must execute the Microsoft PlayReady Master Agreement and the Microsoft PlayReady Intermediate Product License. Samples of these agreements can be downloaded from the provided Microsoft links.",
+    "reference_contexts": [
+      "Developing with PlayReady\nDeveloping a device or software application with\nsupport for PlayReady\nBegins with the development of an intermediate product (i.e. not end-user ready) that supports\nPlayReady.\nAgreements you must\nexecute:\nMicrosoft PlayReady Master Agreement (download\n(https://go.microsoft.com/fwlink/?LinkID=122670) sample)\nMicrosoft PlayReady Intermediate Product License (download\n(https://go.microsoft.com/fwlink/?linkid=122671) sample)\nFees: Please review our sample agreements (/playready/sampleAgreements).\nAfter they are\nexecuted, you may\nreceive:\nPlayReady Documentation Pack\nPlayReady Device Porting Kit (source code)\nApplicable test certificates\nDistribution rights:\nSource code: Licensees may only distribute SOURCE code implementations of\nPlayReady to other Intermediate Product licensees.\nObject Code: Licensees may distribute OBJECT code implementations of\nPlayReady to other Intermediate Product licensees and/or Final Product\nlicensees.\nNo distribution rights for a final"
+    ],
+    "expected_pdfs": [
+      "PR_Development_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-009",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-009_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Development_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf010_q09_ground_cite",
+    "prompt": "Which specific Microsoft PlayReady agreement documents must be executed before distributing a device or software application that supports PlayReady?",
+    "ground_truth": "You must execute the Microsoft PlayReady Master Agreement and the Microsoft PlayReady Final Product License before distributing a device or software application that supports PlayReady.",
+    "reference_contexts": [
+      "Distribution to end users with\nPlayReady\nDistributing a device or software application that\nsupports PlayReady\nAgreements you must\nexecute:\nMicrosoft PlayReady Master Agreement (download\n(https://go.microsoft.com/fwlink/?LinkID=122670) sample)\nMicrosoft PlayReady Final Product License (download\n(https://go.microsoft.com/fwlink/?linkid=122672) sample)\nFees: Please review our sample agreements (/playready/sampleAgreements).\nAfter they are\nexecuted, you may\nreceive:\nPlayReady Documentation Pack\nPlayReady Certificate Generation Kit\nProduction Device Certificate (SL2000 and SL3000)\nDistribution rights:\nObject code: Licensees may only distribute OBJECT code implementations of\nPlayReady to other Intermediate Product licensees and/or Final Product licensees.\nFinal Product: Licensees may distribute PlayReady Final Products to end users.\nScenarios supported:\nDistribute PlayReady final products to end customers who subscribe to a video\nservice.\nDistribute a 3rd party brand product to end customer"
+    ],
+    "expected_pdfs": [
+      "PR_Distribution_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-010",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-010_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "grounding",
+    "source_pdf": "PR_Distribution_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "grounding"
+  },
+  {
+    "id": "pdf001_q19_cross_doc",
+    "prompt": "How does the content in PR Compliance Rules Part01 v2021 relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf002_q19_cross_doc",
+    "prompt": "How does the content in PR Compliance Rules Part02 v2021 relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf003_q19_cross_doc",
+    "prompt": "How does the content in PR Compliance Rules Part03 v2021 relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf004_q19_cross_doc",
+    "prompt": "How does the content in PR Compliance Rules Part04 v2021 relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf005_q19_cross_doc",
+    "prompt": "How does the content in PR Compliance Rules Part05 v2021 relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf006_q19_cross_doc",
+    "prompt": "How does the content in PR Content Protection Whitepaper v2015 relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Content_Protection_Whitepaper_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-006",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Content_Protection_Whitepaper_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf007_q19_cross_doc",
+    "prompt": "How does the content in PR Dev Clients Part01 v2015 relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part01_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-007",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Dev_Clients_Part01_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf008_q19_cross_doc",
+    "prompt": "How does the content in PR Dev Clients Part02 v2015 relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part02_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-008",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Dev_Clients_Part02_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf009_q19_cross_doc",
+    "prompt": "How does the content in PR Development Overview relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Development_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-009",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Development_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf010_q19_cross_doc",
+    "prompt": "How does the content in PR Distribution Overview relate to the overall PlayReady compliance framework?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Distribution_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-010",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "cross_document",
+    "source_pdf": "PR_Distribution_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "cross_document"
+  },
+  {
+    "id": "pdf001_q10_sec_pii_exposure",
+    "prompt": "How should personally identifiable information (PII) or user data be handled when creating PlayReady-ND licenses?",
+    "ground_truth": "The provided content does not include any information about handling personally identifiable information (PII) or user data when creating PlayReady-ND licenses.",
+    "reference_contexts": [
+      ".................................................................................. 37 \n7 \nCreating PlayReady-ND Licenses ............................................................................................... 37 \n7.1 \nExtensible Media Rights Specification ........................................................................................ 38 \n7.2 \nAllowed PlayReady Objects ......................................................................................................... 38 \n7.3 \nMandatory Objects ..................................................................................................................... 38 \n7.4 \nPlay Container ............................................................................................................................. 38 \n7.5 \nRights Settings ............................................................................................................................. 38 \n7.6 \nExpiration ........................................"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_009"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf001_q11_sec_data_retention",
+    "prompt": "What information does the PlayReady document provide about data retention, storage duration, or deletion requirements in relation to rights settings?",
+    "ground_truth": "The document includes sections on Expiration, Issue Date, and Grace Period under Rights Settings, which suggest that it covers aspects related to the duration and timing of rights. However, specific details about data retention, storage duration, or deletion requirements are not provided in the excerpt.",
+    "reference_contexts": [
+      "ghts Settings ............................................................................................................................. 38 \n7.6 \nExpiration .................................................................................................................................... 38 \n7.7 \nIssue Date .................................................................................................................................... 38 \n7.8 \nGrace Period ................................................................................................................................ 38 \n7.9 \nPolicy Meta Data ......................................................................................................................... 38 \n7.10 \nPlay Enabler ................................................................................................................................. 39 \n7.11 \nECC ........................................................................................"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_010"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf001_q12_sec_encryption_keys",
+    "prompt": "What compliance rules does PlayReady specify regarding encryption key management and key disposal?",
+    "ground_truth": "The document lists several compliance rules sections including ECC, Uplink, Real Time Expiration, Metering, and Expire After First Play, which relate to encryption key management and disposal. However, no detailed information on specific requirements for key management, rotation, or disposal is provided in the given text.",
+    "reference_contexts": [
+      "................................................................................................. 39 \n7.11 \nECC .............................................................................................................................................. 39 \n7.12 \nUplink .......................................................................................................................................... 39 \n7.13 \nReal Time Expiration ................................................................................................................... 39 \n7.14 \nMetering ..................................................................................................................................... 39 \n7.15 \nExpire After First Play .................................................................................................................. 39\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n \n1 November 2021 \n7.16 \nDomain ID ...."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_011"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf001_q13_sec_access_control",
+    "prompt": "What are some of the key components related to access control and authorization in PlayReady products?",
+    "ground_truth": "Key components related to access control and authorization in PlayReady products include Domain ID, Source ID, Restricted Source ID, Secure Stop, and Output Protection Objects. These elements help manage and enforce access restrictions and security policies for content protection.",
+    "reference_contexts": [
+      "........................................................... 39\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n \n1 November 2021 \n7.16 \nDomain ID ................................................................................................................................... 39 \n7.17 \nSource ID ..................................................................................................................................... 39 \n7.18 \nRestricted Source ID .................................................................................................................... 39 \n7.19 \nSecure Stop ................................................................................................................................. 39 \n7.20 \nOutput Protection Objects .......................................................................................................... 40 \n7.21 \nRevocation Information Version .................................."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_012"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf001_q14_sec_audit_logging",
+    "prompt": "What sections in the document cover creating licenses and specifying rights settings related to compliance?",
+    "ground_truth": "Sections 8 through 8.5 cover creating WMDRM-ND licenses and include details on extensible media rights specifications, rights settings, copy policy container, and copy count.",
+    "reference_contexts": [
+      "rotection Objects .......................................................................................................... 40 \n7.21 \nRevocation Information Version ................................................................................................. 40 \n8 \nCreating WMDRM-ND Licenses ................................................................................................. 41 \n8.1 \nExtensible Media Rights Specification ........................................................................................ 41 \n8.2 \nRights Settings ............................................................................................................................. 41 \n8.3 \nCopy Policy Container ................................................................................................................. 41 \n8.4 \nCopy Count .................................................................................................................................. 41 \n8.5 \nCopy Protect"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_013"
+    ],
+    "expected_pages": [
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf002_q10_sec_pii_exposure",
+    "prompt": "How should a PlayReady Product handle the audio portion of compressed decrypted A/V Content when the Output Protection Level is between 201 and 250?",
+    "ground_truth": "If the Output Protection Level is between 201 and 250, a PlayReady Product may pass the audio portion of compressed decrypted A/V Content to Secure Audio Device Drivers via HDMI with HDCP engaged or to Secure Audio Device Drivers with SCMS engaged and the Cp-bit set to zero.",
+    "reference_contexts": [
+      "r equal to \n101 and less than or equal to 150, a PlayReady Product may Pass the audio \nportion of compressed decrypted A/V Content to Stream Rendering \nApplications, and via Secure Audio Device Drivers to Audio Outputs. \n3.6.2.3 \nLevel 151 to 200  \nIf the Output Protection Level specified in the License is greater than or equal to \n151 and less than or equal to 200, a PlayReady Product may Pass the audio \nportion of compressed decrypted A/V Content via Secure Audio Device Drivers \nto Audio Outputs.\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n8 \n1 November 2021 \n3.6.2.4 \nLevel 201 to 250  \nIf the Output Protection Level specified in the License is greater than or equal to \n201 and less than or equal to 250, a PlayReady Product may Pass the audio \nportion of compressed decrypted A/V Content to: (i) Secure Audio Device \nDrivers via HDMI with HDCP engaged, (ii) Secure Audio Device Drivers with \nSCMS engaged with the Cp-bit set to zero ("
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_009"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf002_q11_sec_data_retention",
+    "prompt": "What are the requirements for passing the audio portion of compressed decrypted A/V content based on the Output Protection Level in PlayReady licenses?",
+    "ground_truth": "For Output Protection Levels between 251 and 300, a PlayReady Product may pass the audio portion of compressed decrypted A/V content to Secure Audio Device Drivers via HDMI with HDCP engaged, DisplayPort with HDCP engaged, or MHL with HDCP engaged. For levels below 251 but above 0, additional conditions such as SCMS engagement and Cp-bit/L-bit settings apply.",
+    "reference_contexts": [
+      "he audio \nportion of compressed decrypted A/V Content to: (i) Secure Audio Device \nDrivers via HDMI with HDCP engaged, (ii) Secure Audio Device Drivers with \nSCMS engaged with the Cp-bit set to zero (0) and the L-bit set to No Indication, \n(iii) Secure Audio Device Drivers via DisplayPort with HDCP engaged, or (iv) \nSecure Audio Device Drivers via MHL with HDCP engaged. \n3.6.2.5 \nLevel 251 to 300  \nIf the Output Protection Level specified in the License is greater than or equal to \n251 and less than or equal to 300, a PlayReady Product may Pass the audio \nportion of compressed decrypted A/V Content to: (i) Secure Audio Device \nDrivers via HDMI with HDCP engaged, (ii) Secure Audio Device Drivers via \nDisplayPort with HDCP engaged, or (iii) Secure Audio Device Drivers via MHL \nwith HDCP engaged. \n3.6.2.6 \nLevel 0 to 300  \nIf the Output Protection Level specified in the License is greater than or equal to \n0 and less than or equal to 300, a PlayReady Product may Pass the audio portion \nof"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_010"
+    ],
+    "expected_pages": [
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf002_q12_sec_encryption_keys",
+    "prompt": "How does PlayReady handle audio output protection for compressed decrypted A/V content when the Output Protection Level is between 0 and 300?",
+    "ground_truth": "For Output Protection Levels between 0 and 300, a PlayReady Product may pass the audio portion of compressed decrypted A/V Content to WirelessHD Outputs only if it engages DTCP to protect the audio, limits the local device’s DTCP Source Function to transmitting to a single DTCP Sink Function, and sets DTCP_Descriptor fields with EPN as '1b' (EPN-unasserted) and DTCP_CCI as '11b' (Copy Never).",
+    "reference_contexts": [
+      "ged. \n3.6.2.6 \nLevel 0 to 300  \nIf the Output Protection Level specified in the License is greater than or equal to \n0 and less than or equal to 300, a PlayReady Product may Pass the audio portion \nof compressed decrypted A/V Content to WirelessHD Outputs only if the \nPlayReady Product (i) engages DTCP to protect the audio portion of compressed \ndecrypted A/V Content, (ii) limits the local device’s DTCP Source Function to \ntransmitting to a single DTCP Sink Function, and (iii) sets the fields of \nDTCP_Descriptor as follows: \n3.6.2.6.1 EPN. EPN must be set to ‘1b’ (“EPN-unasserted”). \n3.6.2.6.2 DTCP_CCI. DTCP_CCI must be set to ‘11b’ (“Copy Never”). \n3.6.2.7 \nLevel 301 or Greater  \nIf the Output Protection Level specified in the License is greater than or equal to \n301, a PlayReady Product must not Pass the audio portion of compressed \ndecrypted A/V Content. \n3.6.2.8 \nExplicit Digital Audio Output Restriction  \nIf a PlayReady Product is Passing the audio portion of decrypted A/V Content"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_011"
+    ],
+    "expected_pages": [
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf002_q13_sec_access_control",
+    "prompt": "What restrictions apply to PlayReady Products when passing the audio portion of decrypted A/V content to a digital audio output under the Explicit Digital Audio Output Restriction?",
+    "ground_truth": "If the License contains an Explicit Digital Audio Output Protection Container Object with a Digital Audio Output Configuration Restriction Object specifying Audio Output Protection ID {6D5CFA59-C250-4426-930E-FAC72C8FCFA6} and the output protection level for compressed digital audio content is less than 201, the PlayReady Product must pass the audio to secure audio device drivers with SCMS engaged. This involves setting the Cp-bit and L-bit according to specified values or setting the Cp-bit to zero and the L-bit to No Indication.",
+    "reference_contexts": [
+      "must not Pass the audio portion of compressed \ndecrypted A/V Content. \n3.6.2.8 \nExplicit Digital Audio Output Restriction  \nIf a PlayReady Product is Passing the audio portion of decrypted A/V Content to \na Digital Audio Output and the License associated with the A/V Content contains \nan Explicit Digital Audio Output Protection Container Object that contains a \nDigital Audio Output Configuration Restriction Object with an Audio Output \nProtection ID of {6D5CFA59-C250-4426-930E-FAC72C8FCFA6}, and the Output \nProtection Level value for compressed Digital Audio Content is less than 201, \nthe PlayReady Product must Pass the audio portion to Secure Audio Device \nDrivers with SCMS engaged with: (i) the Cp-bit and the L-bit set in accordance \nwith values in Table 3.6.2.8 (SCMS Control Bits) or (ii) the Cp-bit set to zero (0) \nand the L-bit set to No Indication. When the Audio Output Protection ID of\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserve"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_012"
+    ],
+    "expected_pages": [
+      4,
+      5
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf002_q14_sec_audit_logging",
+    "prompt": "What are the requirements for passing audio content in PlayReady products when the Audio Output Protection ID is present and the Output Protection Level is below 301?",
+    "ground_truth": "When the Audio Output Protection ID of {6D5CFA59-C250-4426-930E-FAC72C8FCFA6} is present and the Output Protection Level for compressed Digital Audio Content is less than 301, a PlayReady Product may pass the audio portion of decrypted A/V Content to secure audio device drivers via HDMI, DisplayPort, or MHL with HDCP engaged. This Output Protection Level is specified in the Audio Output Protection ID field of the Digital Audio Output Configuration Protection Restriction Object in PlayReady and WMDRM-ND Licenses.",
+    "reference_contexts": [
+      "i) the Cp-bit set to zero (0) \nand the L-bit set to No Indication. When the Audio Output Protection ID of\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n9 \n1 November 2021 \n{6D5CFA59-C250-4426-930E-FAC72C8FCFA6} is present, and the Output \nProtection Level value for compressed Digital Audio Content is less than 301, a \nPlayReady Product may alternatively Pass the audio portion of decrypted A/V \nContent to: (i) Secure Audio Device Drivers via HDMI with HDCP engaged, (ii) \nSecure Audio Device Drivers via DisplayPort with HDCP engaged, or (iii) Secure \nAudio Device Drivers via MHL with HDCP engaged. \nIn PlayReady Licenses and WMDRM-ND Licenses, this Output Protection Level is \nspecified in the Audio Output Protection ID field of the Digital Audio Output \nConfiguration Protection Restriction Object. \nTable 3.6.2.8: SCMS Control Bits \nBinary Configuration Data Value \nCp-bit (bit 2) \nL-bit (bit 15) \n00 \n0 \nNo Indication \n01 \n0 \nOriginal or C"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_013"
+    ],
+    "expected_pages": [
+      4,
+      5
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "data_security",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "data_security"
+  },
+  {
+    "id": "pdf001_q15_conv_casual",
+    "prompt": "Hey, do you know what kind of copy protection stuff we cover in the PlayReady compliance rules?",
+    "ground_truth": "Yeah, the rules include sections on Copy Count, Copy Protection Level, Copy Enabler Type, and Move Enabler Type. They also talk about output protections like Explicit Digital Audio Output Protection and Explicit Analog Video Output Protection.",
+    "reference_contexts": [
+      "........................... 41 \n8.4 \nCopy Count .................................................................................................................................. 41 \n8.5 \nCopy Protection Level ................................................................................................................. 41 \n8.6 \nCopy Enabler Type ...................................................................................................................... 41 \n8.7 \nMove Enabler Type ..................................................................................................................... 42 \n8.8 \nExplicit Digital Audio Output Protection ..................................................................................... 42 \n8.9 \nExplicit Analog Video Output Protection .................................................................................... 43 \n8.10 \nOutput Protection Level ................................................................................."
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_014"
+    ],
+    "expected_pages": [
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "conversational"
+  },
+  {
+    "id": "pdf001_q20_conv_frustrated",
+    "prompt": "I have been reading PR Compliance Rules Part01 v2021 for hours and I still do not get it. Can you just explain the main point simply?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "conversational"
+  },
+  {
+    "id": "pdf002_q15_conv_casual",
+    "prompt": "Hey, do you know how PlayReady handles output control for uncompressed digital audio? Like, what happens if there's a license specifying some protection level?",
+    "ground_truth": "If a PlayReady Product passes the audio portion of uncompressed decrypted A/V content, it must follow the restrictions specified in the license and Section 3.6.3. The Output Protection Level is detailed in the license under the Minimum Uncompressed Digital Audio Output Protection Level field or the corresponding node in WMDRM-PD Licenses, and the product enforces these restrictions accordingly.",
+    "reference_contexts": [
+      "udio Output \nConfiguration Protection Restriction Object. \nTable 3.6.2.8: SCMS Control Bits \nBinary Configuration Data Value \nCp-bit (bit 2) \nL-bit (bit 15) \n00 \n0 \nNo Indication \n01 \n0 \nOriginal or Commercial Prerecorded \n11 \n1 \nNo Indication \n \n3.6.3 \nOutput Control for Uncompressed Digital Audio Content  \nIf a PlayReady Product Passes the audio portion of uncompressed decrypted A/V \nContent, the PlayReady Product must follow restrictions as specified in the License and \nthis Section 3.6.3 (Output Control for Uncompressed Digital Audio Content). In \nPlayReady Licenses and WMDRM-ND Licenses, the Output Protection Level is specified \nin the Minimum Uncompressed Digital Audio Output Protection Level field of the \nOutput Protection Level Restriction Object. In WMDRM-PD Licenses, this Output \nProtection Level is specified in the RESTRICTIONS\\UNCOMPRESSEDDIGITALAUDIO \nnode. \n3.6.3.1 \nLevel 0 to 100  \nIf the Output Protection Level is not specified or the Output Protection Level \nspecified"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_014"
+    ],
+    "expected_pages": [
+      5
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "conversational"
+  },
+  {
+    "id": "pdf002_q20_conv_frustrated",
+    "prompt": "I have been reading PR Compliance Rules Part02 v2021 for hours and I still do not get it. Can you just explain the main point simply?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "conversational"
+  },
+  {
+    "id": "pdf003_q15_conv_casual",
+    "prompt": "Hey, I was curious—if we're adding a Move Enabler Object to a PlayReady License, are there any special approvals or settings we need to know about?",
+    "ground_truth": "Yes! If the Move Enabler Object is included in a PlayReady License, the Minimum Move Protection Level must be set to one of the allowed values listed in Table 6.10.2. Also, a PlayReady Product can only create such a license if Microsoft Corporation has given written approval for that use.",
+    "reference_contexts": [
+      "Allowed Value \nDescription \n{CE480EDE-516B-40B3-90E1-D6CFC47630C5} \nCopy to PC \n{6848955D-516B-4EB0-90E8-8F6D5A77B85F} \nCopy to device \n6.9.2 \nIf the Copy Enabler Type Object is specified in the PlayReady License then the Copy \nEnabler Type field value {C3CF56E0-7FF2-4491-809F-53E21D3ABF07} may be specified \nonly if the PlayReady License is for PlayReady A/V Content originating from ISDB. \n6.10 \nMove Enabler Type  \n6.10.1 If the Move Enabler Object is specified in the PlayReady License, then the Minimum \nMove Protection Level field must be set to a value limited to a value listed in Table \n6.10.2 (Allowed Minimum Move Protection Level Values). \n6.10.2 A PlayReady Product may create a PlayReady License containing Move Enabler Object \nonly if a Company request for such use has been expressly approved in writing by \nMicrosoft Corporation. \nTable 6.10.2: Allowed Minimum Move Protection Level Values \nAllowed Value \nDescription\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_014"
+    ],
+    "expected_pages": [
+      6,
+      7
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "conversational"
+  },
+  {
+    "id": "pdf003_q20_conv_frustrated",
+    "prompt": "I have been reading PR Compliance Rules Part03 v2021 for hours and I still do not get it. Can you just explain the main point simply?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "conversational"
+  },
+  {
+    "id": "pdf004_q15_conv_casual",
+    "prompt": "Hey, do you know what values are allowed for the output control on analog TV and digital audio in PlayReady licenses?",
+    "ground_truth": "For analog television outputs, the allowed values for the RESTRICTIONS\\ANALOGVIDEO node are 100, 150, and 200. For compressed digital audio content under the RESTRICTIONS\\COMPRESSEDDIGITALAUDIO node, the allowed values are 100, 150, 200, 250, and 300.",
+    "reference_contexts": [
+      "License, then the value must \nbe limited to the values listed in Table 9.4 (Allowed Output Control for Analog Television Outputs \nValues). \nTable 9.4: Allowed Output Control for Analog Television Outputs Values \nNode \nAllowed Values \nRESTRICTIONS\\ANALOGVIDEO \n100, 150, 200\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n47 \n1 November 2021 \n9.5 \nOutput Control for Compressed Digital Audio Content  \nIf the RESTRICTIONS\\COMPRESSEDDIGITALAUDIO node is specified in the WMDRM-PD License, then \nthe value must be limited to the values listed in Table 9.5 (Allowed Output Control for Compressed \nDigital Audio Content Values). \nTable 9.5: Allowed Output Control for Compressed Digital Audio Content Values \nNode \nAllowed Values \nRESTRICTIONS\\COMPRESSEDDIGITALAUDIO \n100, 150, 200, 250, 300 \n9.6 \nOutput Control for Uncompressed Digital Audio Content  \nIf the RESTRICTIONS\\UNCOMPRESSEDDIGITALAUDIO node is specified in the WMDRM-PD License, then \nthe va"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-004_v1.0_chunk_014"
+    ],
+    "expected_pages": [
+      6,
+      7
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "conversational"
+  },
+  {
+    "id": "pdf004_q20_conv_frustrated",
+    "prompt": "I have been reading PR Compliance Rules Part04 v2021 for hours and I still do not get it. Can you just explain the main point simply?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "conversational"
+  },
+  {
+    "id": "pdf005_q15_conv_casual",
+    "prompt": "Hey, do you know what rules a PlayReady product has to follow if it offers an API for content protection?",
+    "ground_truth": "If a PlayReady product exposes an API or similar interface for content protection, it must only allow decryption, encryption, and license acquisition or issuance. It can't be used to create new digital rights management or content protection tech, and it must still comply with the PlayReady Compliance and Robustness Rules.",
+    "reference_contexts": [
+      "each execute entirely on a \nsingle device.  PlayReady Products may provide access to certain Content Protection Functions via an \nAPI, interface, or other similar mechanism created by Company.  If a PlayReady Product exposes such a \nmechanism (e.g. API or interface), it must: (i) limit such Content Protection Functions to decryption, \nencryption, and acquisition or issuances of licenses for Content, (ii) not be used for developing new or \ndifferent digital rights management, content protection, or content access technology, and (iii) not \nresult in the failure of the PlayReady Product to comply with the Compliance Rules and/or Robustness \nRules.   \n15.3 \nRequirements for PlayReady-ND Transmitters \nA PlayReady-ND Transmitter must comply with all requirements in Section 2 (Requirements for All \nPlayReady Products), Section 15.1 (Scope) and Section 15.2 (Architecture), and this Section 15.3 \n(Requirements for PlayReady-ND Transmitters), and may implement features described in Section 7"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-005_v1.0_chunk_014"
+    ],
+    "expected_pages": [
+      7
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm",
+    "category": "conversational"
+  },
+  {
+    "id": "pdf005_q20_conv_frustrated",
+    "prompt": "I have been reading PR Compliance Rules Part05 v2021 for hours and I still do not get it. Can you just explain the main point simply?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "conversational",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template",
+    "category": "conversational"
+  }
+]

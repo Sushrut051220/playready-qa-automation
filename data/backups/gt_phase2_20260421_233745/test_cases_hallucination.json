@@ -1,0 +1,1955 @@
+[
+  {
+    "id": "pdf001_q06_halluc_nonexistent",
+    "prompt": "What are the requirements outlined in section 7.5 regarding multi-device license synchronization in PlayReady products?",
+    "ground_truth": "The provided text does not include any information about section 7.5 or requirements for multi-device license synchronization in PlayReady products.",
+    "reference_contexts": [
+      "laying Digital Literary Content ............................................................................................. 22 \n5.2 \nConverting Text to Speech .......................................................................................................... 22 \n5.3 \nStop State .................................................................................................................................... 22 \n6 \nCreating PlayReady Licenses ..................................................................................................... 23 \n6.1 \nExtensible Media Rights Specification ........................................................................................ 23\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n \n1 November 2021 \n6.2 \nEmbedded License Setting .......................................................................................................... 23 \n6.3 \nPlay Enabler Type ......................"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-001_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf001_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part01 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-001",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part01_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf002_q06_halluc_nonexistent",
+    "prompt": "Does the PlayReady product have any special requirements for outputting decrypted A/V content to HDMI 3.1 outputs?",
+    "ground_truth": "The provided text does not mention any requirements or restrictions related to HDMI 3.1 outputs for PlayReady products. It only specifies that PlayReady products must engage HDCP 2.0 or newer for Miracast and Indirect Display Outputs, and outlines restrictions for output to Bluetooth Audio Profiles.",
+    "reference_contexts": [
+      "ntent to Miracast \nOutputs. A PlayReady Product may only Pass decrypted A/V Content to Miracast \nOutputs if the PlayReady Product successfully engages HDCP 2.0 or newer over the \nMiracast link. \n3.4.9 \nIndirect Display Outputs.  A PlayReady Product may Pass (i) the audio portion of \ndecrypted A/V Content, and/or (ii) the video portion of decrypted A/V Content to \nIndirect Display Outputs. A PlayReady Product may only Pass decrypted A/V Content \nto Indirect Display Outputs if the PlayReady Product successfully engages HDCP 2.0 or \nnewer over the Indirect Display link. \n3.5 \nRestrictions for Output to Bluetooth Audio Profiles \nA PlayReady Product may Pass the audio portion of decrypted A/V Content to Bluetooth Audio Profiles \nonly if the PlayReady Product follows restrictions as specified in the License and this Section 3.5 \n(Restrictions for Output to Bluetooth Audio Profiles). A PlayReady Product may Pass the audio portion of \ndecrypted A/V Content to Bluetooth Audio Profiles only if t"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-002_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf002_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part02 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-002",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part02_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf003_q06_halluc_nonexistent",
+    "prompt": "What is the purpose of the Video Output Encryption Level described in section 7.1.4 of the PlayReady Compliance Rules?",
+    "ground_truth": "The provided text does not mention any Video Output Encryption Level or section 7.1.4, so no information about this topic is available from the document excerpt.",
+    "reference_contexts": [
+      "figuration Data Field \nOutput Restriction \nDescription \n{9645E831- E01D-4FFF-8342-\n0A720E3E028F} \nMaximum Frame Width in \nPixels, Maximum Frame Height \nin Pixels \nMaximum Effective \nResolution Decode Size \n{ABB2C6F1-E663-4625-A945-\n972D17B231E7} \n{2076ECD5-044F-4047-BFCF-              \n7A75D0E4E269} \n \n{6CDA453D-BFBB-45d1-AEB7-\n37287B2403AE} \n1 \n \n1 \n \nSee section 6.6.5 \nHDCP Type Restriction \n \nInternal Video Output Only \n \nWatermarking Signalling \n \n \n \n6.6.2 \nA Binary Configuration Data Field for the Digital Video Output Restriction Object \nwith a Video Restriction ID field value of {9645E831- E01D-4FFF-8342-0A720E3E028F} \nmust be defined as a set of two 32 bit values, each in Big Endian format. The first 32 \nbit field defines the Maximum Frame Width in Pixels, the second 32 bit field defines \nthe Maximum Frame Height in Pixels \n6.6.3 \nThe Digital Video Output Restriction Object with a Video Restriction ID field value of \n{ABB2C6F1-E663-4625-A945-972D17B231E7} may be specified in a"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-003_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf003_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part03 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-003",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part03_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf004_q06_halluc_nonexistent",
+    "prompt": "What are the requirements for PlayReady Products under Section 8.15 regarding Digital Audio Output Protection?",
+    "ground_truth": "The provided text does not contain any information about requirements under Section 8.15 regarding Digital Audio Output Protection.",
+    "reference_contexts": [
+      "9-C250-4426-930E-\nFAC72C8FCFA6} \n00, 01, 10, 11 \nSCMS. See Table 3.6.2.8 \n(SCMS Control Bits) \n8.9 \nExplicit Analog Video Output Protection \n8.9.1 \nIf the PlayReady Product is a WMDRM-ND Tuner, then it is allowed to specify an \nAnalog Video Output Configuration Restriction Object with a Video Output \nProtection ID field containing the value {2098DE8D-7DDD-4BAB-96C6-\n32EBB6FABEA3}. \n8.9.2 \nIf the PlayReady Product is a Network Device Transmitter as a Microsoft PBDA and the \nAnalog Video Output Configuration Protection Restriction Object is specified in the \nWMDRM-ND License then field values must be limited to values listed in Table 8.9.3 \n(Allowed Explicit Analog Video Output Protection Values). \n8.9.3 \nIf a PlayReady Product is required under Section 8.12 (Source ID) to set the Source ID \nfield of the Source ID Object to a value of 266, then the PlayReady Product must also \ninclude in the WMDRM-ND License an Explicit Analog Video Output Protection \nContainer Object with both: (i) an A"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-004_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf004_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part04 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-004",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part04_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf005_q06_halluc_nonexistent",
+    "prompt": "What are the requirements for processing a PlayReady-ND License that includes a 'User Authentication Restriction' as mentioned in section 12.2?",
+    "ground_truth": "The provided text does not mention any requirements related to a 'User Authentication Restriction' or a section 12.2. It only covers requirements for Metering, Expire After First Play, and Domain ID restrictions in section 12.1.",
+    "reference_contexts": [
+      "yReady-ND Receiver.\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n62 \n1 November 2021 \n12 Receiving from PlayReady-ND Transmitter \n12.1 \nRequirements for Complying with Policy  \nThe following Compliance Rules are applicable to the Policy as specified in a PlayReady-ND License: \n12.1.1 Metering \nWhen processing a Root License or a Simple License, a PlayReady Product must fail to \nprocess it if it contains a Metering Restriction Object. \nWhen processing a Leaf License, a PlayReady Product must ignore the Metering \nRestriction Object. \n12.1.2 Expire After First Play \nWhen processing a Root License or a Simple License, a PlayReady Product must fail to \nprocess it if it contains an Expiration After First Play Restriction Object. \nWhen processing a Leaf License, a PlayReady Product must ignore the Expiration After \nFirst Play Restriction Object. \n12.1.3 Domain ID \nWhen processing a License, a PlayReady Product must fail to process it if it"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-005_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf005_q18_halluc_false_premise",
+    "prompt": "Since PR Compliance Rules Part05 v2021 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-005",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Compliance_Rules_Part05_v2021.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf006_q06_halluc_nonexistent",
+    "prompt": "What does section 4.3 of the PlayReady DRM specification say about the integration of biometric authentication for device access?",
+    "ground_truth": "The provided text does not mention any details about biometric authentication or section 4.3 of the PlayReady DRM specification. Therefore, no information is available on this topic from the given content.",
+    "reference_contexts": [
+      "’re at the beginning of a major historical shift \nfrom watching scheduled TV programming to watching Live TV and video on a plethora of \ndevices, including mobile phones, tablets and smart TVs. Content formats and protection \nsystems are no longer tied to a single consumption platform, and there is a growing trend to \nbring managed content experiences to unmanaged devices. The devices are now internet-\nenabled and mobile, and the number of these devices continues to grow. The availability of \nmultiple consumption outlets helps to blur the distinction between web and broadcast media: \nconsumers may consume content on smart phones, tablets, gaming consoles, smart TVs, IP \nstreaming boxes, or connected Blu-ray players. In fact, web and broadcast media are becoming \nrelatively indistinguishable to consumers and people are choosing to watch TV how and where \nthey want.   \nAs content becomes more expensive to produce and more of that investment is lost to piracy, \nrobust DRM systems become e"
+    ],
+    "expected_pdfs": [
+      "PR_Content_Protection_Whitepaper_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-006",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-006_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Content_Protection_Whitepaper_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf006_q18_halluc_false_premise",
+    "prompt": "Since PR Content Protection Whitepaper v2015 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Content_Protection_Whitepaper_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-006",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Content_Protection_Whitepaper_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf007_q06_halluc_nonexistent",
+    "prompt": "What are the specific security protocols outlined in section 35 of the PlayReady Device Porting Kit documentation?",
+    "ground_truth": "The provided text does not include any information about security protocols in section 35 of the PlayReady Device Porting Kit documentation.",
+    "reference_contexts": [
+      "............................................................................................................................................ 21 \nWeb Applications .................................................................................................................................................... 24 \nPlayReady Device Porting Kit .............................................................................................................................. 25 \nTools and Options by Platform .......................................................................................................................... 27 \nTesting Resources ........................................................................................................................................................ 29 \nRelease Requirements ................................................................................................................................................ 29 \nCompliance and Robustne"
+    ],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part01_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-007",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-007_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Dev_Clients_Part01_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf007_q18_halluc_false_premise",
+    "prompt": "Since PR Dev Clients Part01 v2015 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part01_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-007",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Dev_Clients_Part01_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf008_q06_halluc_nonexistent",
+    "prompt": "Does the PlayReady client SDK support section 4.3.2 requirements for cross-device DRM synchronization?",
+    "ground_truth": "The provided text does not mention any section 4.3.2 requirements or specific support for cross-device DRM synchronization in the PlayReady client SDK.",
+    "reference_contexts": [
+      "iosks, and embedded displays. You can also \nimplement PlayReady on network device (ND) transmitters and receivers, which enable users to \nshare media content between devices that are connected to the same Internet Protocol (IP) \nnetwork. Overall, any device that is capable of receiving and playing media content can host \nPlayReady client technologies. \nIn addition, a PlayReady client can use any application model that is supported by the target \nplatform. For example, a PlayReady client might be a desktop application for a Windows 7 or \nLinux computer, a universal app for a Windows 8 tablet and Windows Phone 8 device, an Xbox \nOne app, or an app for an Android phone or iPad. It might also be a Silverlight® or HTML5 \nmedia application. \nThe breadth of client options derives from a combination of factors — native PlayReady support \non many platforms, the PlayReady client SDKs and Device Porting Kit for other platforms, and \nPlayReady support for the latest web standards and technologies."
+    ],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part02_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-008",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-008_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Dev_Clients_Part02_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf008_q18_halluc_false_premise",
+    "prompt": "Since PR Dev Clients Part02 v2015 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Dev_Clients_Part02_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-008",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Dev_Clients_Part02_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf009_q06_halluc_nonexistent",
+    "prompt": "What are the specific requirements outlined in section 4.3.2 for distributing PlayReady object code to final product licensees?",
+    "ground_truth": "The provided text does not include any information about section 4.3.2 or specific requirements for distributing PlayReady object code to final product licensees. It only mentions that licensees may distribute object code implementations of PlayReady to other Intermediate Product licensees and/or Final Product licensees, but no distribution rights exist for a final product to end customers.",
+    "reference_contexts": [
+      "ct licensees.\nObject Code: Licensees may distribute OBJECT code implementations of\nPlayReady to other Intermediate Product licensees and/or Final Product\nlicensees.\nNo distribution rights for a final product to end customers.\nScenarios supported:\nDevelop intermediate products for one's own use or to sell another PlayReady\nlicensee company.\nDistribute PlayReady intermediate products to other PlayReady device licensees\nthat distribute PlayReady final products.\nReceive object or source code from another PlayReady licensee company to\nfurther develop and distribute a product that supports PlayReady.\nLicensing process: Please refer to the IPLA Licensing homepage (https://aka.ms/IPLA).\n\nProduct Overview\nDigital Media Strategy (/playready/features/DigitalMediaStrategy)\nProduct Suite (/playready/features/productSuite)\nEnhanced Content Protection (/playready/features/EnhancedContentProtection)\nClient Options (/playready/features/clientOptions)\nHTML5 (/playready/features/html5)\nMicrosoft End Poin"
+    ],
+    "expected_pdfs": [
+      "PR_Development_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-009",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-009_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      1,
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Development_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf009_q18_halluc_false_premise",
+    "prompt": "Since PR Development Overview requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Development_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-009",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Development_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf010_q06_halluc_nonexistent",
+    "prompt": "What are the specific steps outlined in section 4.3 for integrating PlayReady with third-party branded set top boxes?",
+    "ground_truth": "The provided text does not include any details or steps about integrating PlayReady with third-party branded set top boxes in section 4.3 or any other section.",
+    "reference_contexts": [
+      "PlayReady Final Products to end users.\nScenarios supported:\nDistribute PlayReady final products to end customers who subscribe to a video\nservice.\nDistribute a 3rd party brand product to end customers (company set top box but\nbranded for a different company’s video service.\nReceive object from another PlayReady licensee company to use and distribute a\nproduct that supports PlayReady.\nLicensing process: Please refer to the IPLA Licensing homepage (https://aka.ms/IPLA).\nProduct Overview\n\nDigital Media Strategy (/playready/features/DigitalMediaStrategy)\nProduct Suite (/playready/features/productSuite)\nEnhanced Content Protection (/playready/features/EnhancedContentProtection)\nClient Options (/playready/features/clientOptions)\nHTML5 (/playready/features/html5)\nMicrosoft End Points (/playready/features/microsoftEndpoints)\nSupported Standards (/playready/features/supportedStandards)\nGet Started!\nGet PlayReady (/playready/licensing/getplayready)\nLicensing Options (/playready/licensing/licens"
+    ],
+    "expected_pdfs": [
+      "PR_Distribution_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-010",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-010_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      1,
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Distribution_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf010_q18_halluc_false_premise",
+    "prompt": "Since PR Distribution Overview requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Distribution_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-010",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Distribution_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf011_q06_halluc_nonexistent",
+    "prompt": "Can you explain how PlayReady's section 5.3 licensing renewal process works during content playback?",
+    "ground_truth": "The provided text does not include any information about a section 5.3 licensing renewal process during content playback. It only describes the general content and license flow for license acquisition.",
+    "reference_contexts": [
+      "tent and license flow for license acquisition (LA). The\ngray arrow indicates clear content transfer, black arrows indicate protected content\ntransfer without a license, and white arrows indicate license transfers.\n７ Note\nContent is stored and distributed using Web Servers, but PlayReady products do\nnot include or require a specialized Web Server for content storage and\ndistribution.\nContent and license flow\n\nThe following steps describe the content and license flow for license acquisition shown\nin the previous figure:\n1. A content provider packages unprotected content by using either third party\nsoftware or the PlayReady Server SDK.\n2. When the content is packaged, the content provider copies the protected content\nto a content distribution Server/system.\n3. The content provider transfers the license information to a License Server.\n4. A client will then acquire the protected content.\n5. When the client attempts to play the content, the header indicates that the client\nneeds to acquire"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part01.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-011",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-011_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      5,
+      6
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part01.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf011_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part01 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part01.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-011",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part01.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf012_q06_halluc_nonexistent",
+    "prompt": "What does section 3.5 say about the maximum number of devices that can use a single PlayReady license?",
+    "ground_truth": "The provided text does not mention section 3.5 or specify any details about the maximum number of devices that can use a single PlayReady license.",
+    "reference_contexts": [
+      "Any policy enabled by\nthe license can be used. For example, if the license enables \"play,\" the license acquisition\nclient can play the content.\nThe following figure shows the basic steps to proactively acquire a license.\n\nThe following figure shows the basic steps to reactively acquire a license.\n \n \nAfter a client retrieves a protected file, that client needs to acquire a license before it can\nperform actions that use that content. Licenses store the information necessary to\n\naccess the associated content and store the rules by which that content can be\naccessed. Users must acquire their own licenses to play protected content, even if the\nprotected content was copied from someone who already had a license for it. Licenses\ncontain the encryption key to decrypt the corresponding content or, in the case of\nchained licenses, contain an intermediary key. Licenses also contain rights and other\nproperties that specify the use of the content. For example, the license determines the\nnumber of"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part02.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-012",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-012_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3,
+      4,
+      5
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part02.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf012_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part02 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part02.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-012",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part02.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf013_q06_halluc_nonexistent",
+    "prompt": "What does section 5.3.2 say about how PlayReady handles licenses when the device clock is tampered with?",
+    "ground_truth": "The provided text does not include any information from section 5.3.2 or details specifically about how PlayReady handles licenses when the device clock is tampered with beyond recommending setting a begin date and time to help protect against clock rollback.",
+    "reference_contexts": [
+      "ration date and\ntime. After this date and time occurs, the content may still be on the user's device, and\nthe license may still also be persisting in the user's device's data store, but the\nPlayReady Client in the user's device will use the device's clock system to verify if the\nlicense is still valid, and enforce the expiration set by the service in the license.\nIn addition, it is a recommended good practice to set a begin date and time (typically\nthe date and time that the user paid for the content). This will help protect the system in\nsome cases where the user would be able to roll back the clock of their device.\nAn alternative is for the service to provide a limitation in the license in terms of a time\nspan that indicates when the license will expire after the first play. This allows the service\nprovider to issue a license that could begin at some time in the future, expire at a\nspecified time, and/or expire after a specified duration, after the content is first played.\nA typical"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part03.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-013",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-013_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      6
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part03.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf013_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part03 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part03.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-013",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part03.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf014_q06_halluc_nonexistent",
+    "prompt": "What specific steps are outlined in section 5.2 for customizing the license acquisition URL in PlayReady service plug-ins?",
+    "ground_truth": "The provided text does not include any information about section 5.2 or the customization of the license acquisition URL in PlayReady service plug-ins.",
+    "reference_contexts": [
+      "h a Web service entry point.\nArchitecture\n\n3. The Web service entry point then processes the call, processes the data, and\ntriggers the service plug-in.\n4. The service-specific application logic (implemented by the service provider) is\nencapsulated in a service developed plug-in.\nService-specific application logic typically is either going to be identification information\nor business logic. Service information includes the service identifier (service ID) and the\nlicense acquisition URL associated with licenses (these settings are service-specific). Also\nspecified in the plug-in is business logic associated with the service such as the policy\nthat is associated with issued licenses.\nService providers can implement their own services by using PlayReady Server SDK and\noffer individualized, unique license-issuing scenarios. For example, consider two services,\nContoso and Fabrikam. Each service provider needs to provide separate identifiers for its\nservices and each supports different polic"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part04.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-014",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-014_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      5,
+      6
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part04.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf014_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part04 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part04.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-014",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part04.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf015_q06_halluc_nonexistent",
+    "prompt": "Does the PlayReady 3.0 update include support for section 7.5.3 on enhanced key revocation protocols?",
+    "ground_truth": "The provided text does not mention any section 7.5.3 or details about enhanced key revocation protocols in PlayReady 3.0. It only notes compatibility issues related to revocation support in some PK 1.2 clients and general compatibility between PlayReady Device Porting Kit and Server SDK versions.",
+    "reference_contexts": [
+      "upgrade to be compatible with PlayReady 3.0 and higher.\nMost versions of PlayReady on the client can work with the different versions of the\nPlayReady Server SDK. There are some subtleties as noted below as well as a change\nwith PlayReady clients developed on the 4.0 Device Porting Kit.\nThe following table lists the compatibility between the various PlayReady Device Porting\nKit and PlayReady Server SDK versions:\nPorting Kit Version Compatibility with Server\nSDK Versions\nPlayReady Compatibility Matrix\n\n*\nSome PK 1.2 clients did not support revocation which is required in Server SDK 2.x+. This is\nnot common.\n**\nPK 3.0 and higher clients cannot use a Server SDK prior to version 2.0 to get a media\nplayback license.\n***\nPK 3.0 and higher clients can use license servers using a 2.X SDK, but can only obtain a\nlicense with a SL2000 security level. In addition, new features, such as support for version 4.2\nheaders (multiple keys) and policies such as Secure Stop and MaxResDecode, are not\navaila"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part05.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-015",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-015_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      6,
+      7
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part05.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf015_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part05 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part05.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-015",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part05.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf016_q06_halluc_nonexistent",
+    "prompt": "What are the specific steps outlined in section 7.3.2 for integrating PlayReady Headers with third-party DRM headers?",
+    "ground_truth": "The text does not provide any details about section 7.3.2 or specific steps for integrating PlayReady Headers with third-party DRM headers. It only mentions that encrypted content can contain multiple DRM headers including PlayReady and third-party headers, and refers to 'Using encryption tools' for more information.",
+    "reference_contexts": [
+      "lt URL that the client will use to acquire a license from if no\nother is provided, and any custom attributes.  \nAny packager that packages clear content needs to implement a PlayReady Header\ngenerator to build the header and embed it in the encrypted content. The PlayReady\nHeader must be implemented according to the PlayReady Header Specification. There\nare multiple ways to create a PlayReady Header generator in your packager: \nDevelop it yourself based on the PlayReady Header Specification. \nUse the PlayReady Server SDK API that generates a PlayReady Header. \nUse the Windows 10 API that generates a PlayReady Header. \nYour encrypted content can contain multiple DRM headers, including PlayReady Headers\nalong with third-party DRM headers. For more information on how this works, see Using\nencryption tools.\nPackaging PlayReady content — Encrypting\nand inserting the DRM header \nContent Type\n\nPlayReady can be used to protect audio and video content. The most common types of\nencoding used wit"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part06.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-016",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-016_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      5,
+      6
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part06.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf016_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part06 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part06.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-016",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part06.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf017_q06_halluc_nonexistent",
+    "prompt": "What does section 7.3 say about the impact of MAC1 on license binding performance in PlayReady?",
+    "ground_truth": "The provided text does not include any information about section 7.3 or specific impacts of MAC1 on license binding performance in PlayReady.",
+    "reference_contexts": [
+      "MAC1, which is\nequivalent to CMAC (Cipher-based message Authentication Code) and became a NIST\nrecommendation in May 2005. Keys are generated at random, but data is hashed with\nSHA256 and then the hash is signed with ECC256.\nWhen content playback is triggered, the PlayReady Client must perform some steps\nbefore initial playback can begin. This includes finding a license, binding, or interpreting\nthe license, decrypting the content key, and finally, preparing to decrypt the content.\nThe PlayReady Client stack takes time to bind a license to a piece of content, and this\noperation is required prior to starting the content decryption and rendering. This means\nthat the time to bind a license impacts the time to first frame when starting a playback,\nor the gap between tracks. The client developer as well as the application developer\nmight want to consider optimizing their code for runtime and performance issues, to\nreduce the time to first frame, and allow gapless playback.\nProtected contain"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part07.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-017",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-017_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part07.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf017_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part07 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part07.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-017",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part07.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf018_q06_halluc_nonexistent",
+    "prompt": "Can you explain how the PlayReady encryption header handles key rotation according to section 9.2.1?",
+    "ground_truth": "The provided text does not include any information about key rotation or section 9.2.1. It only describes how to build a Rights Management Object with two KeyIDs, encryption mode, and an optional domain ID in an XML format.",
+    "reference_contexts": [
+      "ttle endian \nformat\nvoid buildRMObject(string KeyID1, string KeyID2, string encryptMode, \nstring domainID)\n{\n\t\n// The string parameters include the following:\n\t\n// KeyID1, KeyID2 - The key identifiers - these values are returned \nfrom the key management system or\n\t\n//                                        the KeySeed mechanism\n\t\n// encryptMode - the encryption mode used to encrypt content, can be \nAESCTR or AESCBC\n\t\n// domainID - the optional domain service identifier (only used for \ndomains)\n\t\nstring xmlString = \"<WRMHEADER \nxmlns=\\\"http://schemas.microsoft.com/DRM/2007/03/PlayReadyHeader\\\" \nversion=\\\"4.3.0.0\\\"><DATA><PROTECTINFO><KIDS><KID ALGID=\\\"\";\n\t\nxmlString.append(encryptMode);\n\t\nxmlString.append(\"\\\" VALUE=\\\"\");\n\t\nxmlString.append(KeyID1);\n\t\nxmlString.append(\"\\\"></KID><KID ALGID=\\\"\");\n\t\nxmlString.append(encryptMode);\n\t\nxmlString.append(\"\\\" VALUE=\\\"\");\n\t\nxmlString.append(KeyID2);\n\t\nxmlString.append(\"\\\"></KID></KIDS></PROTECTINFO>\n<LA_URL>http://rm.contoso.com/rightsmanager.asmx<"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part08.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-018",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-018_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part08.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf018_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part08 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part08.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-018",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part08.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf019_q06_halluc_nonexistent",
+    "prompt": "What encryption algorithms are specified in section 5.3.2 for securing license nonces in PlayReady?",
+    "ground_truth": "The provided text does not include any section 5.3.2 or specific details about encryption algorithms used for securing license nonces in PlayReady. It only mentions the use of AES128-CBC for encryption and ECC256 for key encryption without reference to any section numbers.",
+    "reference_contexts": [
+      "/Version></RevListInfo>\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n<RevListInfo><ListID>BOZ1zT1UnEqfCf5tJOi/kA==\n</ListID><Version>0</Version></RevListInfo>\n\t\n\t\n\t\n\t\n\t\n\t\n</RevocationLists>\n\t\n\t\n\t\n\t\n\t\n\t\n<CustomData>User=Roland</CustomData>\n\t\n\t\n\t\n\t\n\t\n\t\n<LicenseNonce>7GYVLC7wvGVR0nqGYXs4DQ==\n</LicenseNonce>\n\t\n\t\n\t\n\t\n\t\n\t\n<ClientTime>1446224160</ClientTime>\n\t\n\t\n\t\n\t\n\t\n\t\n<EncryptedData \nxmlns=\"http://www.w3.org/2001/04/xmlenc#\" \nType=\"http://www.w3.org/2001/04/xmlenc#Element\">\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n<EncryptionMethod \nAlgorithm=\"http://www.w3.org/2001/04/xmlenc#aes128-cbc\"></EncryptionMethod>\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n<KeyInfo \nxmlns=\"http://www.w3.org/2000/09/xmldsig#\">\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n<EncryptedKey \nxmlns=\"http://www.w3.org/2001/04/xmlenc#\">\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n<EncryptionMethod \nAlgorithm=\"http://schemas.microsoft.com/DRM/2007/03/protocols#ecc256\">\n</EncryptionMethod>\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n<KeyInfo \nxmlns=\"http://www.w3.org/2000/09/xmldsig#\">\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n<KeyName>WMRMServer</KeyName>\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n</KeyInfo>\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n<CipherDa"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part09.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-019",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-019_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part09.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf019_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part09 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part09.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-019",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part09.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf020_q06_halluc_nonexistent",
+    "prompt": "What are the requirements outlined in section CA-3.0 regarding PlayReady Device Porting Kit Robustness?",
+    "ground_truth": "The provided text does not include any information about a section CA-3.0 or requirements related to PlayReady Device Porting Kit Robustness under that section.",
+    "reference_contexts": [
+      "mentation must be\ncommunicated to companies building a Final Product based on this Intermediate\nProduct.\nThe requirements are broken into 5 categories:\n1. CA: Content Accessibility\n2. CPR: Content Protection Robustness\n3. PKR: PlayReady Device Porting Kit Robustness\n4. TEER: PlayReady Trusted Execution Environment (TEE) Robustness\n5. TEEC: PlayReady Trusted Execution Environment (TEE) Compliance\n3. SL3000 Requirements for Intermediate\nProducts\nSL3000 Requirements for Intermediate Products Test\nReport – Check List\n\nRequirement\nUnderlying\nRule\nTitle\nRequirement\nTesting\nProcedure(s)\nOverview &\nResource\nUsage\nResult\nCA-1.1\nRR 2.2.1\nProduct\nDesign - TEE\nPlayReady Product is\nclearly designed such\nthat it uses a PlayReady\nTrusted Execution\nEnvironment (TEE).\nArchitecture\nReview and\nCode Review\n-\nCA-1.2\nRR 2.2.1\nProduct\nDesign - TEE\nPlayReady Product only\nuses Content Protection\nFunctions implemented\nby a PlayReady TEE.\nArchitecture\nReview and\nCode Review\n-\nCA-2.1\nRR 2.2.2.1\nDecrypted\nContent"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part10.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-020",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-020_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part10.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf020_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part10 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part10.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-020",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part10.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf021_q06_halluc_nonexistent",
+    "prompt": "Can you explain the requirements outlined in Section 5.4 regarding PlayReady's compatibility with legacy EME specifications?",
+    "ground_truth": "The provided text does not include any information about Section 5.4 or specific requirements related to PlayReady's compatibility with legacy EME specifications.",
+    "reference_contexts": [
+      "pliance with\nlatest EME specification.\n- Not supported.\ncom.microsoft.playrea\ndy\n- Deprecated.\n- Will be removed in a future\nrelease.\n- Non-compliant with any ve\nrsion of the EME specifificati\non.\n- Supported in PK 3.2.\n- Deprecated in PK 3.3-4.2.\n- Not supported in PK 4.3 or higher.\n- Security Level depends on OEM device.\n- Only compliant with EME specification\ncirca 2017.\nAll other key system st\nrings\n- Behavior undefined.\n- Not supported.\n \n \nAvailable Key System Strings\nNotes\n\n*\nOnly versions of the OS and browser which are currently supported by Microsoft. Versions that\nare out of support have undefined behavior.\n\nPlayReady Revocation\nArticle • 02/21/2020\nRevocation is a process to identify clients that have compromised security, and prevent\nthose clients from getting access to additional licenses for decrypting content that has\nbeen protected.\nWhen Microsoft identifies a client with compromised security, the device may be\nrevoked and added to a revocation list. The revocation lis"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part11.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-021",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-021_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3,
+      4,
+      5
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part11.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf021_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part11 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part11.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-021",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part11.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf022_q06_halluc_nonexistent",
+    "prompt": "How does PlayReady handle concurrent playback sessions when using the hypothetical 'Section 5.3' feature for device synchronization?",
+    "ground_truth": "The provided text does not mention any 'Section 5.3' feature related to device synchronization or handling concurrent playback sessions. It only discusses limiting concurrent sessions using Secure Stop and Limited Duration Licenses in PlayReady 3.0 or higher.",
+    "reference_contexts": [
+      "k sessions across\ndevices from a user account. For example, if Mr. Smith pays for a 2-stream maximum\nplan at Service Contoso, the service needs to keep count of how many clients are\ncurrently streaming content.\nThere are two PlayReady features that you can leverage to limit the number of\nconcurrent playback sessions:\nSecure Stop\nLimited Duration Licenses\nYou can use Secure Stop, supported in PlayReady 3.0 or higher, to limit the number of\nconcurrent playback sessions across devices.\nWith Secure Stop, a player will send a\ntrusted event to the license server when it stops playing a stream or file. You can use this\nto allow another client to start playback, depending on the number of players the server\nis aware of that is currently playing, and the service logic. This is the preferred option,\nand is implemented by several large services. In some cases, a player may disappear\nfrom the network before it has sent its Secure Stop event, so the logic on the license\nserver must be set in place"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part12.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-022",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-022_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part12.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf022_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part12 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part12.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-022",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part12.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf023_q06_halluc_nonexistent",
+    "prompt": "What does section 5.2 specify about how PlayReady Clients handle license revocation in offline mode?",
+    "ground_truth": "The provided text does not include any information about section 5.2 or how PlayReady Clients handle license revocation in offline mode.",
+    "reference_contexts": [
+      "system to\nverify that the policy is being properly enforced. After the policy is verified, the client\ndisplays the content. At point 4, the client that does not support the extensible policy\nopens the license, and identifies that it cannot enforce the policy. The client then\ndiscards the content and policy because it cannot view it.\n\nPlayReady Communication Protocols\nArticle • 11/07/2018\nPlayReady Clients communicate with PlayReady Servers to acquire licenses and perform\nadditional operations related to the management of rights set by services for clients.\nPlayReady Clients also communicate with other services that allow them to function\naccording to the PlayReady Compliance and Robustness Rules\n (for example, to a\nsecure clock service, which provides the trusted time and allows the client to enforce\ntime restrictions).\nMost communication between a PlayReady Client and a PlayReady Server are managed\nthrough the use of Simple Object Access Protocol (SOAP) messages. This\ncommunication be"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part13.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-023",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-023_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      4,
+      5
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part13.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf023_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part13 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part13.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-023",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part13.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf024_q06_halluc_nonexistent",
+    "prompt": "What are the specific steps outlined in section 5.2 for handling license renewal requests in PlayReady?",
+    "ground_truth": "The provided text does not contain any information about section 5.2 or specific steps for handling license renewal requests in PlayReady.",
+    "reference_contexts": [
+      "request a license:\n{versioned license service URL}?cfg=\n(rootid:uPeXHrR3K0icGCpYMBGsZw==,kid:header),\n(isroot:true,kid:uPeXHrR3K0icGCpYMBGsZw==)\nex: https://test.playready.microsoft.com/service/rightsmanager.asmx?cfg=\n(rootid:uPeXHrR3K0icGCpYMBGsZw==,kid:header),\n(isroot:true,kid:uPeXHrR3K0icGCpYMBGsZw==)\n3. Validate that a license is returned and that playback is successful. In this scenario a\nsingle response from the service should contain two licenses. One of them will be a\nroot license and the other a leaf license. The licenses should expire five minutes\nafter being issued to the client.\nDomains are not as commonly used by services. PlayReady domains provide both a way\nfor a service to manage the number of active devices in an account and for devices\nwithin the account to share content and licenses offline.\n1. Package the content using the KeySeed noted on the PlayReady test site using the\nfollowing KeyID:\nBase64: m1HAERIu8E+uABCZY4TX2g==\nThe test client will use the following URL"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part14.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-024",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-024_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part14.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf024_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part14 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part14.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-024",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part14.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf025_q06_halluc_nonexistent",
+    "prompt": "What are the required parameters to set in section 3.2.1 for initializing the PlayReady Crypto object?",
+    "ground_truth": "The text does not mention any section 3.2.1 or specific parameters related to that section for initializing the PlayReady Crypto object. It only states that the app should set the content header on the plug-in before creating a Crypto object, and describes possible content header formats and the need to set the Publisher Certificate for secure stop calls.",
+    "reference_contexts": [
+      "sizeof(rgbKID));\n    DRM_UTL_PromoteASCIItoUNICODE(pszhKID, &dasstrKID, (DRM_STRING \n*)&dstrKID);\n    ChkDR(Drm_Content_SetProperty(\n    &SessionManager::soAppContext, // DRM_APP_CONTEXT pointer\n    DRM_CSP_SELECT_KID,\n    dstrKID.pwszString,\n    dstrKID.cchString * sizeof(DRM_WCHAR)));\n  }\nErrorExit:\n\nApps will use this method to pass parameters to PlayReady that are not otherwise\npossible due to the current design of the Plug-in APIs.\nContentHeader—The app should set the content header on the plug-in before\nattempting to create a Crypto object. The content header could be in one of the\nfollowing formats:\nByte array with the contents of the PlayReady Object.\nByte array with the contents of the V2, V2.4, V4, V4.1, V4.2 headers (unicode\nXML).\nWide character array specifying the 24-character KeyID.\nSecureStopPublisherCert—The app should set the Publisher Certificate once before\nall secure stop related calls.\nC++\n  return _DR_TO_STATUS(dr);\n}\nsetPropertyByteArray\nstatus_t PlayReadyDrmPlug"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part15.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-025",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-025_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      4,
+      5
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part15.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf025_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part15 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part15.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-025",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part15.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf026_q06_halluc_nonexistent",
+    "prompt": "What details are provided about the encryption algorithms used in section 1.4 of the PlayReady DRM documentation?",
+    "ground_truth": "The provided text does not include any information about encryption algorithms or a section 1.4. It only covers terminology and descriptions related to Adaptation Set, Content Protection, Embedded Licenses, Embedded License Store, GUID, Initialization Segment, and Key Identifier.",
+    "reference_contexts": [
+      "p\nTerm\nDescription\nAdaptation Set\nIn DASH, a set of interchangeable encoded versions of one or several media\ncontent components.\nContent\nProtection (CP)\nThe process of securing a Protected Resource subsequent to its delivery to a\nClient device.\nEmbedded\nLicense\nA License stored in the PlayReady Object (PRO).\n1.1 Scope\n1.2 Conventions\n1.3 Terminology, Abbreviations and Acronyms\n1.3.1 Terminology\n\nTerm\nDescription\nEmbedded\nLicense Store\n(ELS)\nA record in the PlayReady Object (PRO) for storing Embedded Licenses.\nGlobally\nUnique\nIdentifier\n(GUID)\nA unique reference number, represented as a hyphen separated 32-character\nhexadecimal string, and usually stored as a 128-bit integer.\nInitialization\nSegment\nA DASH Segment containing metadata necessary to present the media streams\nencapsulated in Media Segments; in the case of ISO Media, a file header.\nKey Identifier\n(KID)\nA UUID which uniquely identifies a key protecting content, licenses or other\nsensitive information; in the case of PlayReady,"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part16.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-026",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-026_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part16.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf026_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part16 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part16.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-026",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part16.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf027_q06_halluc_nonexistent",
+    "prompt": "What does section 5.3 of the PlayReady documentation specify about the implementation of the Certificate Security Level (CSL)?",
+    "ground_truth": "The provided text does not include any information about section 5.3 or specific implementation details regarding the Certificate Security Level (CSL).",
+    "reference_contexts": [
+      "ntity that issues digital certificates and provides\ntrust in certificate chains.\nCAS\nConditional Access System.\n\nTerm\nDefinition\nCBC mode\nAn AES encryption mode. Cipher Block Chaining (CBC) mode turns a block\ncipher into a stream cipher.\n'cbcs'\nOne of the encryption modes of the Common Encryption standard. Uses the\nAES CBC mode with Stripped (partial) sample encryption. See also Common\nEncryption (CENC).\nCDM\nSee Content Decryption Module.\nCENC\nSee Common Encryption (CENC).\n'cenc'\nOne of the encryption modes of the Common Encryption standard. Uses the\nAES CTR mode with full sample encryption. See also Common Encryption\n(CENC).\nCertificate\nA digitally-signed binary document used to grant and revoke privileges to\ndevices and computers to perform specific operations.\nCertificate\nrevocation list\n(CRL)\nA list that maintains the information necessary to disable a device from being\nable to acquire licenses and play protected content.\nCertificate\nSecurity Level\n(CSL)\nThe security value specifie"
+    ],
+    "expected_pdfs": [
+      "PR_Documentation_Part17.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-027",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-027_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      5,
+      6
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part17.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf027_q18_halluc_false_premise",
+    "prompt": "Since PR Documentation Part17 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Documentation_Part17.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-027",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Documentation_Part17.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf028_q06_halluc_nonexistent",
+    "prompt": "What are the steps outlined in section 4.3 for renewing an Extended Validation Code Signing Certificate?",
+    "ground_truth": "The provided text does not include any information about section 4.3 or the steps for renewing an Extended Validation Code Signing Certificate.",
+    "reference_contexts": [
+      "nded Validation Code Signing Certificate to Microsoft  \nThe Extended Validation Code Signing Certificate is for company verification only and is a \nrequirement for the license agreement you are requesting. One of the ways Microsoft validates \nsecure code distribution is through an Extended Validation Code Signing Certificate that you \nprovide. The certificate is necessary for security, it is not used in any SDK or Application itself. \nThe companies below are accepted certification authorities by Microsoft and you can compare \nthese companies for the best price.  \nComplete instructions on how to obtain an Extended Validation Code Signing Certificate are \nbelow:  \n   \nYou will need two files to sign an Extended Validation Code Signing Certificate:  \n1. WMLA.ocx   \n2. Signcode.exe     \n  \nBoth of these files can be found in the WMLA.zip folder.   \nDownload the WMLA.zip folder here: http://go.microsoft.com/fwlink/?LinkID=148072  \n   \nObtain a certificate from one of the four certificate au"
+    ],
+    "expected_pdfs": [
+      "PR_EV_Certificate_Instructions.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-028",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-028_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_EV_Certificate_Instructions.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf028_q18_halluc_false_premise",
+    "prompt": "Since PR EV Certificate Instructions requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_EV_Certificate_Instructions.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-028",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_EV_Certificate_Instructions.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf029_q06_halluc_nonexistent",
+    "prompt": "What specific licensing terms are outlined in Section 3.5 regarding the use of PlayReady technology in mobile applications?",
+    "ground_truth": "The provided text does not include any information about Section 3.5 or licensing terms related to mobile applications.",
+    "reference_contexts": [
+      "mware \nupdate to a Device is not a PlayReady Software Application. \n1.10 “Quarter” means the period commencing on January 1st  of any given year and ending three (3) months thereafter and each \nsubsequent three (3) month period. \n1.11 “Server Application” means a PlayReady Intermediate Product that (a) runs on Windows Server 2008 and/or future versions of \nWindows Server as designated by Microsoft; and (b) uses other Licensed Technology to encrypt PlayReady Content, set PlayReady \nPolicy, and issue licenses containing, without limitation, PlayReady Policy and encrypted key(s) used to decrypt associated PlayReady \nContent. \n2. \nLICENSE GRANTS  \n \n2.1 License Scope.  The licenses granted in Sections 2.2 and 2.3 extend only to Developed Technology in Final Products that are Devices \nor software specifically designed to operate on Devices.   The licenses granted in Sections 2.2 and 2.3 do not authorize the use or \ndistribution of Developed Technology in Final Products that are PC Software."
+    ],
+    "expected_pdfs": [
+      "PR_Final_Product_License_Sample_v2018.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-029",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-029_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Final_Product_License_Sample_v2018.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf029_q18_halluc_false_premise",
+    "prompt": "Since PR Final Product License Sample v2018 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Final_Product_License_Sample_v2018.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-029",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Final_Product_License_Sample_v2018.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf030_q06_halluc_nonexistent",
+    "prompt": "What are the requirements specified in Section 4.2 regarding the sublicensing of Developed Technology to third parties?",
+    "ground_truth": "The provided text does not include any information about Section 4.2 or requirements regarding sublicensing of Developed Technology to third parties.",
+    "reference_contexts": [
+      "gnable, world-wide license (i) under Microsoft’s copyrights in the Licensed Technology, to reproduce and modify \nthe Licensed Technology solely in connection with Company’s development of Developed Technology; and (ii) under Microsoft’s trade \nsecret rights in the Licensed Technology, to use the Licensed Technology solely in connection with Company’s development of \nDeveloped Technology.   \n2.3 Distribution Copyright and Trade Secret License.  Microsoft grants to Company a non-exclusive, personal, non-transferable, non-\nsublicensable, non-assignable, world-wide license under Microsoft’s copyrights and trade secret rights in the Licensed Technology to: \n(a) \nreproduce, install and test Developed Technology on, into, or with Intermediate Product(s); \n(b) \nprovide Developed Technology in object code form to Authorized Contractor(s) to reproduce, install and test Developed \nTechnology on, into, or with Intermediate Product(s) on behalf of Company, subject to the requirements in Section 3.5"
+    ],
+    "expected_pdfs": [
+      "PR_Intermediate_Product_License_Sample_v2016.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-030",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-030_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Intermediate_Product_License_Sample_v2016.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf030_q18_halluc_false_premise",
+    "prompt": "Since PR Intermediate Product License Sample v2016 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Intermediate_Product_License_Sample_v2016.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-030",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Intermediate_Product_License_Sample_v2016.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf031_q06_halluc_nonexistent",
+    "prompt": "How do I update my billing information in the Microsoft Licensing Portal?",
+    "ground_truth": "The provided text does not include any information about updating billing information in the Microsoft Licensing Portal. It only describes how to enter a code for account creation, troubleshoot Azure B2C account issues, log into the portal, and review or modify contact lists and license agreement contacts.",
+    "reference_contexts": [
+      "4 – Enter the code that is sent to your email address. Then create a password. (Password resets \nare easy to do and are sent to your work email address) \n \n \n \nTrouble with Azure B2C Account Creation? If you cannot create an Azure B2C account it means that \nwmla@microsoft.com/ipla@microsoft.com does not have your work email address or company \ndomain registered in the licensee database. Email  ipla@microsoft.com and provide your full name, \nwork email address and company name. \n \n \nStep 5 – Log into the Microsoft Licensing Portal! You should be able to log into the portal now.\n\nNavigating the IP Licensing Administration Licensing Portal \n \nReviewing and Updating Contacts \n1.   To view or modify your contact list, from the Home page under Actions click Request \nContact Change. \n \n \n \nThe Agreements page provides a list of your active license agreements and the corresponding \nlicense agreement contacts.  \n2.   Select Edit to change an existing license agreement contact permissions by ch"
+    ],
+    "expected_pdfs": [
+      "PR_IPLA_Licensing_Portal_FAQ.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-031",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-031_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_IPLA_Licensing_Portal_FAQ.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf031_q18_halluc_false_premise",
+    "prompt": "Since PR IPLA Licensing Portal FAQ requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_IPLA_Licensing_Portal_FAQ.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-031",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_IPLA_Licensing_Portal_FAQ.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf032_q06_halluc_nonexistent",
+    "prompt": "What specific encryption algorithms are detailed in section 4.3 of the PlayReady Live TV protection document?",
+    "ground_truth": "The provided text does not include any information about encryption algorithms or a section 4.3, so no details about specific encryption algorithms can be provided.",
+    "reference_contexts": [
+      "remium video content. Instead of watching premium content \naccording to broadcast schedules and on a limited set of devices, consumers prefer and expect \nto watch it at their convenience and on a multitude of consumer electronic devices — phones, \ntablets, game consoles, Smart TVs, and more. Media consumption is shifting to an “anytime, \nanywhere, any device” ethos that marks a major change from the past. Consequently, well-\nunderstood business models for creating, distributing, and monetizing video content are \nexperiencing considerable upheaval. In addition, piracy continues to be a costly risk, yet access \npoints are proliferating and media formats and protection systems can no longer be tied to a \nsingle consumption platform. \nMicrosoft PlayReady provides highly scalable, studio-grade protection features that help content \nowners and providers address these trends and implement end-to-end protection of Live TV \nservices across a variety of business models. As the world’s most deplo"
+    ],
+    "expected_pdfs": [
+      "PR_LiveTV_Protection_Part01_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-032",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-032_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_LiveTV_Protection_Part01_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf032_q18_halluc_false_premise",
+    "prompt": "Since PR LiveTV Protection Part01 v2015 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_LiveTV_Protection_Part01_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-032",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_LiveTV_Protection_Part01_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf033_q06_halluc_nonexistent",
+    "prompt": "What are the specific requirements outlined in section 4.3.2 of the PlayReady licensing document for deploying PlayReady servers on third-party platforms?",
+    "ground_truth": "The provided text does not include any information about section 4.3.2 or specific requirements for deploying PlayReady servers on third-party platforms. It only mentions that you can contract with a Microsoft PlayReady Server ASP licensee to run PlayReady servers on your behalf or execute the Microsoft PlayReady Server ASP Agreement for deploying services on behalf of third-party brands.",
+    "reference_contexts": [
+      "te licenses to Windows \nendpoints. \nIf you are developing and distributing a PlayReady client for any other platform, you need to \npurchase the PlayReady license that reflects your business needs. \nInstead of licensing PlayReady server technologies directly, you can contract with a Microsoft \nPlayReady Server ASP licensee to run PlayReady servers on your behalf. Or, if you’re interested in \ndeploying a service on behalf of a third-party brand, you can execute the Microsoft PlayReady \nServer ASP Agreement. For more information about the Microsoft PlayReady Server ASP \nAgreement, see Approved Microsoft PlayReady Licensees.  \nFor more information about PlayReady licensing, see Licensing Frequently Asked Questions. If \nyou have questions about the PlayReady licensing process, please contact Microsoft at \nwmla@microsoft.com. \nAppendix: Rights Management Header \nAs mentioned in Live TV Streaming Architecture, a packager embeds the correct leaf license in \neach stream as Protection System Spe"
+    ],
+    "expected_pdfs": [
+      "PR_LiveTV_Protection_Part02_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-033",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-033_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_LiveTV_Protection_Part02_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf033_q18_halluc_false_premise",
+    "prompt": "Since PR LiveTV Protection Part02 v2015 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_LiveTV_Protection_Part02_v2015.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-033",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_LiveTV_Protection_Part02_v2015.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf034_q06_halluc_nonexistent",
+    "prompt": "What are the requirements outlined in section 2.3 regarding the distribution of Developed Technology under the PlayReady license?",
+    "ground_truth": "The provided text does not include any information about section 2.3 or specific requirements regarding the distribution of Developed Technology under the PlayReady license.",
+    "reference_contexts": [
+      "tities” means Company’s authorized distributors, resellers, dealers, and others in its distribution channels for Company’s \nIntermediate Products and/or Final Products. \n1.4 “Compliance Rules” means Microsoft’s then-effective compliance rules for the applicable Licensed Technology component.  The \nCompliance Rules for PlayReady are available, as of the Effective Date, at http://go.microsoft.com/fwlink/?LinkId=93849 and the \nCompliance Rules for WMDRM are available, as of the Effective Date, at http://go.microsoft.com/fwlink/?LinkID=152730.   \n1.5 “Confidential Information” means nonpublic information regarding the Licensed Technology, Deliverables or Developed \nTechnology (including nonpublic information regarding Company’s distribution of Developed Technology) which (i) Microsoft or \nCompany designates as confidential, or (ii) under the circumstances surrounding disclosure, ought to be treated as confidential.  \nConfidential Information includes PlayReady or WMDRM source code Company"
+    ],
+    "expected_pdfs": [
+      "PR_Master_Agreement_Sample_v2013.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-034",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-034_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Master_Agreement_Sample_v2013.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf034_q18_halluc_false_premise",
+    "prompt": "Since PR Master Agreement Sample v2013 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Master_Agreement_Sample_v2013.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-034",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Master_Agreement_Sample_v2013.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf035_q06_halluc_nonexistent",
+    "prompt": "What does section 2.3 of the agreement specify about sublicensing rights for third-party technologies?",
+    "ground_truth": "The provided text does not include any information about section 2.3 or sublicensing rights for third-party technologies, so no details can be given regarding that section.",
+    "reference_contexts": [
+      "in the “samples” directory provided by Microsoft as part of the Licensed \nTechnology, which has been modified pursuant to the rights granted to Company under this Agreement. \n1.9 \n“Necessary Claim” means each claim of a patent or patent application that is: (a) owned or controlled by Microsoft or its Affiliate, \nor sublicensable by that party without payment of royalties to or requiring the consent of an unaffiliated third party, now or in \nthe future; and (b) necessarily infringed in connection with the Licensed Technology’s use or implementation pursuant to this \nAgreement’s terms. But, Necessary Claims do not include any claims: (x) to any enabling technologies that may be needed to \nmake or use any product or service that includes the Licensed Technology (e.g., enabling semiconductor manufacturing \ntechnology, compiler technology, object oriented technology, operating system technology, protocols, programming interfaces, \netc.); (y) covering the implementation of other specificati"
+    ],
+    "expected_pdfs": [
+      "PR_Server_Agreement_Sample_v2019.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-035",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-035_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Server_Agreement_Sample_v2019.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf035_q18_halluc_false_premise",
+    "prompt": "Since PR Server Agreement Sample v2019 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Server_Agreement_Sample_v2019.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-035",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Server_Agreement_Sample_v2019.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf036_q06_halluc_nonexistent",
+    "prompt": "Can you explain the requirements detailed in section 5.3 of the PlayReady Server Overview for integrating watermarking vendors?",
+    "ground_truth": "The provided text does not include any details about section 5.3 or specific requirements for integrating watermarking vendors.",
+    "reference_contexts": [
+      "y/documents)\nSample Agreements (/playready/sampleAgreements)\nLicensee Information\nLicensee List (https://iplapublic.powerappsportals.com/page/Licensee-Lists/)\nWatermarking Vendors (/playready/watermarking)\nCompliance & Robustness Rules (/playready/licensing/compliance)\nFAQ (/playready/licensing/faq)\nOther\nPartners (/playready/partners)\nLicensee Portal (https://aka.ms/IPLA)\nNews (/playready/newsroom)\n© 2024 Microsoft. All Rights Reserved.\nContact Us (http://go.microsoft.com/?linkid=2028325)\nTerms of Use (http://go.microsoft.com/?linkid=4412892)\nTrademarks (https://www.microsoft.com/trademarks)\nPrivacy Statement (http://go.microsoft.com/fwlink/?LinkId=81184)\nConsumer Health Privacy (https://go.microsoft.com/fwlink/?linkid=2259814)"
+    ],
+    "expected_pdfs": [
+      "PR_Server_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-036",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-036_v1.0_chunk_002"
+    ],
+    "expected_pages": [
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Server_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf036_q18_halluc_false_premise",
+    "prompt": "Since PR Server Overview requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_Server_Overview.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-036",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_Server_Overview.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf037_q06_halluc_nonexistent",
+    "prompt": "What are the specific requirements outlined in Section 7 of the PlayReady SL3000 Playbook for Intermediate Products' hardware security?",
+    "ground_truth": "The provided text does not mention any requirements in Section 7 or specific hardware security requirements for Intermediate Products. The security review for Intermediate Products is based on the SL3000 Requirements outlined in Section 4 of the document.",
+    "reference_contexts": [
+      "arly window). \nThe security of a PlayReady Product depends critically on the robustness of the PlayReady implementation. A \nsecurity review, including hardware and firmware, is required for Intermediate Products to qualify for SL3000. \nThe security review is based on the SL3000 Requirements, outlined in Section 4 of this document. This security \nreview must be documented, and the documentation communicated to companies building a Final Products \nbased on this Intermediate Product. This security review can be conducted by a third-party test house, or by the \nimplementer themselves (the IPL).\n\n© 2016 Microsoft Corporation. All rights reserved. 20 February 2016 \n \nPlayReady SL3000 Playbook \nPlayReady Final Products are not required to be reviewed by a third-party test house to qualify for SL3000 \nCompliance. However, Final Products that wish to ship with an SL3000 Certificate may only do so when they \nmeet the requirements for SL3000 Compliant Final Products.  This requires the Final Prod"
+    ],
+    "expected_pdfs": [
+      "PR_SL3000_Playbook.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-037",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-037_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      3,
+      4
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_SL3000_Playbook.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf037_q18_halluc_false_premise",
+    "prompt": "Since PR SL3000 Playbook requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_SL3000_Playbook.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-037",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_SL3000_Playbook.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf038_q06_halluc_nonexistent",
+    "prompt": "Can you explain how PlayReady version 4.2 improves support for the new SecureStream3 encryption protocol?",
+    "ground_truth": "PlayReady version 4.2 does not mention any improvements or support related to a SecureStream3 encryption protocol. The version focuses on enhancements such as the SecureStop2 feature, CBCS support on Windows, and updates to the SecureStop message processing.",
+    "reference_contexts": [
+      "What's New in PlayReady Version 4.2\nArticle • 03/05/2021\nThis page contains an overview of the most significant changes between PlayReady version\n4.0 and PlayReady version 4.2.\nThe SecureStop2 feature is added. This provides a higher level of security than the\npreviously-extant SecureStop1 feature.\nWindows now supports CBCS for both hardware and software DRM. Additionally, the\nPlayReady license server extends CBCS support for SL2000.\nThe server can now process SecureStop2 messages. For more information, see PlayReady\nSecure Stop.\nThe server's Certificate class now correctly returns ManufacturerName, ModelName, and\nModelNumber for certificates coming from Windows clients.\nThe client now sends SecureStop2 messages to the server. For more information, see\nPlayReady Secure Stop.\nThe client application can now choose to reject individual licenses during\nDrm_Reader_Bind. For more information, refer to enum and structure documentation in\nsource code file source/inc/drmcallbacktypes.h.\nIt is n"
+    ],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.2.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-038",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-038_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.2.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf038_q18_halluc_false_premise",
+    "prompt": "Since PR WhatsNew v4.2 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.2.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-038",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.2.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf039_q06_halluc_nonexistent",
+    "prompt": "Does PlayReady version 4.3 introduce support for streaming encrypted content using the new AES-256 encryption standard as described in section 5.2?",
+    "ground_truth": "The provided text does not mention any new support for streaming encrypted content using AES-256 encryption or a section 5.2. It only highlights the release of a PlayReady Server SDK built on .NETCore compatible with Linux and Windows, and the ability for server applications to treat revoked client certificates as not revoked.",
+    "reference_contexts": [
+      "What's New in PlayReady Version 4.3\nArticle • 03/05/2021\nThis page contains an overview of the most significant changes between PlayReady version\n4.2 and PlayReady version 4.3.\nA PlayReady Server SDK built on .NETCore was released. This SDK can be installed on Linux\nmachines in addition to Windows and is compatible with the same clients as the Windows-\nspecific PlayReady Server SDK. For more information on version compatibility, see\nPlayReady Product Versions.\nA server application can now explicitly request that one or more revoked client certificates\nbe treated as if they were not revoked. For more information, see PlayReady Revocation.\nGeneral Changes in PlayReady Version 4.3\nChanges in PlayReady Server SDK Version 4.3\nGeneral"
+    ],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.3.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-039",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-039_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.3.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf039_q18_halluc_false_premise",
+    "prompt": "Since PR WhatsNew v4.3 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.3.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-039",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.3.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf040_q06_halluc_nonexistent",
+    "prompt": "What are the new licensing protocols introduced in section 5.3 of PlayReady Version 4.4?",
+    "ground_truth": "The provided text does not mention any new licensing protocols or a section 5.3 in PlayReady Version 4.4, so no information is available on this topic.",
+    "reference_contexts": [
+      "ey 2 feature cannot improve performance on the client, the\nproperty has no effect. For example, if the client is older than version 4.4, the property\nis ignored.\n2. Otherwise, setting the property to true will cause the server to perform one additional\nasymmetric encrypt operation when generating the license acquisition response and\ninclude an \"Optimized Content Key 2\" in each non-leaf license included in the\nresponse. See \"Changes in PlayReady Device Porting Kit Version 4.4\" below for the\ncorresponding benefits of this feature.\nGeneral Changes in PlayReady Version 4.4\nGeneral changes in PlayReady Server SDK\nVersion 4.4\nChanges in PlayReady Device Porting Kit Version\n4.4\n\nThe client application can now determine what features the specific OEM implementation\nof the PlayReady Device Porting Kit has implemented. For more information, refer to\nstructure definitions in source code file source/inc/drmmanagertypes.h.\nThe client sends what features the specific OEM implementation of the PlayRe"
+    ],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.4.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-040",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-040_v1.0_chunk_001"
+    ],
+    "expected_pages": [
+      1,
+      2
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.4.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf040_q18_halluc_false_premise",
+    "prompt": "Since PR WhatsNew v4.4 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.4.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-040",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.4.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf041_q06_halluc_nonexistent",
+    "prompt": "What are the specific changes made to the License Acquisition API in section 3.2 of the PlayReady .NET Standard SDK documentation?",
+    "ground_truth": "The provided text does not include any information about changes to the License Acquisition API or a section 3.2 in the PlayReady .NET Standard SDK documentation.",
+    "reference_contexts": [
+      "he .NET Standard SDK nor does it list all of the packaging classes\nremoved which will be restored.\n \nGeneral Server Changes\nServer API Documentation Changes\nﾉ\nExpand table\n\n.NET Framework class or\ninterface\n.NET Standard equivalent\nDifferences\nProtocolChallengeContext class\nIProtocolChallengeContext interface\nThe HttpRequest Request property only exists\nin the .NET Framework SDK as discussed\nabove.\nProtocolChallenge class\nIProtocolChallenge interface\nNone.\nIDeleteLicenseHandler interface\nSame\nProcessDeleteLicenseDataAsync is\nsynchronous in the .NET Framework SDK as\ndiscussed above.\nDeleteLicenseDataChallenge class\nIDeleteLicenseDataChallenge\ninterface\nNone.\nIDomainHandler interface\nSame\nHandleJoinDomainAsync and\nHandleLeaveDomainAsync are synchronous in\nthe .NET Framework SDK as discussed above.\nJoinDomainChallenge class\nIDomainChallenge and\nIJoinDomainChallenge interfaces\nThe static\nJoinDomainChallenge.GenerateDomainKeyPair\nmethod does not exist in the .NET Standard\nSDK. The loss of t"
+    ],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.5.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-041",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-041_v1.0_chunk_005"
+    ],
+    "expected_pages": [
+      2,
+      3
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.5.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf041_q18_halluc_false_premise",
+    "prompt": "Since PR WhatsNew v4.5 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.5.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-041",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.5.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  },
+  {
+    "id": "pdf042_q06_halluc_nonexistent",
+    "prompt": "Can you explain the new encryption method introduced in section 3.2 of the PlayReady 4.6 update?",
+    "ground_truth": "The provided text does not mention any new encryption method introduced in section 3.2 or any specific section. It only highlights that PlayReady 4.6 allows a single Key Exchange license to include multiple keys with different algorithms and other SDK updates.",
+    "reference_contexts": [
+      "What's New in PlayReady Version 4.6\nArticle • 12/15/2022\nThis page contains an overview of the most significant changes between PlayReady version\n4.5 and PlayReady version 4.6.\nStarting with PlayReady 4.6, a single Key Exchange license can include multiple keys with\ndifferent algorithms.\nThe .NET Core SDK was migrated to .NET version 6.0.\nKey Exchange licenses can now include multiple keys with different algorithms.\nThis is merely an overview. Refer to the Server API documentation for more information.\nThe LicenseChallengeReeFeatures enum now includes value KeyExchangeMultiple.\nThe KeyExchangeLicense class method AddRight can now be called multiple times\nwith different KeyExchangeRight instances with different algorithms if the challenge's\nReeFeatureList contains LicenseChallengeReeFeatures.KeyExchangeMultiple.\nIPackagingDataAcquisitionHandler has been added to .NET Core version. .NET Core\nServer SDK was originally released without this functionality. It was added back to\nclose this fu"
+    ],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.6.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-042",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [
+      "PR-DOC-042_v1.0_chunk_000"
+    ],
+    "expected_pages": [
+      1
+    ],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.6.pdf",
+    "source_category": "general",
+    "generation_method": "llm"
+  },
+  {
+    "id": "pdf042_q18_halluc_false_premise",
+    "prompt": "Since PR WhatsNew v4.6 requires AES-256-GCM encryption for all content, how should implementers configure this?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [
+      "PR_WhatsNew_v4.6.pdf"
+    ],
+    "expected_doc_id": "PR-DOC-042",
+    "expected_doc_version": "1.0",
+    "expected_chunk_ids": [],
+    "expected_pages": [],
+    "kb_version": "2026.04",
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "query_type": "hallucination",
+    "source_pdf": "PR_WhatsNew_v4.6.pdf",
+    "source_category": "general",
+    "generation_method": "template"
+  }
+]
