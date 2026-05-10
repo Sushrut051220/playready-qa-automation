@@ -45,10 +45,40 @@ Enables batch processing
 azure-pipelines.yml
 reproducible QA workflows
 
-![alt text](image.png)
+## 🧠 Architecture (Current)
+
+![Current Architecture](docs/architecture-current.png)
+
+```mermaid
+flowchart TD
+    A[Test Cases] --> B[query_new_agent.py]
+    B --> C[Evaluation Dataset]
+    C --> D[RAGAS Evaluation]
+    C --> E[Foundry Evaluation]
+    D --> F[RAGAS Results]
+    E --> G[Foundry Results]
+    F --> H[Reports / Analysis]
+    G --> H
+    H --> I[QA Review / Bug Analysis]
 
 🔮 Future Architecture (EvalOps Vision)
-![alt text](image-1.png)
+![Current Architecture](docs/architecture-future.png)
+
+flowchart TD
+    A[Test Cases] --> B[Agent Execution]
+    B --> C[Evaluation Dataset]
+    C --> D[RAGAS]
+    C --> E[DeepEval - Planned]
+    C --> F[Foundry Evaluation]
+    D --> G[Metrics]
+    E --> G
+    F --> G
+    G --> H[Azure Monitor - Planned]
+    G --> I[Power BI Dashboard - Planned]
+    G --> J[Release Gates - Planned]
+
+
+
 📂 Project Structure
 playready-qa-automation/
 │
@@ -113,12 +143,10 @@ QA Automation Engineer – GenAI / RAG Systems
 
 ---
 
-# ✅ ✅ FINAL CHECK BEFORE PUSH
-
-👉 After replacing:
+✅ ✅ FINAL PUSH
 
 ```powershell
+git add docs/
 git add README.md
-git commit -m "📘 Clean README with architecture diagram"
+git commit -m "📊 Add real architecture diagrams + Mermaid"
 git push
-
