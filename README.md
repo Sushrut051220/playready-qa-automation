@@ -60,7 +60,7 @@ flowchart TD
     F --> H[Reports / Analysis]
     G --> H
     H --> I[QA Review / Bug Analysis]
-
+    
 ## 🔮 Future Architecture
 
 ![Future Architecture](docs/architecture-future.png)
