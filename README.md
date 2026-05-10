@@ -46,7 +46,6 @@ azure-pipelines.yml
 reproducible QA workflows
 
 ## 🧠 Architecture (Current)
-
 ![Current Architecture](docs/architecture-current.png)
 
 ```mermaid
@@ -64,6 +63,8 @@ flowchart TD
 ## 🔮 Future Architecture
 
 ![Future Architecture](docs/architecture-future.png)
+
+
 
 ```mermaid
 flowchart TD
