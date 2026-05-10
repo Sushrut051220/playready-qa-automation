@@ -61,9 +61,11 @@ flowchart TD
     G --> H
     H --> I[QA Review / Bug Analysis]
 
-🔮 Future Architecture (EvalOps Vision)
-![Current Architecture](docs/architecture-future.png)
+## 🔮 Future Architecture
 
+![Future Architecture](docs/architecture-future.png)
+
+```mermaid
 flowchart TD
     A[Test Cases] --> B[Agent Execution]
     B --> C[Evaluation Dataset]
@@ -76,7 +78,6 @@ flowchart TD
     G --> H[Azure Monitor - Planned]
     G --> I[Power BI Dashboard - Planned]
     G --> J[Release Gates - Planned]
-
 
 
 📂 Project Structure
