@@ -1,0 +1,61 @@
+{
+  "timestamp": "2026-04-21T22:52:38.824298",
+  "phase": 1,
+  "dry_run": false,
+  "stats": {
+    "filled": 184,
+    "skipped_existing": 0,
+    "skipped_inscope": 0,
+    "total": 184
+  },
+  "files": {
+    "test_cases_neg_competitor_technology.json": {
+      "filled": 10,
+      "skipped_existing": 0,
+      "skipped_inscope": 0,
+      "total": 10
+    },
+    "test_cases_neg_cross_document_confusion.json": {
+      "filled": 20,
+      "skipped_existing": 0,
+      "skipped_inscope": 0,
+      "total": 20
+    },
+    "test_cases_neg_data_leakage.json": {
+      "filled": 10,
+      "skipped_existing": 0,
+      "skipped_inscope": 0,
+      "total": 10
+    },
+    "test_cases_neg_false_premise.json": {
+      "filled": 15,
+      "skipped_existing": 0,
+      "skipped_inscope": 0,
+      "total": 15
+    },
+    "test_cases_neg_hallucination_trap.json": {
+      "filled": 15,
+      "skipped_existing": 0,
+      "skipped_inscope": 0,
+      "total": 15
+    },
+    "test_cases_neg_out_of_scope.json": {
+      "filled": 20,
+      "skipped_existing": 0,
+      "skipped_inscope": 0,
+      "total": 20
+    },
+    "test_cases_neg_version_confusion.json": {
+      "filled": 10,
+      "skipped_existing": 0,
+      "skipped_inscope": 0,
+      "total": 10
+    },
+    "test_cases_negative.json": {
+      "filled": 84,
+      "skipped_existing": 0,
+      "skipped_inscope": 0,
+      "total": 84
+    }
+  }
+}

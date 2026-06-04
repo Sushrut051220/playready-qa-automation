@@ -1,0 +1,491 @@
+[
+  {
+    "id": "pdf001_q01_pos_factual",
+    "question": "When was the Compliance Rules for PlayReady Products document published?",
+    "user_input": "When was the Compliance Rules for PlayReady Products document published?",
+    "answer": "The Compliance Rules for PlayReady Products document was published on 1st November 2021.",
+    "response": "The Compliance Rules for PlayReady Products document was published on 1st November 2021.",
+    "contexts": [
+      "Compliance Rules for PlayReady® Products \n \nMicrosoft Corporation \n1st  November 2021\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n \n1 November 2021 \n \n Contents \n1 \nIntroduction ...............................................................................................................................1 \n1.1 \nDefinitions ..................................................................................................................................... 1 \n1.2 \nFormatting Conventions ............................................................................................................... 1 \n1.3 \nUsing this Document ..................................................................................................................... 1 \n2 \nRequirements For All PlayReady Products ...................................................................................2 \n2.1 \nScope ......................................................."
+    ],
+    "retrieved_contexts": [
+      "Compliance Rules for PlayReady® Products \n \nMicrosoft Corporation \n1st  November 2021\n\nCompliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n \n1 November 2021 \n \n Contents \n1 \nIntroduction ...............................................................................................................................1 \n1.1 \nDefinitions ..................................................................................................................................... 1 \n1.2 \nFormatting Conventions ............................................................................................................... 1 \n1.3 \nUsing this Document ..................................................................................................................... 1 \n2 \nRequirements For All PlayReady Products ...................................................................................2 \n2.1 \nScope ......................................................."
+    ],
+    "ground_truth": "The Compliance Rules for PlayReady Products document was published on 1st November 2021.",
+    "reference": "The Compliance Rules for PlayReady Products document was published on 1st November 2021.",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [],
+    "agent_citation_quotes": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 19.31,
+    "token_usage": {
+      "total_tokens": 9954,
+      "prompt_tokens": 9897,
+      "completion_tokens": 57
+    },
+    "source_test_suite": "test_cases_positive.json"
+  },
+  {
+    "id": "pdf001_q02_pos_detail",
+    "question": "What are the main sections covered under the 'Requirements For All PlayReady Products' in the document PR_Compliance_Rules_Part01_v2021.pdf?",
+    "user_input": "What are the main sections covered under the 'Requirements For All PlayReady Products' in the document PR_Compliance_Rules_Part01_v2021.pdf?",
+    "answer": "The main sections covered under the \"Requirements For All PlayReady Products\" in the document PR_Compliance_Rules_Part01_v2021.pdf include:\n\n- Scope of the requirements applicable to all PlayReady Products.\n- Enforcement of license rights and restrictions based on the type of license (e.g., PlayReady License, Windows Media DRM 10 for Portable Devices, Windows Media DRM 10 for Network Devices).\n- Policy enforcement rules depending on flags such as Must Understand and Best Effort.\n- Privacy compliance requirements for PlayReady Products.\n\nThese sections set forth the foundational compliance rules that apply universally to all PlayReady Products, before more specific functionality requirements covered in later sections of the document【4:0†source】【4:5†source】【4:1†source】【4:4†source】【4:3†source】【4:7†source】【4:9†source】.",
+    "response": "The main sections covered under the \"Requirements For All PlayReady Products\" in the document PR_Compliance_Rules_Part01_v2021.pdf include:\n\n- Scope of the requirements applicable to all PlayReady Products.\n- Enforcement of license rights and restrictions based on the type of license (e.g., PlayReady License, Windows Media DRM 10 for Portable Devices, Windows Media DRM 10 for Network Devices).\n- Policy enforcement rules depending on flags such as Must Understand and Best Effort.\n- Privacy compliance requirements for PlayReady Products.\n\nThese sections set forth the foundational compliance rules that apply universally to all PlayReady Products, before more specific functionality requirements covered in later sections of the document【4:0†source】【4:5†source】【4:1†source】【4:4†source】【4:3†source】【4:7†source】【4:9†source】.",
+    "contexts": [
+      ". 1 \n2 \nRequirements For All PlayReady Products ...................................................................................2 \n2.1 \nScope ............................................................................................................................................. 2 \n2.2 \nFunctionality ................................................................................................................................. 2 \n2.3 \nNo Circumvention ......................................................................................................................... 2 \n2.4 \nUnspecified Policy ......................................................................................................................... 2 \n2.5 \nRoot Public Keys ............................................................................................................................ 3 \n2.6 \nPrivacy ..................................................................................................."
+    ],
+    "retrieved_contexts": [
+      ". 1 \n2 \nRequirements For All PlayReady Products ...................................................................................2 \n2.1 \nScope ............................................................................................................................................. 2 \n2.2 \nFunctionality ................................................................................................................................. 2 \n2.3 \nNo Circumvention ......................................................................................................................... 2 \n2.4 \nUnspecified Policy ......................................................................................................................... 2 \n2.5 \nRoot Public Keys ............................................................................................................................ 3 \n2.6 \nPrivacy ..................................................................................................."
+    ],
+    "ground_truth": "The main sections include Scope, Functionality, No Circumvention, Unspecified Policy, Root Public Keys, and Privacy.",
+    "reference": "The main sections include Scope, Functionality, No Circumvention, Unspecified Policy, Root Public Keys, and Privacy.",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_0",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 741,
+        "end_index": 753
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_5",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 753,
+        "end_index": 765
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_1",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 765,
+        "end_index": 777
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_4",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 777,
+        "end_index": 789
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_3",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 789,
+        "end_index": 801
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_7",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 801,
+        "end_index": 813
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_9",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 813,
+        "end_index": 825
+      }
+    ],
+    "agent_citation_quotes": [
+      "doc_0",
+      "doc_5",
+      "doc_1",
+      "doc_4",
+      "doc_3",
+      "doc_7",
+      "doc_9"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part01_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 19.42,
+    "token_usage": {
+      "total_tokens": 10005,
+      "prompt_tokens": 9776,
+      "completion_tokens": 229
+    },
+    "source_test_suite": "test_cases_positive.json"
+  },
+  {
+    "id": "pdf002_q01_pos_factual",
+    "question": "Under what conditions can a PlayReady Product pass decrypted A/V Content through local outputs?",
+    "user_input": "Under what conditions can a PlayReady Product pass decrypted A/V Content through local outputs?",
+    "answer": "- The PlayReady License, PlayReady-ND Output Protection Level, and Output Control requirements must be met.\n- The decrypted A/V Content may only be passed to local Outputs described in the Restricted Outputs and Other Outputs sections, complying with their specific restrictions and controls【4:1†source】【4:0†source】.",
+    "response": "- The PlayReady License, PlayReady-ND Output Protection Level, and Output Control requirements must be met.\n- The decrypted A/V Content may only be passed to local Outputs described in the Restricted Outputs and Other Outputs sections, complying with their specific restrictions and controls【4:1†source】【4:0†source】.",
+    "contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n5 \n1 November 2021 \n3 Passing A/V Content \nA PlayReady Product must comply with this Section 3 (Passing A/V Content) when Passing decrypted A/V \nContent. \n3.1 \nPlayback \nA PlayReady Product may Pass decrypted A/V Content through the local Outputs described in Section \n3.4 (Restricted Outputs) and Section 3.7 (Other Outputs) only if: (i) the PlayReady License, PlayReady-ND \nLicense, or WMDRM-ND License associated with such A/V Content contains a Play Policy Container \nObject or (ii) the WMDRM-PD License associated with such A/V Content contains a RIGHTS\\ONACTION \nnode with a type attribute of “Play”. For the avoidance of doubt, Playback does not authorize any \naction other than those expressly permitted under this Section 3, including transcoding decrypted A/V \nContent, or functioning as a Transmitter. \n3.2 \nStop State \nFor A/V Content, Stop State occurs when decrypted A/V Content is no long"
+    ],
+    "retrieved_contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n5 \n1 November 2021 \n3 Passing A/V Content \nA PlayReady Product must comply with this Section 3 (Passing A/V Content) when Passing decrypted A/V \nContent. \n3.1 \nPlayback \nA PlayReady Product may Pass decrypted A/V Content through the local Outputs described in Section \n3.4 (Restricted Outputs) and Section 3.7 (Other Outputs) only if: (i) the PlayReady License, PlayReady-ND \nLicense, or WMDRM-ND License associated with such A/V Content contains a Play Policy Container \nObject or (ii) the WMDRM-PD License associated with such A/V Content contains a RIGHTS\\ONACTION \nnode with a type attribute of “Play”. For the avoidance of doubt, Playback does not authorize any \naction other than those expressly permitted under this Section 3, including transcoding decrypted A/V \nContent, or functioning as a Transmitter. \n3.2 \nStop State \nFor A/V Content, Stop State occurs when decrypted A/V Content is no long"
+    ],
+    "ground_truth": "A PlayReady Product can pass decrypted A/V Content through local outputs only if the associated PlayReady License, PlayReady-ND License, or WMDRM-ND License contains a Play Policy Container Object, or if the WMDRM-PD License contains a RIGHTS\\ONACTION node with a type attribute of 'Play'.",
+    "reference": "A PlayReady Product can pass decrypted A/V Content through local outputs only if the associated PlayReady License, PlayReady-ND License, or WMDRM-ND License contains a Play Policy Container Object, or if the WMDRM-PD License contains a RIGHTS\\ONACTION node with a type attribute of 'Play'.",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_1",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 291,
+        "end_index": 303
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_0",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 303,
+        "end_index": 315
+      }
+    ],
+    "agent_citation_quotes": [
+      "doc_1",
+      "doc_0"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 13.43,
+    "token_usage": {
+      "total_tokens": 10173,
+      "prompt_tokens": 10067,
+      "completion_tokens": 106
+    },
+    "source_test_suite": "test_cases_positive.json"
+  },
+  {
+    "id": "pdf002_q02_pos_detail",
+    "question": "What triggers the Stop State for A/V Content in PlayReady, and what must a PlayReady Product do after entering the Stop State?",
+    "user_input": "What triggers the Stop State for A/V Content in PlayReady, and what must a PlayReady Product do after entering the Stop State?",
+    "answer": "- Stop State for A/V Content occurs when decrypted A/V Content is no longer being Passed, such as when the end user selects a stop playback function, the final portion of decrypted A/V Content has been Passed, or decrypted A/V Content stops being Passed in preparation for different content.  \n- After entering Stop State, a PlayReady Product must re-initialize PlayReady before Passing any decrypted A/V Content.  \n- Additionally, a PlayReady Product must close and destroy all PlayReady decryptor objects when Stop State occurs【4:2†source】【4:1†source】【4:4†source】【4:0†source】.",
+    "response": "- Stop State for A/V Content occurs when decrypted A/V Content is no longer being Passed, such as when the end user selects a stop playback function, the final portion of decrypted A/V Content has been Passed, or decrypted A/V Content stops being Passed in preparation for different content.  \n- After entering Stop State, a PlayReady Product must re-initialize PlayReady before Passing any decrypted A/V Content.  \n- Additionally, a PlayReady Product must close and destroy all PlayReady decryptor objects when Stop State occurs【4:2†source】【4:1†source】【4:4†source】【4:0†source】.",
+    "contexts": [
+      "ermitted under this Section 3, including transcoding decrypted A/V \nContent, or functioning as a Transmitter. \n3.2 \nStop State \nFor A/V Content, Stop State occurs when decrypted A/V Content is no longer being Passed, for example \nbut without limitation as a result of one of the following: (i) the end user has selected a stop playback \nfunction, (ii) the final portion of decrypted A/V Content has been Passed, or (iii) decrypted A/V Content \nstops being Passed in preparation for Passing different decrypted A/V Content. After the PlayReady \nProduct enters the Stop State for any reason, it must re-initialize PlayReady before Passing any \ndecrypted A/V Content. \n3.3 \nSecure Stop  \nIf the Secure Stop Object, whether with or without the Secure Stop 2 Object, is specified in a PlayReady \nLicense, a PlayReady Product must comply with all requirements in this Section 3.3 (Secure Stop)  \n3.3.1 \nA PlayReady Product must implement Secure Stop in a manner Consistent with the \nMicrosoft Implementatio"
+    ],
+    "retrieved_contexts": [
+      "ermitted under this Section 3, including transcoding decrypted A/V \nContent, or functioning as a Transmitter. \n3.2 \nStop State \nFor A/V Content, Stop State occurs when decrypted A/V Content is no longer being Passed, for example \nbut without limitation as a result of one of the following: (i) the end user has selected a stop playback \nfunction, (ii) the final portion of decrypted A/V Content has been Passed, or (iii) decrypted A/V Content \nstops being Passed in preparation for Passing different decrypted A/V Content. After the PlayReady \nProduct enters the Stop State for any reason, it must re-initialize PlayReady before Passing any \ndecrypted A/V Content. \n3.3 \nSecure Stop  \nIf the Secure Stop Object, whether with or without the Secure Stop 2 Object, is specified in a PlayReady \nLicense, a PlayReady Product must comply with all requirements in this Section 3.3 (Secure Stop)  \n3.3.1 \nA PlayReady Product must implement Secure Stop in a manner Consistent with the \nMicrosoft Implementatio"
+    ],
+    "ground_truth": "Stop State occurs when decrypted A/V Content is no longer being Passed, such as when the user selects stop playback, the final portion of content has been Passed, or content stops being Passed in preparation for different content. After entering Stop State, the PlayReady Product must re-initialize PlayReady before Passing any decrypted A/V Content.",
+    "reference": "Stop State occurs when decrypted A/V Content is no longer being Passed, such as when the user selects stop playback, the final portion of content has been Passed, or content stops being Passed in preparation for different content. After entering Stop State, the PlayReady Product must re-initialize PlayReady before Passing any decrypted A/V Content.",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_2",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 529,
+        "end_index": 541
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_1",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 541,
+        "end_index": 553
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_4",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 553,
+        "end_index": 565
+      },
+      {
+        "type": "url_citation",
+        "url": "https://dev-search-openai.search.windows.net/knowledgebases/public-playready-ks/mcp",
+        "title": "doc_0",
+        "text": "",
+        "file_id": "",
+        "filename": "",
+        "start_index": 565,
+        "end_index": 577
+      }
+    ],
+    "agent_citation_quotes": [
+      "doc_2",
+      "doc_1",
+      "doc_4",
+      "doc_0"
+    ],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part02_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 17.34,
+    "token_usage": {
+      "total_tokens": 10572,
+      "prompt_tokens": 10393,
+      "completion_tokens": 179
+    },
+    "source_test_suite": "test_cases_positive.json"
+  },
+  {
+    "id": "pdf003_q01_pos_factual",
+    "question": "What syntax must a PlayReady Product follow when creating PlayReady Licenses?",
+    "user_input": "What syntax must a PlayReady Product follow when creating PlayReady Licenses?",
+    "answer": "A PlayReady Product must create only PlayReady Licenses that follow the syntax defined in the \"PlayReady DRM Extensible Media Rights Specification.\"",
+    "response": "A PlayReady Product must create only PlayReady Licenses that follow the syntax defined in the \"PlayReady DRM Extensible Media Rights Specification.\"",
+    "contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n23 \n1 November 2021 \n6 Creating PlayReady Licenses  \nA PlayReady Product may create PlayReady Licenses only if all requirements in this Section 6 (Creating \nPlayReady Licenses) are met. \n6.1 \nExtensible Media Rights Specification  \nA PlayReady Product must create only PlayReady Licenses that follow the syntax defined in the \n“PlayReady DRM Extensible Media Rights Specification”. \n6.2 \nEmbedded License Setting  \nThe Embedded License Settings Object must be specified in the PlayReady License. The allowed values \nfor the License Processing Indicator field must be set to values listed in Table 6.2 (Allowed License \nProcessing Indicator Values) according to the License type. \nTable 6.2: Allowed License Processing Indicator Values \nLicense Type \nAllowed Value \nDescription \nRoot License \n1 \nLicense will not be embedded. \nDevice Bound License \n1 \nLicense will not be embedded. \nLeaf License \n2 \nLice"
+    ],
+    "retrieved_contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n23 \n1 November 2021 \n6 Creating PlayReady Licenses  \nA PlayReady Product may create PlayReady Licenses only if all requirements in this Section 6 (Creating \nPlayReady Licenses) are met. \n6.1 \nExtensible Media Rights Specification  \nA PlayReady Product must create only PlayReady Licenses that follow the syntax defined in the \n“PlayReady DRM Extensible Media Rights Specification”. \n6.2 \nEmbedded License Setting  \nThe Embedded License Settings Object must be specified in the PlayReady License. The allowed values \nfor the License Processing Indicator field must be set to values listed in Table 6.2 (Allowed License \nProcessing Indicator Values) according to the License type. \nTable 6.2: Allowed License Processing Indicator Values \nLicense Type \nAllowed Value \nDescription \nRoot License \n1 \nLicense will not be embedded. \nDevice Bound License \n1 \nLicense will not be embedded. \nLeaf License \n2 \nLice"
+    ],
+    "ground_truth": "A PlayReady Product must create PlayReady Licenses that follow the syntax defined in the \"PlayReady DRM Extensible Media Rights Specification.\"",
+    "reference": "A PlayReady Product must create PlayReady Licenses that follow the syntax defined in the \"PlayReady DRM Extensible Media Rights Specification.\"",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [],
+    "agent_citation_quotes": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 13.48,
+    "token_usage": {
+      "total_tokens": 11075,
+      "prompt_tokens": 11005,
+      "completion_tokens": 70
+    },
+    "source_test_suite": "test_cases_positive.json"
+  },
+  {
+    "id": "pdf003_q02_pos_detail",
+    "question": "What are the allowed values for the License Type in PlayReady licenses and what do they signify?",
+    "user_input": "What are the allowed values for the License Type in PlayReady licenses and what do they signify?",
+    "answer": "The allowed values for the License Type in PlayReady licenses and their significance are:\n\n- Root License: License will not be embedded.\n- Device Bound License: License will not be embedded.\n- Leaf License: License will be embedded.\n- Domain Bound License: License will be embedded.",
+    "response": "The allowed values for the License Type in PlayReady licenses and their significance are:\n\n- Root License: License will not be embedded.\n- Device Bound License: License will not be embedded.\n- Leaf License: License will be embedded.\n- Domain Bound License: License will be embedded.",
+    "contexts": [
+      "nse Processing Indicator Values \nLicense Type \nAllowed Value \nDescription \nRoot License \n1 \nLicense will not be embedded. \nDevice Bound License \n1 \nLicense will not be embedded. \nLeaf License \n2 \nLicense will be embedded. \nDomain Bound License \n2 \nLicense will be embedded. \n6.3 \nPlay Enabler Type  \nIf the Play Enabler Type Object is specified in the PlayReady License then the allowed values for the Play \nEnabler Type field must be limited to values described in Section 3.9 (Output Control for Unknown \nOutputs) or Section 10.4 (Content Provider Authorized Exports). \n6.4 \nExplicit Digital Audio Output Protection  \nIf the Digital Audio Output Configuration Protection Restriction Object is specified in the PlayReady \nLicense the field values must be limited to values listed in Table 6.4 (Allowed Explicit Digital Audio \nOutput Protection Level Values). \nTable 6.4: Allowed Explicit Digital Audio Output Protection Level Values \nAudio Output Protection ID Field \nBinary Configuration Data \nFiel"
+    ],
+    "retrieved_contexts": [
+      "nse Processing Indicator Values \nLicense Type \nAllowed Value \nDescription \nRoot License \n1 \nLicense will not be embedded. \nDevice Bound License \n1 \nLicense will not be embedded. \nLeaf License \n2 \nLicense will be embedded. \nDomain Bound License \n2 \nLicense will be embedded. \n6.3 \nPlay Enabler Type  \nIf the Play Enabler Type Object is specified in the PlayReady License then the allowed values for the Play \nEnabler Type field must be limited to values described in Section 3.9 (Output Control for Unknown \nOutputs) or Section 10.4 (Content Provider Authorized Exports). \n6.4 \nExplicit Digital Audio Output Protection  \nIf the Digital Audio Output Configuration Protection Restriction Object is specified in the PlayReady \nLicense the field values must be limited to values listed in Table 6.4 (Allowed Explicit Digital Audio \nOutput Protection Level Values). \nTable 6.4: Allowed Explicit Digital Audio Output Protection Level Values \nAudio Output Protection ID Field \nBinary Configuration Data \nFiel"
+    ],
+    "ground_truth": "The allowed values for License Type are 1 and 2. Value 1 indicates a Root License or Device Bound License where the license will not be embedded. Value 2 indicates a Leaf License or Domain Bound License where the license will be embedded.",
+    "reference": "The allowed values for License Type are 1 and 2. Value 1 indicates a Root License or Device Bound License where the license will not be embedded. Value 2 indicates a Leaf License or Domain Bound License where the license will be embedded.",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [],
+    "agent_citation_quotes": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part03_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 13.54,
+    "token_usage": {
+      "total_tokens": 9559,
+      "prompt_tokens": 9459,
+      "completion_tokens": 100
+    },
+    "source_test_suite": "test_cases_positive.json"
+  },
+  {
+    "id": "pdf004_q01_pos_factual",
+    "question": "What must a PlayReady Product do when creating WMDRM-ND Licenses as a Network Device Transmitter regarding the Cannot Persist bit?",
+    "user_input": "What must a PlayReady Product do when creating WMDRM-ND Licenses as a Network Device Transmitter regarding the Cannot Persist bit?",
+    "answer": "A PlayReady Product functioning as a Network Device Transmitter must set the Cannot Persist bit in the Rights field of the Rights Settings Object to a value of 1 when creating WMDRM-ND Licenses.",
+    "response": "A PlayReady Product functioning as a Network Device Transmitter must set the Cannot Persist bit in the Rights field of the Rights Settings Object to a value of 1 when creating WMDRM-ND Licenses.",
+    "contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n41 \n1 November 2021 \n8 Creating WMDRM-ND Licenses  \nA PlayReady Product may create WMDRM-ND Licenses only if all requirements in this Section 8 \n(Creating WMDRM-ND Licenses) are met. \n8.1 \nExtensible Media Rights Specification  \nA PlayReady Product must create only WMDRM-ND objects that follow the syntax defined in the \n“Windows Media DRM Extensible Media Rights Specification”. \n8.2 \nRights Settings  \nIf the PlayReady Product is functioning as a Network Device Transmitter, it must set the Cannot Persist \nbit in the Rights field of the Rights Settings Object to a value of 1. \n8.3 \nCopy Policy Container \n8.3.1 \nThe Copy Policy 2 Container Object must not be specified if the Copy Policy Container \nObject is specified in the WMDRM-ND License.  \n8.3.2 \nThe Copy Policy 2 Container Object may be specified in a WMDRM-ND License only if \nthe PlayReady Product is a Network Device Transmitter as a Mic"
+    ],
+    "retrieved_contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n41 \n1 November 2021 \n8 Creating WMDRM-ND Licenses  \nA PlayReady Product may create WMDRM-ND Licenses only if all requirements in this Section 8 \n(Creating WMDRM-ND Licenses) are met. \n8.1 \nExtensible Media Rights Specification  \nA PlayReady Product must create only WMDRM-ND objects that follow the syntax defined in the \n“Windows Media DRM Extensible Media Rights Specification”. \n8.2 \nRights Settings  \nIf the PlayReady Product is functioning as a Network Device Transmitter, it must set the Cannot Persist \nbit in the Rights field of the Rights Settings Object to a value of 1. \n8.3 \nCopy Policy Container \n8.3.1 \nThe Copy Policy 2 Container Object must not be specified if the Copy Policy Container \nObject is specified in the WMDRM-ND License.  \n8.3.2 \nThe Copy Policy 2 Container Object may be specified in a WMDRM-ND License only if \nthe PlayReady Product is a Network Device Transmitter as a Mic"
+    ],
+    "ground_truth": "If the PlayReady Product is functioning as a Network Device Transmitter, it must set the Cannot Persist bit in the Rights field of the Rights Settings Object to a value of 1.",
+    "reference": "If the PlayReady Product is functioning as a Network Device Transmitter, it must set the Cannot Persist bit in the Rights field of the Rights Settings Object to a value of 1.",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [],
+    "agent_citation_quotes": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 11.85,
+    "token_usage": {
+      "total_tokens": 8961,
+      "prompt_tokens": 8873,
+      "completion_tokens": 88
+    },
+    "source_test_suite": "test_cases_positive.json"
+  },
+  {
+    "id": "pdf004_q02_pos_detail",
+    "question": "What are the allowed minimum copy protection level values specified in the WMDRM-ND License for the Copy Protection Level Restriction Object?",
+    "user_input": "What are the allowed minimum copy protection level values specified in the WMDRM-ND License for the Copy Protection Level Restriction Object?",
+    "answer": "The allowed minimum copy protection level values specified in the WMDRM-ND License for the Copy Protection Level Restriction Object are:\n\n- 300: Copy to PD-DRM devices, WMDRM-PD devices, and PlayReady Portable Devices\n- 400: Copy to WMDRM-PD devices and PlayReady Portable Devices",
+    "response": "The allowed minimum copy protection level values specified in the WMDRM-ND License for the Copy Protection Level Restriction Object are:\n\n- 300: Copy to PD-DRM devices, WMDRM-PD devices, and PlayReady Portable Devices\n- 400: Copy to WMDRM-PD devices and PlayReady Portable Devices",
+    "contexts": [
+      "Object is specified in the WMDRM-ND License.  \n8.3.2 \nThe Copy Policy 2 Container Object may be specified in a WMDRM-ND License only if \nthe PlayReady Product is a Network Device Transmitter as a Microsoft PBDA. \n8.4 \nCopy Count  \nIf the Copy Count 2 Restriction Object is specified in the WMDRM-ND License then the allowed values \nfor Copy Enabler Type Object’s Copy Enabler Type field must be limited to values described in Section \n10.4 (Content Provider Authorized Exports). \n8.5 \nCopy Protection Level  \nIf the Copy Protection Level Restriction Object is specified in the WMDRM-ND License, then the allowed \nvalues for the Minimum Copy Protection Level field must be limited to values listed in Table 8.5 \n(Allowed Minimum Copy Protection Level Values). \nTable 8.5: Allowed Minimum Copy Protection Level Values \nAllowed Value \nDescription \n300 \nCopy to PD-DRM devices, WMDRM-PD devices and PlayReady Portable \nDevices \n400 \nCopy to WMDRM-PD devices and PlayReady Portable Devices \n8.6 \nCopy Ena"
+    ],
+    "retrieved_contexts": [
+      "Object is specified in the WMDRM-ND License.  \n8.3.2 \nThe Copy Policy 2 Container Object may be specified in a WMDRM-ND License only if \nthe PlayReady Product is a Network Device Transmitter as a Microsoft PBDA. \n8.4 \nCopy Count  \nIf the Copy Count 2 Restriction Object is specified in the WMDRM-ND License then the allowed values \nfor Copy Enabler Type Object’s Copy Enabler Type field must be limited to values described in Section \n10.4 (Content Provider Authorized Exports). \n8.5 \nCopy Protection Level  \nIf the Copy Protection Level Restriction Object is specified in the WMDRM-ND License, then the allowed \nvalues for the Minimum Copy Protection Level field must be limited to values listed in Table 8.5 \n(Allowed Minimum Copy Protection Level Values). \nTable 8.5: Allowed Minimum Copy Protection Level Values \nAllowed Value \nDescription \n300 \nCopy to PD-DRM devices, WMDRM-PD devices and PlayReady Portable \nDevices \n400 \nCopy to WMDRM-PD devices and PlayReady Portable Devices \n8.6 \nCopy Ena"
+    ],
+    "ground_truth": "The allowed minimum copy protection level values are 300 and 400. Value 300 allows copying to PD-DRM devices, WMDRM-PD devices, and PlayReady Portable Devices, while value 400 allows copying to WMDRM-PD devices and PlayReady Portable Devices.",
+    "reference": "The allowed minimum copy protection level values are 300 and 400. Value 300 allows copying to PD-DRM devices, WMDRM-PD devices, and PlayReady Portable Devices, while value 400 allows copying to WMDRM-PD devices and PlayReady Portable Devices.",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [],
+    "agent_citation_quotes": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part04_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 12.59,
+    "token_usage": {
+      "total_tokens": 9581,
+      "prompt_tokens": 9465,
+      "completion_tokens": 116
+    },
+    "source_test_suite": "test_cases_positive.json"
+  },
+  {
+    "id": "pdf005_q01_pos_factual",
+    "question": "What key usage must a PlayReady-ND Receiver's Device Certificate contain for a PlayReady Product to transmit to it?",
+    "user_input": "What key usage must a PlayReady-ND Receiver's Device Certificate contain for a PlayReady Product to transmit to it?",
+    "answer": "A PlayReady-ND Receiver's Device Certificate must contain the key usage rights EncryptKey, PRNDEncrypt, and Sign, with the keys for these usages being individually unique for a PlayReady Product to transmit to it.",
+    "response": "A PlayReady-ND Receiver's Device Certificate must contain the key usage rights EncryptKey, PRNDEncrypt, and Sign, with the keys for these usages being individually unique for a PlayReady Product to transmit to it.",
+    "contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n60 \n1 November 2021 \n11 Transmitting to PlayReady-ND Receiver \nA PlayReady Product must comply with this Section 11 (Transmitting to PlayReady-ND Receiver) when \nTransmitting to a PlayReady-ND Receiver. \n11.1 \nKey Usage \nA PlayReady Product must not Transmit to a PlayReady-ND Receiver whose Device Certificate \ndoes not contain the PlayReady-ND Encrypt key usage or whose Device Certificate does not \ncontain the Receiver feature. \n11.2 \nTimer  \nThe PlayReady Product must implement a timer with a resolution of no coarser than one (1) \nmillisecond. \n11.3 \nSecurity Level Verification \nA PlayReady Product must verify that the Certificate Security Level in the Device Certificate of \nthe associated PlayReady-ND Receiver is not less than the minimum License Security Level of the \nPlayReady License for the requested PlayReady A/V Content. If this verification fails, the \nPlayReady Product must not Tr"
+    ],
+    "retrieved_contexts": [
+      "Compliance Rules for PlayReady Products \n \n \n© 2021 Microsoft Corporation. All rights reserved. \n60 \n1 November 2021 \n11 Transmitting to PlayReady-ND Receiver \nA PlayReady Product must comply with this Section 11 (Transmitting to PlayReady-ND Receiver) when \nTransmitting to a PlayReady-ND Receiver. \n11.1 \nKey Usage \nA PlayReady Product must not Transmit to a PlayReady-ND Receiver whose Device Certificate \ndoes not contain the PlayReady-ND Encrypt key usage or whose Device Certificate does not \ncontain the Receiver feature. \n11.2 \nTimer  \nThe PlayReady Product must implement a timer with a resolution of no coarser than one (1) \nmillisecond. \n11.3 \nSecurity Level Verification \nA PlayReady Product must verify that the Certificate Security Level in the Device Certificate of \nthe associated PlayReady-ND Receiver is not less than the minimum License Security Level of the \nPlayReady License for the requested PlayReady A/V Content. If this verification fails, the \nPlayReady Product must not Tr"
+    ],
+    "ground_truth": "The Device Certificate must contain the PlayReady-ND Encrypt key usage and the Receiver feature for a PlayReady Product to transmit to a PlayReady-ND Receiver.",
+    "reference": "The Device Certificate must contain the PlayReady-ND Encrypt key usage and the Receiver feature for a PlayReady Product to transmit to a PlayReady-ND Receiver.",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [],
+    "agent_citation_quotes": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 11.01,
+    "token_usage": {
+      "total_tokens": 9207,
+      "prompt_tokens": 9122,
+      "completion_tokens": 85
+    },
+    "source_test_suite": "test_cases_positive.json"
+  },
+  {
+    "id": "pdf005_q02_pos_detail",
+    "question": "What are the specific requirements for proximity detection in PlayReady regarding RTT, TTL, and Hop Count?",
+    "user_input": "What are the specific requirements for proximity detection in PlayReady regarding RTT, TTL, and Hop Count?",
+    "answer": "- The Round Trip Time (RTT) between the PlayReady Product and the associated PlayReady-ND Receiver must be no more than seven (7) milliseconds as measured with a timer.  \n- The Time To Live (TTL) must be set to three (3) in the IPv4 header of the proximity challenge message when transmitting over IPv4 networks.  \n- The Hop Count must be set to three (3) in the IPv6 header of the proximity challenge message when transmitting over IPv6 networks.",
+    "response": "- The Round Trip Time (RTT) between the PlayReady Product and the associated PlayReady-ND Receiver must be no more than seven (7) milliseconds as measured with a timer.  \n- The Time To Live (TTL) must be set to three (3) in the IPv4 header of the proximity challenge message when transmitting over IPv4 networks.  \n- The Hop Count must be set to three (3) in the IPv6 header of the proximity challenge message when transmitting over IPv6 networks.",
+    "contexts": [
+      "yReady-ND Receiver is not less than the minimum License Security Level of the \nPlayReady License for the requested PlayReady A/V Content. If this verification fails, the \nPlayReady Product must not Transmit to the associated PlayReady-ND Receiver. \n11.4 \nProximity Detection Policy \n11.4.1 Round Trip Time (RTT) Verification  \nA PlayReady Product must verify that the RTT between the PlayReady Product and the \nassociated PlayReady-ND Receiver, as measured, is no more than seven (7) \nmilliseconds computed with a timer as described in Section 11.2 (Timer). \n11.4.2 Time To Live (TTL) \nA PlayReady Product must set the TTL to three (3) in the IPv4 header of the proximity \nchallenge message when Transmitting over IPv4 networks. \n11.4.3 Hop Count \nA PlayReady Product must set the Hop Count to three (3) in the IPv6 header of the \nproximity challenge message when Transmitting over IPv6 networks. \n11.4.4 Revalidation of PlayReady-ND Receivers \nA PlayReady Product may Transmit to a PlayReady-ND Rece"
+    ],
+    "retrieved_contexts": [
+      "yReady-ND Receiver is not less than the minimum License Security Level of the \nPlayReady License for the requested PlayReady A/V Content. If this verification fails, the \nPlayReady Product must not Transmit to the associated PlayReady-ND Receiver. \n11.4 \nProximity Detection Policy \n11.4.1 Round Trip Time (RTT) Verification  \nA PlayReady Product must verify that the RTT between the PlayReady Product and the \nassociated PlayReady-ND Receiver, as measured, is no more than seven (7) \nmilliseconds computed with a timer as described in Section 11.2 (Timer). \n11.4.2 Time To Live (TTL) \nA PlayReady Product must set the TTL to three (3) in the IPv4 header of the proximity \nchallenge message when Transmitting over IPv4 networks. \n11.4.3 Hop Count \nA PlayReady Product must set the Hop Count to three (3) in the IPv6 header of the \nproximity challenge message when Transmitting over IPv6 networks. \n11.4.4 Revalidation of PlayReady-ND Receivers \nA PlayReady Product may Transmit to a PlayReady-ND Rece"
+    ],
+    "ground_truth": "The PlayReady Product must verify that the Round Trip Time (RTT) is no more than seven (7) milliseconds. It must set the Time To Live (TTL) to three (3) in the IPv4 header and set the Hop Count to three (3) in the IPv6 header of the proximity challenge message.",
+    "reference": "The PlayReady Product must verify that the Round Trip Time (RTT) is no more than seven (7) milliseconds. It must set the Time To Live (TTL) to three (3) in the IPv4 header and set the Hop Count to three (3) in the IPv6 header of the proximity challenge message.",
+    "agent_id": "PublicAgent:8",
+    "thread_id": "",
+    "run_status": "completed",
+    "agent_citations": [],
+    "agent_citation_quotes": [],
+    "expected_pdfs": [
+      "PR_Compliance_Rules_Part05_v2021.pdf"
+    ],
+    "strict_grounding": true,
+    "expect_fallback": false,
+    "paraphrase_group": "",
+    "query_type": "positive",
+    "latency_seconds": 14.22,
+    "token_usage": {
+      "total_tokens": 8978,
+      "prompt_tokens": 8838,
+      "completion_tokens": 140
+    },
+    "source_test_suite": "test_cases_positive.json"
+  }
+]

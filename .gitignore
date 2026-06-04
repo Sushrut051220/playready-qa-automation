@@ -40,3 +40,65 @@ artifacts/
 *.cert
 Thumbs.db
 .DS_Store
+
+
+
+# Virtual Environment
+.venv/
+venv/
+
+# Environment variables / secrets
+.env
+.env.*
+*.key
+*.pem
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# VS Code
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Test / Eval outputs
+results/
+reports/
+artifacts/
+outputs/
+
+# Database / local state
+*.db
+*.sqlite
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large generated files
+*.csv
+*.xlsx
+*.jsonl
+
+# Node modules (if frontend exists)
+node_modules/
+
+# Build folders
+dist/
+build/
+
+# Streamlit cache
+.streamlit/secrets.toml
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/

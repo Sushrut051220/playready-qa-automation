@@ -1,0 +1,77 @@
+{
+  "timestamp": "2026-04-21T23:59:57.454002",
+  "phase": 2,
+  "dry_run": false,
+  "stats": {
+    "llm_filled": 179,
+    "no_chunks": 1,
+    "llm_failed": 1,
+    "skipped_existing": 154,
+    "total": 335
+  },
+  "files": {
+    "test_cases_conversational.json": {
+      "llm_filled": 42,
+      "no_chunks": 0,
+      "llm_failed": 0,
+      "skipped_existing": 42,
+      "total": 84
+    },
+    "test_cases_hallucination.json": {
+      "llm_filled": 42,
+      "no_chunks": 0,
+      "llm_failed": 0,
+      "skipped_existing": 42,
+      "total": 84
+    },
+    "test_cases_cross_document.json": {
+      "llm_filled": 42,
+      "no_chunks": 0,
+      "llm_failed": 0,
+      "skipped_existing": 0,
+      "total": 42
+    },
+    "test_cases_sample_100.json": {
+      "llm_filled": 30,
+      "no_chunks": 0,
+      "llm_failed": 0,
+      "skipped_existing": 70,
+      "total": 100
+    },
+    "test_cases_conv_behavioral_edge.json": {
+      "llm_filled": 4,
+      "no_chunks": 1,
+      "llm_failed": 0,
+      "skipped_existing": 0,
+      "total": 5
+    },
+    "test_cases_conv_boundary_testing.json": {
+      "llm_filled": 4,
+      "no_chunks": 0,
+      "llm_failed": 1,
+      "skipped_existing": 0,
+      "total": 5
+    },
+    "test_cases_conv_frustrated_user.json": {
+      "llm_filled": 5,
+      "no_chunks": 0,
+      "llm_failed": 0,
+      "skipped_existing": 0,
+      "total": 5
+    },
+    "test_cases_conv_natural_language.json": {
+      "llm_filled": 5,
+      "no_chunks": 0,
+      "llm_failed": 0,
+      "skipped_existing": 0,
+      "total": 5
+    },
+    "test_cases_conv_tone_professionalism.json": {
+      "llm_filled": 5,
+      "no_chunks": 0,
+      "llm_failed": 0,
+      "skipped_existing": 0,
+      "total": 5
+    }
+  }
+}

@@ -1,0 +1,212 @@
+[
+  {
+    "id": "neg_0081_competitor_01",
+    "prompt": "Compare PlayReady with Google Widevine. Which one is better for my streaming service?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  },
+  {
+    "id": "neg_0082_competitor_02",
+    "prompt": "How do I migrate from Apple FairPlay to PlayReady? Provide a step-by-step guide.",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  },
+  {
+    "id": "neg_0083_competitor_03",
+    "prompt": "What are the advantages of Widevine L1 over PlayReady SL3000?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  },
+  {
+    "id": "neg_0084_competitor_04",
+    "prompt": "Can I use PlayReady and FairPlay simultaneously? How does the licensing work?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  },
+  {
+    "id": "neg_0085_competitor_05",
+    "prompt": "What is the market share of PlayReady vs Widevine vs FairPlay in 2024?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  },
+  {
+    "id": "neg_0086_competitor_06",
+    "prompt": "How does the Amazon DRM solution compare to PlayReady in terms of security?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  },
+  {
+    "id": "neg_0087_competitor_07",
+    "prompt": "Explain the technical differences between PlayReady TEE and Widevine TEE implementations.",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  },
+  {
+    "id": "neg_0088_competitor_08",
+    "prompt": "Is it true that Widevine is more secure than PlayReady for Android devices?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  },
+  {
+    "id": "neg_0089_competitor_09",
+    "prompt": "How much does a Widevine license cost compared to PlayReady?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  },
+  {
+    "id": "neg_0090_competitor_10",
+    "prompt": "Should I choose PlayReady or Widevine for a new OTT platform launch?",
+    "ground_truth": "",
+    "reference_contexts": [],
+    "expected_pdfs": [],
+    "expected_behavior": "PLAYREADY_SCOPE_ONLY",
+    "expected_response_contains": [
+      "PlayReady"
+    ],
+    "expected_response_not_contains": [],
+    "strict_grounding": false,
+    "expect_fallback": false,
+    "query_type": "negative_competitor",
+    "category": "competitor_technology",
+    "severity": "high",
+    "scenario_description": "Question about competitor DRM — agent should stay in PlayReady scope",
+    "bug_it_catches": "Agent provides detailed competitor info instead of staying in scope",
+    "source_pdf": "NONE",
+    "run_timestamp": "2026-04-12 20:15:10"
+  }
+]

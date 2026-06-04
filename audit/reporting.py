@@ -326,41 +326,210 @@ def _generate_bridge_excel_report(bridge_report_dir: Path, ragas_csv_source: Pat
         )
 
     excel_path = bridge_report_dir / "Bridge_Evaluation_Report.xlsx"
+
+    # =============================
+    # ✅ TEST SUMMARY — KPI SECTION
+    # =============================
+    total_cases = len(rows)
+    answered = sum(1 for r in rows if r.get("response"))
+    refusals = sum(1 for r in rows if not r.get("response"))
+    with_contexts = sum(1 for r in rows if r.get("retrieved_chunks"))
+    with_gt = sum(1 for r in rows if r.get("ground_truth"))
+    with_citations = sum(1 for r in rows if r.get("citations"))
+
+    avg_latency = round(
+        sum((r.get("latency_seconds") or 0) for r in rows) / max(total_cases, 1), 2
+    )
+    avg_tokens = int(
+        sum((r.get("total_tokens") or 0) for r in rows) / max(total_cases, 1)
+    )
+
+    kpi_rows = [
+        {"metric": "Test Suite", "value": source_test_suite or "N/A"},
+        {"metric": "Input File", "value": (source_test_suite or "N/A") + ".json"},
+        {"metric": "Total Test Cases", "value": total_cases},
+        {"metric": "Answered (real response)", "value": answered},
+        {"metric": "Refusals / Errors", "value": refusals},
+        {"metric": "With Contexts", "value": with_contexts},
+        {"metric": "With Ground Truth", "value": with_gt},
+        {"metric": "With Citations", "value": with_citations},
+        {"metric": "Avg Latency (s)", "value": avg_latency},
+        {"metric": "Avg Total Tokens", "value": avg_tokens},
+    ]
+
+    # =============================
+    # ✅ TEST SUMMARY — EVALUATOR COUNTS
+    # =============================
+    summary_rows = []
+    for metric in evaluator_order:
+        total = total_cases
+        threshold = thresholds.get(metric)
+        operator = metric_operators.get(metric, ">=")
+
+        passed = failed = skipped = 0
+
+        for r in rows:
+            val = r.get(metric)
+            if val in (None, ""):
+                skipped += 1
+                continue
+            try:
+                val = float(val)
+                th = float(threshold)
+                if operator == "<=":
+                    if val <= th:
+                        passed += 1
+                    else:
+                        failed += 1
+                else:
+                    if val >= th:
+                        passed += 1
+                    else:
+                        failed += 1
+            except:
+                skipped += 1
+
+        pass_rate = f"{(passed / max(total, 1)) * 100:.0f}%" if total else "N/A"
+
+        if passed == 0 and failed == 0:
+            pass_rate = "N/A"
+
+        summary_rows.append({
+            "evaluator": metric,
+            "total": total,
+            "pass": passed,
+            "fail": failed,
+            "skipped": skipped,
+            "pass_rate": pass_rate,
+        })
+
+    # =============================
+    # ✅ METRIC EXPLANATIONS — PER ROW × PER METRIC
+    # =============================
+    metric_descriptions = {
+        "answer_relevancy": "Measures if the response directly addresses the question.",
+        "answer_accuracy": "Compares factual claims in response vs ground truth.",
+        "faithfulness": "Checks if response claims are supported by retrieved contexts.",
+        "context_precision": "Measures if retrieved contexts are relevant and precise.",
+        "context_utilization": "Checks if the response uses retrieved contexts effectively.",
+        "context_recall": "Measures if contexts cover all claims in ground truth.",
+        "context_relevance": "Evaluates if retrieved contexts are relevant to the question.",
+        "response_groundedness": "Checks if every claim in response is grounded in contexts.",
+        "context_entity_recall": "Compares named entities between contexts and ground truth.",
+        "noise_sensitivity_relevant": "Measures if adding relevant noise changes the answer.",
+        "noise_sensitivity_irrelevant": "Measures if adding irrelevant noise changes the answer.",
+        "response_correctness": "Overall correctness combining factual accuracy and semantic similarity.",
+        "answer_completeness": "Rates how completely the response covers all aspects (1-5 scale).",
+    }
+
+    metric_explanations = []
+
+    for r in rows:
+        row_id = r.get("id", "")
+        question = r.get("question", "")
+
+        for metric in evaluator_order:
+            score = r.get(metric)
+            threshold = thresholds.get(metric)
+            operator = metric_operators.get(metric, ">=")
+            description = metric_descriptions.get(metric, "")
+
+            # Determine result + explanation
+            if score in (None, ""):
+                result = "SKIPPED"
+                explanation = "Metric was skipped or returned no score."
+            else:
+                try:
+                    score_f = float(score)
+                    th_f = float(threshold)
+
+                    if operator == "<=":
+                        if score_f <= th_f:
+                            result = "PASS"
+                            explanation = f"Score {score_f:.4f} <= threshold {th_f}. Noise impact is acceptable."
+                        else:
+                            result = "FAIL"
+                            explanation = f"Score {score_f:.4f} > threshold {th_f}. Response is too sensitive to noise."
+                    else:
+                        if score_f >= th_f:
+                            result = "PASS"
+
+                            # Custom messages
+                            if metric == "faithfulness":
+                                explanation = f"Score {score_f:.4f} >= threshold {th_f}. Response is grounded in source contexts."
+                            elif metric == "context_utilization":
+                                explanation = f"Score {score_f:.4f} >= threshold {th_f}. Response effectively uses the retrieved contexts."
+                            elif metric == "response_groundedness":
+                                explanation = f"Score {score_f:.4f} >= threshold {th_f}. All response claims are grounded in contexts."
+                            else:
+                                explanation = f"Score {score_f:.4f} >= threshold {th_f}. Metric passed."
+                        else:
+                            result = "FAIL"
+
+                            if metric == "answer_accuracy":
+                                explanation = f"Score {score_f:.4f} < threshold {th_f}. Response has different facts or wording than ground truth."
+                            elif metric == "context_precision":
+                                explanation = f"Score {score_f:.4f} < threshold {th_f}. Retrieved contexts contain noisy or irrelevant information."
+                            elif metric == "context_recall":
+                                explanation = f"Score {score_f:.4f} < threshold {th_f}. Contexts are missing key information from ground truth."
+                            elif metric == "context_relevance":
+                                explanation = f"Score {score_f:.4f} < threshold {th_f}. Retrieved contexts are not relevant to the question."
+                            elif metric == "response_correctness":
+                                explanation = f"Score {score_f:.4f} < threshold {th_f}. Response is incorrect or semantically different from ground truth."
+                            elif metric == "faithfulness":
+                                explanation = f"Score {score_f:.4f} < threshold {th_f}. Response contains claims not found in contexts (possible hallucination)."
+                            else:
+                                explanation = f"Score {score_f:.4f} < threshold {th_f}. Metric below acceptable level."
+                except:
+                    result = "SKIPPED"
+                    explanation = "Could not evaluate score."
+
+            metric_explanations.append({
+                "id": row_id,
+                "question": question,
+                "metric": metric,
+                "score": score if score not in (None, "") else "",
+                "threshold": threshold,
+                "result": result,
+                "explanation": explanation,
+                "metric_description": description,
+            })
+
+    # ✅ WRITE EXCEL
     with pd.ExcelWriter(excel_path, engine="openpyxl") as writer:
+
+        pd.DataFrame(summary_rows).to_excel(writer, sheet_name="Test_Summary", index=False)
+        pd.DataFrame(metric_explanations).to_excel(writer, sheet_name="Metric_Explanations", index=False)
+
         pd.DataFrame(
             core_rows,
             columns=[
-                "question",
-                "response",
-                "ground_truth",
-                "answer_relevancy",
-                "answer_relevancy_result",
-                "answer_accuracy",
-                "answer_accuracy_result",
-                "response_correctness",
-                "response_correctness_result",
-                "answer_completeness",
-                "answer_completeness_result",
-                "overall_result",
-            ],
+                "question", "response", "ground_truth",
+                "answer_relevancy", "answer_relevancy_result",
+                "answer_accuracy", "answer_accuracy_result",
+                "response_correctness", "response_correctness_result",
+                "answer_completeness", "answer_completeness_result",
+                "overall_result"
+            ]
         ).to_excel(writer, sheet_name="Core_4_Metrics", index=False)
+
         pd.DataFrame(
             all_evaluator_rows,
             columns=[
-                "id",
-                "question",
-                "response",
-                "ground_truth",
-                "retrieved_chunks",
-                "citations",
-                "citation_quotes",
-                *evaluator_order,
-            ],
+                "id", "question", "response", "ground_truth",
+                "retrieved_chunks", "citations", "citation_quotes",
+                *evaluator_order
+            ]
         ).to_excel(writer, sheet_name="All_13_Evaluators", index=False)
+
         pd.DataFrame(
             threshold_rows,
-            columns=["evaluator", "operator", "threshold", "executed", "average_score", "rows_evaluated", "skip_reason"],
+            columns=[
+                "evaluator", "operator", "threshold", "executed",
+                "average_score", "rows_evaluated", "skip_reason"
+            ]
         ).to_excel(writer, sheet_name="Thresholds", index=False)
+
         ragas_csv_df.to_excel(writer, sheet_name="RAGAS_Results_CSV", index=False)
 
     workbook = load_workbook(excel_path)
