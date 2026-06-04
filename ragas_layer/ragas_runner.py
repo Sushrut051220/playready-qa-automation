@@ -48,8 +48,14 @@ def _to_builtin(value):
     return value
 
 
-def _rows_from_dataset(dataset: Dataset) -> list[dict[str, Any]]:
-    return [dataset[index] for index in range(dataset.num_rows)]
+def _rows_from_dataset(dataset) -> list[dict[str, Any]]:
+    """Accept HuggingFace Dataset, plain list, or dict with 'rows' key."""
+    if isinstance(dataset, list):
+        return dataset
+    if isinstance(dataset, dict):
+        return dataset.get("rows") or dataset.get("data") or list(dataset.values())[0] if dataset else []
+    # HuggingFace Dataset
+    return [dataset[i] for i in range(dataset.num_rows)]
 
 
 def _filter_rows(
@@ -354,7 +360,7 @@ def run_ragas_evaluation(
     rows_with_contexts_and_ground_truth = _filter_rows(rows, require_contexts=True, require_ground_truth=True)
 
     payload: dict[str, Any] = {
-        "dataset_size": dataset.num_rows,
+        "dataset_size": dataset.num_rows if hasattr(dataset, "num_rows") else len(dataset) if isinstance(dataset, (list, dict)) else 0,
         "thresholds": {
             "answer_relevancy": answer_relevancy_threshold,
             "faithfulness": faithfulness_threshold,
