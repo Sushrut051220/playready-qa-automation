@@ -14,6 +14,7 @@ from ragas.run_config import RunConfig
 
 from audit.reporting import create_enterprise_reporting_assets
 from llm_provider import build_ragas_dependencies, get_llm_provider, get_metrics_profile
+from ragas_layer.dashboard_bridge import save_to_dashboard
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -587,5 +588,11 @@ def run_ragas_evaluation(
         )
     except Exception as exc:
         print(f"⚠️ Report generation failed: {exc}")
+
+    # Save results to DeepEval Foundry Dashboard (eval_history/)
+    try:
+        save_to_dashboard(_to_builtin(payload))
+    except Exception as exc:
+        print(f"⚠️ Dashboard bridge failed: {exc}")
 
     return payload
