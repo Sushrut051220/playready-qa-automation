@@ -562,4 +562,103 @@ All three bots (Public, Customer, Private) use MCP (Model Context Protocol) for 
 
 ---
 
+---
+
+## Load Testing — Dashboard Integration
+
+### Current State
+
+The PlayReady QA project has `scripts/run_agent_load_test.py` which runs concurrent load tests against the Azure Foundry agent endpoint. It produces:
+
+| Output File | Contents |
+|-------------|----------|
+| `agent_load_summary_TIMESTAMP.json` | Overall stats — P50/P95/P99, throughput, SLA evaluation, RCA, recommendations |
+| `agent_load_details_TIMESTAMP.json` | Per-request records — `latency_seconds`, `token_usage`, `run_status`, `error_type` |
+| `agent_load_details_TIMESTAMP.csv` | Flattened CSV version |
+| `agent_load_bridge_TIMESTAMP.xlsx` | Excel report with latency percentiles, SLA, errors |
+
+**Problem:** These results are not appearing on the dashboard Latency page.
+
+---
+
+### Why It Does Not Show on the Dashboard
+
+The dashboard Latency page reads latency exclusively from **span timestamps** nested inside `trace.llmSpans[].startTime` and `endTime` (ISO8601). The load test outputs a flat `latency_seconds` number in files with the wrong name.
+
+| Issue | Load Test Output | Dashboard Expects |
+|-------|-----------------|-------------------|
+| File name | `agent_load_details_*.json` | `test_run_*.json` |
+| Latency format | `"latency_seconds": 5.2` (flat float) | `startTime` + `endTime` ISO8601 on each span |
+| Structure | Flat request list | `testCases[].trace.llmSpans[]` |
+| Span types | None | `llm`, `retriever`, `tool`, `agent`, `base` |
+
+The dashboard's aggregator (`aggregator.py`) computes latency as:
+```
+duration_ms = (datetime.fromisoformat(endTime) - datetime.fromisoformat(startTime)) * 1000
+```
+It only reads files named `test_run_*.json` from `eval_history/`. Load test files never reach it.
+
+---
+
+### Integration Approach — Non-Disruptive Bridge
+
+The fix is a **bridge script** that converts what the load test already produces into what the dashboard expects. Zero changes to `run_agent_load_test.py` or the existing RAGAS/Foundry eval pipeline.
+
+```
+run_agent_load_test.py              (unchanged)
+        |
+        v
+agent_load_details_TIMESTAMP.json   (unchanged output)
+        |
+        v
+scripts/load_test_to_dashboard.py   ← NEW bridge script
+        |
+        v
+eval_history/test_run_loadtest_TIMESTAMP.json
+        |
+        v
+Dashboard Latency Page              (now shows load test data)
+```
+
+**What the bridge does:**
+- Reads `agent_load_details_*.json`
+- For each request record, reconstructs span timestamps:
+  - `startTime = recorded request_time` (ISO8601)
+  - `endTime = startTime + latency_seconds`
+- Wraps each request as a test case with one `llmSpan` of type `"llm"`
+- Writes to `eval_history/test_run_loadtest_TIMESTAMP.json`
+- Sets `project: "playready-loadtest"` in hyperparameters — load test runs appear as a **separate project** in the dashboard, completely isolated from regular eval runs
+
+**Bot type support:** Pass `--bot-type` to the bridge so load test runs for each bot appear under their own project:
+```
+playready-loadtest-public
+playready-loadtest-customer
+playready-loadtest-private
+```
+
+---
+
+### What Shows on Dashboard After Integration
+
+| Dashboard Section | What Appears |
+|------------------|--------------|
+| Latency page | P50, P95, P99 per span type from load test runs |
+| Projects filter | `playready-loadtest-*` isolated from regular eval projects |
+| SLOs | Set `latency_p95 ≤ 5000ms` for load test project independently |
+| Bug detector | LATENCY bug category fires if P95 exceeds 2× SLO threshold |
+| Regular eval runs | Completely unaffected — different file prefix, different project |
+
+---
+
+### File Changes for Load Test Integration
+
+| File | Change |
+|------|--------|
+| `scripts/load_test_to_dashboard.py` | NEW — bridge that converts load test JSON → `test_run_loadtest_*.json` |
+| `scripts/run_agent_load_test.py` | No change — output format stays as-is |
+| `eval_history/` | Receives new `test_run_loadtest_*.json` files from bridge |
+| `.env` | No change needed |
+
+---
+
 *Last updated: 2026-06-06*
