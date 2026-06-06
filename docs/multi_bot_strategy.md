@@ -62,15 +62,22 @@ data/
 
 ### 2. Environment Config — Per-Bot Variables
 
+Each bot type has its own **Foundry project endpoint**, **OpenAI endpoint**, and **agent**. These are completely separate Azure deployments.
+
 Add to `.env`:
 
 ```bash
-# Bot endpoints
+# UI endpoints (chatbot frontend)
 PUBLIC_BASE_URL=https://public-bot.example.com
 CUSTOMER_BASE_URL=https://customer-bot.example.com
 PRIVATE_BASE_URL=https://private-bot.example.com
 
-# Foundry agent per bot
+# Azure AI Foundry project endpoint — one per bot (different Azure projects)
+PUBLIC_FOUNDRY_PROJECT_ENDPOINT=https://public-foundry.api.azureml.ms/...
+CUSTOMER_FOUNDRY_PROJECT_ENDPOINT=https://customer-foundry.api.azureml.ms/...
+PRIVATE_FOUNDRY_PROJECT_ENDPOINT=https://private-foundry.api.azureml.ms/...
+
+# Foundry agent name + version per bot
 PUBLIC_FOUNDRY_AGENT_NAME=PublicAgent
 CUSTOMER_FOUNDRY_AGENT_NAME=CustomerAgent
 PRIVATE_FOUNDRY_AGENT_NAME=PrivateAgent
@@ -79,25 +86,49 @@ PUBLIC_FOUNDRY_AGENT_VERSION=8
 CUSTOMER_FOUNDRY_AGENT_VERSION=1
 PRIVATE_FOUNDRY_AGENT_VERSION=1
 
-# Environment tag sent to dashboard
+# Azure OpenAI endpoint — one per bot (different Azure OpenAI deployments)
+PUBLIC_AZURE_OPENAI_BASE_URL=https://public-openai.openai.azure.com/
+CUSTOMER_AZURE_OPENAI_BASE_URL=https://customer-openai.openai.azure.com/
+PRIVATE_AZURE_OPENAI_BASE_URL=https://private-openai.openai.azure.com/
+
+# Azure OpenAI API keys per bot
+PUBLIC_AZURE_OPENAI_API_KEY=<public-key>
+CUSTOMER_AZURE_OPENAI_API_KEY=<customer-key>
+PRIVATE_AZURE_OPENAI_API_KEY=<private-key>
+
+# Azure OpenAI deployment names per bot (may differ per project)
+PUBLIC_AZURE_OPENAI_CHAT_DEPLOYMENT=gpt-4o
+CUSTOMER_AZURE_OPENAI_CHAT_DEPLOYMENT=gpt-4o
+PRIVATE_AZURE_OPENAI_CHAT_DEPLOYMENT=gpt-4o
+
+PUBLIC_AZURE_OPENAI_EMBEDDING_DEPLOYMENT=text-embedding-3-small
+CUSTOMER_AZURE_OPENAI_EMBEDDING_DEPLOYMENT=text-embedding-3-small
+PRIVATE_AZURE_OPENAI_EMBEDDING_DEPLOYMENT=text-embedding-3-small
+
+# Active bot type for the current run
 BOT_TYPE=public   # override per run: public | customer | private
 ```
+
+> **Why separate endpoints?** Each bot type is a different Azure AI Foundry **project** with its own KB index, agent, and OpenAI deployment. They are not just different agents within the same project — the entire Azure backend is separate per bot.
 
 ---
 
 ### 3. `scripts/query_new_agent.py` — Add `--bot-type` Argument
 
-Current: single agent name from env vars.
-Change: pass `--bot-type` CLI argument to select the right agent + dataset.
+Current: single agent name + single Foundry endpoint from env vars.
+Change: pass `--bot-type` to select the right Foundry project endpoint, agent, and dataset.
 
 ```python
 parser.add_argument("--bot-type", choices=["public", "customer", "private"], default="public")
 args = parser.parse_args()
+prefix = args.bot_type.upper()
 
-agent_name = os.getenv(f"{args.bot_type.upper()}_FOUNDRY_AGENT_NAME", "PublicAgent")
-agent_version = os.getenv(f"{args.bot_type.upper()}_FOUNDRY_AGENT_VERSION", "8")
-test_cases_file = f"data/test_cases_{args.bot_type}.json"
-output_file = f"data/ragas_eval_dataset_{args.bot_type}.json"
+# All three change per bot type
+foundry_endpoint = os.getenv(f"{prefix}_FOUNDRY_PROJECT_ENDPOINT")
+agent_name       = os.getenv(f"{prefix}_FOUNDRY_AGENT_NAME", "PublicAgent")
+agent_version    = os.getenv(f"{prefix}_FOUNDRY_AGENT_VERSION", "8")
+test_cases_file  = f"data/test_cases_{args.bot_type}.json"
+output_file      = f"data/ragas_eval_dataset_{args.bot_type}.json"
 ```
 
 Run per bot:
@@ -121,13 +152,19 @@ def bot_type(request):
 
 @pytest.fixture(scope="session")
 def settings(bot_type):
-    url_key = f"{bot_type.upper()}_BASE_URL"
+    prefix = bot_type.upper()
     return {
-        "base_url": os.getenv(url_key, os.getenv("BASE_URL", "")).strip(),
-        "bot_type": bot_type,
+        "base_url":                os.getenv(f"{prefix}_BASE_URL", os.getenv("BASE_URL", "")).strip(),
+        "bot_type":                bot_type,
+        "foundry_project_endpoint": os.getenv(f"{prefix}_FOUNDRY_PROJECT_ENDPOINT"),
+        "azure_openai_base_url":   os.getenv(f"{prefix}_AZURE_OPENAI_BASE_URL"),
+        "azure_openai_api_key":    os.getenv(f"{prefix}_AZURE_OPENAI_API_KEY"),
+        "azure_openai_deployment": os.getenv(f"{prefix}_AZURE_OPENAI_CHAT_DEPLOYMENT"),
         ...
     }
 ```
+
+These settings flow into `foundry_evaluator.py` and `query_new_agent.py` so every layer uses the correct Azure endpoints for the selected bot.
 
 Run tests per bot:
 ```bash
@@ -240,30 +277,33 @@ POST /api/sla/slos
 ## Data Flow (End to End)
 
 ```
-Dev Team deploys Customer Bot
+Dev Team deploys Customer Bot (separate Azure Foundry project + OpenAI instance)
          |
          v
 scripts/query_new_agent.py --bot-type=customer
+  - Reads CUSTOMER_FOUNDRY_PROJECT_ENDPOINT   ← customer Azure Foundry project
+  - Reads CUSTOMER_FOUNDRY_AGENT_NAME/VERSION ← customer agent
   - Reads data/test_cases_customer.json
-  - Queries CustomerAgent on Foundry
-  - Writes data/ragas_eval_dataset_customer.json
+  - Queries CustomerAgent and writes data/ragas_eval_dataset_customer.json
          |
          v
 pytest -m ragas --bot-type=customer
-  - test_ragas_eval.py runs RAGAS metrics
-  - test_foundry_eval.py runs quality/safety/NLP
+  - conftest loads CUSTOMER_AZURE_OPENAI_BASE_URL + CUSTOMER_AZURE_OPENAI_API_KEY
+  - test_ragas_eval.py runs RAGAS metrics (using customer OpenAI endpoint)
+  - test_foundry_eval.py runs quality/safety/NLP (using customer OpenAI endpoint)
   - dspy_layer evaluates deterministic metrics
          |
          v
 ragas_layer/dashboard_bridge.py
-  - Tags run with bot_type="customer", project="playready-customer"
+  - Tags run: bot_type="customer", project="playready-customer"
+  - Records foundry_endpoint and openai_endpoint in hyperparameters for traceability
   - Writes eval_history/test_run_<timestamp>.json
          |
          v
 DeepEval Dashboard (localhost:5000)
   - Auto-detects new file in eval_history/
   - Shows under Projects > playready-customer
-  - Metrics, SLOs, bugs visible per bot
+  - Metrics, SLOs, bugs visible and isolated per bot
 ```
 
 ---
@@ -273,11 +313,11 @@ DeepEval Dashboard (localhost:5000)
 | File | Change |
 |------|--------|
 | `data/test_cases.json` | Add `bot_type`, `kb_scope` fields; split into 3 files |
-| `scripts/query_new_agent.py` | Add `--bot-type` CLI arg; per-bot agent name/version/dataset |
-| `conftest.py` | Add `--bot-type` pytest option; per-bot BASE_URL fixture |
+| `scripts/query_new_agent.py` | Add `--bot-type` CLI arg; per-bot Foundry endpoint + agent name/version/dataset |
+| `conftest.py` | Add `--bot-type` pytest option; per-bot BASE_URL, Foundry endpoint, OpenAI endpoint fixture |
 | `ragas_layer/dashboard_bridge.py` | Tag hyperparameters with `bot_type`, `kb_scope`; per-bot project name |
-| `.env` / `.env.example` | Add per-bot URL and agent env vars |
-| `foundry_layer/foundry_evaluator.py` | Add `KBBoundaryViolation` metric |
+| `.env` / `.env.example` | Add per-bot BASE_URL, Foundry project endpoint, OpenAI endpoint + key + deployment |
+| `foundry_layer/foundry_evaluator.py` | Accept per-bot OpenAI endpoint/key instead of global env vars; add `KBBoundaryViolation` metric |
 | `pytest.ini` | Add `bot_type` marker or session variable |
 
 ---
