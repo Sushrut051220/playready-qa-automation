@@ -1,3 +1,30 @@
+from __future__ import annotations
+# __FULL_DEEP_TRACER_INJECTED__
+# Auto-injected: deep-tracing for the dashboard's Trace Viewer.
+# Defensive: if the local exporter is missing, _T is a no-op so the
+# pipeline keeps working without any behavior change.
+try:
+    from local_trace_exporter import get_tracer as _get_tracer  # type: ignore
+    _T = _get_tracer()
+    _TRACING_OK = True
+except Exception:
+    class _NoopTracer:
+        from contextlib import contextmanager
+        _pending_by_case = {}
+        def set_case_key(self, *a, **kw): pass
+        @contextmanager
+        def span(self, *a, **kw):
+            class S:
+                output = None
+                metadata = {}
+            yield S()
+        def observe(self, *a, **kw):
+            def deco(f):
+                return f
+            return deco
+    _T = _NoopTracer()
+    _TRACING_OK = False
+
 """
 dashboard_bridge.py
 ====================
@@ -11,8 +38,6 @@ Usage (already wired in ragas_runner.py):
     from ragas_layer.dashboard_bridge import save_to_dashboard
     save_to_dashboard(payload)
 """
-
-from __future__ import annotations
 
 import json
 import os
@@ -123,6 +148,24 @@ def _build_test_cases(payload: dict[str, Any]) -> list[dict]:
             "tags":             [],
         })
 
+    # Attach per-case traces if local_trace_exporter is available.
+    try:
+        _pending = getattr(_T, "_pending_by_case", {}) or {}
+        for _tc in test_cases:
+            _key = str(_tc.get("name") or "")
+            _trace = _pending.get(_key)
+            if not _trace:
+                _q = str(_tc.get("input") or "")
+                for _k, _v in _pending.items():
+                    if _k and _q and (_k in _q or _q[:60] in _k):
+                        _trace = _v
+                        break
+            if _trace:
+                _tc["trace"] = _trace
+                _tc["traces"] = [_trace]
+    except Exception as _e:
+        print(f"[trace] attach skipped: {_e}")
+
     return test_cases
 
 
@@ -182,6 +225,7 @@ def save_to_dashboard(payload: dict[str, Any]) -> Path:
         "runDuration":            None,
         "evaluationCost":         0.0,
         "hyperparameters": {
+            "project":      "playready-foundry",   # ← ADD
             "framework":    "ragas",
             "model":        provider.get("model", "unknown"),
             "provider":     provider.get("provider", "unknown"),

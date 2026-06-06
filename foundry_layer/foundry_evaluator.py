@@ -1,4 +1,48 @@
 from __future__ import annotations
+# __FULL_DEEP_TRACER_INJECTED__
+# Auto-injected: deep-tracing for the dashboard's Trace Viewer.
+# Defensive: if the local exporter is missing, _T is a no-op so the
+# pipeline keeps working without any behavior change.
+try:
+    from local_trace_exporter import get_tracer as _get_tracer  # type: ignore
+    _T = _get_tracer()
+    _TRACING_OK = True
+except Exception:
+    class _NoopTracer:
+        from contextlib import contextmanager
+        _pending_by_case = {}
+        def set_case_key(self, *a, **kw): pass
+        @contextmanager
+        def span(self, *a, **kw):
+            class S:
+                output = None
+                metadata = {}
+            yield S()
+        def observe(self, *a, **kw):
+            def deco(f):
+                return f
+            return deco
+    _T = _NoopTracer()
+    _TRACING_OK = False
+
+# __DEEP_TRACER_INJECTED__
+try:
+    from local_trace_exporter import get_tracer as _get_tracer
+    _T = _get_tracer()
+except Exception:
+    class _Noop:
+        from contextlib import contextmanager
+        @contextmanager
+        def span(self, *a, **kw):
+            class S:
+                output = None
+                metadata = {}
+            yield S()
+        def observe(self, *a, **kw):
+            def deco(f):
+                return f
+            return deco
+    _T = _Noop()
 
 import json
 import os
@@ -187,6 +231,7 @@ def _write_csv(dataframe, target_path):
         dataframe.to_csv(target_path.with_name(fallback), index=False)
 
 
+@_T.observe(type="evaluator", name="foundry_quality")
 def run_foundry_quality_evaluation(rows, output_dir):
     from azure.ai.evaluation import (
         CoherenceEvaluator,
@@ -266,6 +311,7 @@ def run_foundry_quality_evaluation(rows, output_dir):
     return payload
 
 
+@_T.observe(type="evaluator", name="foundry_nlp")
 def run_foundry_nlp_evaluation(rows, output_dir):
     from azure.ai.evaluation import (
         F1ScoreEvaluator,
@@ -333,6 +379,7 @@ def run_foundry_nlp_evaluation(rows, output_dir):
     return payload
 
 
+@_T.observe(type="evaluator", name="foundry_safety")
 def run_foundry_safety_evaluation(rows, output_dir):
     output_path = Path(output_dir)
     credential, azure_ai_project = _get_safety_project_config()
@@ -396,6 +443,7 @@ def run_foundry_safety_evaluation(rows, output_dir):
     return payload
 
 
+@_T.observe(type="task", name="foundry_report")
 def generate_foundry_report(output_dir=None, report_dir=None):
     """
     Read Foundry JSON results and write an Excel report with
@@ -647,6 +695,7 @@ def generate_foundry_report(output_dir=None, report_dir=None):
     return str(report_path)
 
 
+@_T.observe(type="task", name="foundry_run")
 def run_all_foundry_evaluations(dataset_path=None, output_dir=None):
     dataset_path = dataset_path or (PROJECT_ROOT / "data" / "ragas_eval_dataset.json")
     output_dir = output_dir or (PROJECT_ROOT / "artifacts" / "foundry")

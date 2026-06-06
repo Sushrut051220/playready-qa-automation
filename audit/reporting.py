@@ -310,6 +310,46 @@ def _generate_bridge_excel_report(bridge_report_dir: Path, ragas_csv_source: Pat
 
     all_evaluator_rows = list(question_row_map.values())
 
+    # __PATCH_EXCEL_ROWS_ALIAS__
+    # Auto-injected alias so the KPI / summary / metric_explanations sections work.
+    # `rows` was referenced 11 times in this function but never assigned.
+    # `all_evaluator_rows` (built above) has the exact shape they expect:
+    #   id, question, response, ground_truth, retrieved_chunks, citations,
+    #   citation_quotes, plus per-metric score columns.
+    rows = all_evaluator_rows
+
+    # Enrich `rows` with latency / token / citation info from the bridge dataset
+    # (keyed by question) so KPI averages aren't all zero.
+    _bridge_by_q = {
+        str(_it.get("question") or _it.get("user_input") or "").strip(): _it
+        for _it in bridge_dataset_rows
+        if isinstance(_it, dict)
+    }
+    for _r in rows:
+        _q = str(_r.get("question") or "").strip()
+        _src = _bridge_by_q.get(_q, {}) if _q else {}
+        if "latency_seconds" not in _r:
+            _r["latency_seconds"] = _src.get("latency_seconds")
+        if "total_tokens" not in _r:
+            _tu = _src.get("token_usage") or {}
+            _r["total_tokens"] = _tu.get("total_tokens") if isinstance(_tu, dict) else None
+        # Make sure 'citations' is a non-empty-aware truthy/falsey value
+        if _r.get("citations") is None:
+            _r["citations"] = ""
+
+    # `source_test_suite` is referenced in the KPI section. Derive from the
+    # first bridge dataset row if available; otherwise from ragas_payload.
+    try:
+        source_test_suite
+    except NameError:
+        _src_suite = ""
+        if bridge_dataset_rows and isinstance(bridge_dataset_rows[0], dict):
+            _src_suite = str(bridge_dataset_rows[0].get("source_test_suite") or "")
+        if not _src_suite and isinstance(ragas_payload, dict):
+            _src_suite = str(ragas_payload.get("source_test_suite") or "")
+        source_test_suite = _src_suite or "bridge_run"
+
+
     threshold_rows = []
     for metric_name in evaluator_order:
         operator = "<=" if metric_name in {"noise_sensitivity_relevant", "noise_sensitivity_irrelevant"} else ">="

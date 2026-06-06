@@ -1,4 +1,29 @@
 from __future__ import annotations
+# __FULL_DEEP_TRACER_INJECTED__
+# Auto-injected: deep-tracing for the dashboard's Trace Viewer.
+# Defensive: if the local exporter is missing, _T is a no-op so the
+# pipeline keeps working without any behavior change.
+try:
+    from local_trace_exporter import get_tracer as _get_tracer  # type: ignore
+    _T = _get_tracer()
+    _TRACING_OK = True
+except Exception:
+    class _NoopTracer:
+        from contextlib import contextmanager
+        _pending_by_case = {}
+        def set_case_key(self, *a, **kw): pass
+        @contextmanager
+        def span(self, *a, **kw):
+            class S:
+                output = None
+                metadata = {}
+            yield S()
+        def observe(self, *a, **kw):
+            def deco(f):
+                return f
+            return deco
+    _T = _NoopTracer()
+    _TRACING_OK = False
 
 import os
 import concurrent.futures
@@ -222,6 +247,7 @@ def _build_ragas_metric_catalog(ragas_llm: Any | None, ragas_embeddings: Any | N
 # =============================
 # Safe metric execution
 # =============================
+@_T.observe(type="evaluator", name="ragas_metric")
 def _execute_metric(
     *,
     metric_name: str,
@@ -321,6 +347,7 @@ def _execute_metric(
 # =============================
 # Main runner
 # =============================
+@_T.observe(type="task", name="ragas_run")
 def run_ragas_evaluation(
     dataset: Dataset,
     metrics_config: dict[str, Any] | None = None,
@@ -525,6 +552,10 @@ def run_ragas_evaluation(
     final_rows: list[dict[str, Any]] = []
 
     for base_row in rows:
+        try:
+            _T.set_case_key(base_row.get("id") or base_row.get("question"))
+        except Exception:
+            pass
         row_id = base_row.get("id")
 
         new_row: dict[str, Any] = {
@@ -544,10 +575,15 @@ def run_ragas_evaluation(
         new_row["completion_tokens"] = _to_builtin(token_usage.get("completion_tokens"))
 
         for metric_name, threshold in payload["thresholds"].items():
+            base_question = base_row.get("question") or base_row.get("user_input")
             match = next(
                 (
                     r for r in payload["metric_details"].get(metric_name, [])
-                    if r.get("id") == row_id or r.get("question") == base_row.get("question")
+                    if (
+                        (row_id is not None and r.get("id") == row_id)
+                        or (base_question and r.get("user_input") == base_question)
+                        or (base_question and r.get("question") == base_question)
+                    )
                 ),
                 None,
             )

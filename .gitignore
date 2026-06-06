@@ -1,104 +1,98 @@
-﻿.env
-.env.*
-*.env
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 .venv/
 venv/
-__pycache__/
-*.pyc
+env/
+.eggs/
 *.egg-info/
-data/kb/*.pdf
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# === Env / secrets - NEVER push ===
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+auth.json
+auth_sessions.json
+sessions.json
+secrets/
+credentials/
+
+# === Backups created by our patchers ===
+*.bak
+*.bak_*
+*.py.bak_*
+*.json.bak_*
+
+# === Run artifacts ===
+artifacts/
+reports/
+eval_history/test_run_*.json
+eval_history/trace_*.json
+eval_history/bug_reports.json
+eval_history/sla_breaches.json
+eval_history/automations.json
+eval_history/evaluators.json
+eval_history/projects.json
+eval_history/slos.json
+eval_history/auth.json
+eval_history/auth_sessions.json
+eval_history/*.bak_*
+
+# === Logs / large dumps ===
+*.log
+logs/
+security_scan*.txt
+my_files_scan*.txt
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# === OS ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Playwright traces ===
+playwright_traces/
+test-results/
+
+# === PlayReady internal KB documents - NEVER push ===
+data/kb/
+data/kb/**
+*.pdf
+
+# === Large generated artifacts ===
 data/chunk_registry.json
-data/ragas_eval_dataset.json
-data/test_cases_backup_*.json
 data/coverage_report.json
-data/testcase_generation_summary.json
-data/negative_test_summary.json
-data/test_cases_positive.json
-data/test_cases_negative.json
+
+# === Large generated test case sets (regenerate locally) ===
+data/test_cases_conversational.json
+data/test_cases_cross_document.json
+data/test_cases_data_security.json
 data/test_cases_edge_case.json
+data/test_cases_grounding.json
 data/test_cases_hallucination.json
 data/test_cases_robustness.json
 data/test_cases_compliance.json
-data/test_cases_grounding.json
-data/test_cases_cross_document.json
-data/test_cases_data_security.json
-data/test_cases_conversational.json
-data/test_cases_smart_master.json
-data/test_cases_negative_master.json
-data/test_cases_conversational_master.json
+data/test_cases_negative.json
+data/test_cases_positive.json
 data/test_cases_neg_*.json
 data/test_cases_conv_*.json
-data/fallback_cases_review.json
-reports/bridge/*.xlsx
-reports/bridge/*.docx
-artifacts/
-*.csv
-.pytest_cache/
-.vscode/settings.json
-*.pem
-*.key
-*.cert
-Thumbs.db
-.DS_Store
+data/ragas_eval_dataset.json
+data/negative_test_summary.json
+data/testcase_generation_summary.json
 
-
-
-# Virtual Environment
-.venv/
-venv/
-
-# Environment variables / secrets
-.env
-.env.*
-*.key
-*.pem
-
-# Python cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# VS Code
-.vscode/
-
-# Logs
-logs/
-*.log
-
-# Test / Eval outputs
-results/
-reports/
-artifacts/
-outputs/
-
-# Database / local state
-*.db
-*.sqlite
-*.sqlite3
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Large generated files
-*.csv
+# === Excel reports ===
 *.xlsx
-*.jsonl
-
-# Node modules (if frontend exists)
-node_modules/
-
-# Build folders
-dist/
-build/
-
-# Streamlit cache
-.streamlit/secrets.toml
-
-# Pytest
-.pytest_cache/
-
-# Coverage
-.coverage
-htmlcov/
+*.xls

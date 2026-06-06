@@ -1,4 +1,33 @@
-﻿"""
+from __future__ import annotations
+# __FULL_DEEP_TRACER_INJECTED__
+# Auto-injected: deep-tracing for the dashboard's Trace Viewer.
+
+# Defensive: if the local exporter is missing, _T is a no-op so the
+# pipeline keeps working without any behavior change.
+
+try:
+    from local_trace_exporter import get_tracer as _get_tracer  # type: ignore
+    _T = _get_tracer()
+    _TRACING_OK = True
+except Exception:
+    class _NoopTracer:
+        from contextlib import contextmanager
+        _pending_by_case = {}
+        def set_case_key(self, *a, **kw): pass
+        @contextmanager
+        def span(self, *a, **kw):
+            class S:
+                output = None
+                metadata = {}
+            yield S()
+        def observe(self, *a, **kw):
+            def deco(f):
+                return f
+            return deco
+    _T = _NoopTracer()
+    _TRACING_OK = False
+
+"""
 Query the Foundry agent and produce a RAGAS-ready dataset.
 
 Architecture (stable / old-style):
@@ -10,8 +39,6 @@ Architecture (stable / old-style):
 This keeps RAGAS evaluation stable, because contexts do not depend on
 live retrieval behavior from the agent.
 """
-
-from __future__ import annotations
 
 import argparse
 import json
@@ -254,6 +281,7 @@ def run(
     print(f"  with citations: {with_citations}/{len(results)}")
 
 
+@_T.observe(type="task", name="query_new_agent_main")
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Query Foundry agent and produce a RAGAS-ready dataset."
