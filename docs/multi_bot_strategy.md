@@ -13,9 +13,11 @@ The PlayReady QA automation framework currently tests a single **Public Bot**. T
 | Public KB      | Yes       | Yes          | Yes         |
 | Customer KB    | No        | Yes          | Yes         |
 
-- **Public Bot** — answers from public knowledge base only
-- **Customer Bot** — answers from public KB + customer-specific KB
-- **Private Bot** — full access: public KB + all customer KB
+- **Public Bot** — answers from public knowledge base only; MCP tools scoped to public resources
+- **Customer Bot** — answers from public KB + customer-specific KB; MCP tools include customer resources
+- **Private Bot** — full access: public KB + all customer KB; MCP tools have full resource access
+
+All three bots use MCP (Model Context Protocol) for tool and resource access. MCP scope enforcement per bot is a key test target.
 
 ---
 
@@ -447,13 +449,15 @@ This section maps all 54 concrete DeepEval metrics against what the PlayReady QA
 | **TurnContextualRelevancyMetric** | **NO** | Per-turn context relevance |
 | **ConversationCompletenessMetric** | **NO** | Did the full conversation address all user intents? |
 
-#### MCP Metrics (3 total — Not Applicable)
+#### MCP Metrics (3 total — All Applicable, All Missing)
 
-| Metric | Status |
-|--------|--------|
-| MCPTaskCompletionMetric | N/A — not using MCP protocol |
-| MCPUseMetric | N/A |
-| MultiTurnMCPUseMetric | N/A |
+All three bots (Public, Customer, Private) use MCP (Model Context Protocol) for tool/resource access. These metrics are currently not evaluated at all.
+
+| Metric | Covered? | Gap / Note |
+|--------|----------|------------|
+| **MCPTaskCompletionMetric** | **NO** | **MISSING** — did the bot complete its task using MCP tools? Each bot has different MCP tool access scope |
+| **MCPUseMetric** | **NO** | **MISSING** — validates correct MCP tool/resource/prompt usage. Critical for verifying KB scope enforcement (customer bot should only use customer MCP resources) |
+| **MultiTurnMCPUseMetric** | **NO** | **MISSING** — evaluates MCP usage patterns across a full multi-turn session. Important for detecting KB boundary leaks across conversation turns |
 
 #### Multimodal Metrics (5 total — Not Applicable)
 
@@ -491,6 +495,9 @@ This section maps all 54 concrete DeepEval metrics against what the PlayReady QA
 | **P3** | StepEfficiencyMetric | Agent efficiency |
 | **P3** | ArenaGEval | Compare public vs customer bot responses on same query |
 | **P3** | All 5 Turn-level metrics | Full multi-turn evaluation (TurnRelevancy, TurnFaithfulness, etc.) |
+| **P1** | MCPUseMetric | All 3 bots use MCP — verify correct MCP resource/tool usage per bot scope |
+| **P1** | MCPTaskCompletionMetric | Did the bot complete its task via MCP tools? |
+| **P2** | MultiTurnMCPUseMetric | Detect KB boundary leaks via MCP across conversation turns |
 
 ---
 
