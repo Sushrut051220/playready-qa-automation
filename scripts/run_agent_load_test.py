@@ -9,6 +9,7 @@ import statistics
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -155,8 +156,13 @@ def build_query_pool(raw_cases, repeat):
 # =========================================================
 # AGENT CALL
 # =========================================================
+def _iso_now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+
+
 def query_agent(client, agent_name, agent_version, question, request_id):
     start_time = time.time()
+    start_iso = _iso_now()
     try:
         response = client.responses.create(
             input=[{"role": "user", "content": question}],
@@ -169,6 +175,7 @@ def query_agent(client, agent_name, agent_version, question, request_id):
             },
         )
     except Exception as e:
+        end_iso = _iso_now()
         return {
             "request_id": request_id,
             "question": question,
@@ -177,6 +184,8 @@ def query_agent(client, agent_name, agent_version, question, request_id):
             "citation_quotes": [],
             "run_status": "failed",
             "latency_seconds": round(time.time() - start_time, 4),
+            "request_start_iso": start_iso,
+            "request_end_iso": end_iso,
             "token_usage": {"total_tokens": 0, "prompt_tokens": 0, "completion_tokens": 0},
             "error_type": type(e).__name__,
             "error_message": str(e)[:1000],
@@ -185,6 +194,7 @@ def query_agent(client, agent_name, agent_version, question, request_id):
         }
 
     latency = round(time.time() - start_time, 4)
+    end_iso = _iso_now()
     usage = getattr(response, "usage", None)
     token_usage = {
         "total_tokens": getattr(usage, "total_tokens", 0),
@@ -202,6 +212,8 @@ def query_agent(client, agent_name, agent_version, question, request_id):
         "citation_quotes": citation_quotes,
         "run_status": "completed",
         "latency_seconds": latency,
+        "request_start_iso": start_iso,
+        "request_end_iso": end_iso,
         "token_usage": token_usage,
         "error_type": "",
         "error_message": "",
