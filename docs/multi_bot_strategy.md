@@ -349,4 +349,210 @@ POST /api/projects/configure
 
 ---
 
+---
+
+## DeepEval Gap Analysis — What We Are Missing
+
+This section maps all 54 concrete DeepEval metrics against what the PlayReady QA framework currently covers via RAGAS, Azure Foundry Evaluator, and DSPy. It also covers tracing and synthetic test case generation gaps.
+
+---
+
+### Current Coverage in PlayReady QA
+
+| Layer | Metrics |
+|-------|---------|
+| RAGAS | AnswerRelevancy, Faithfulness, ContextualPrecision, ContextualRecall, ContextualRelevancy |
+| Azure Foundry Quality | Coherence, Fluency, Relevance, Groundedness, Similarity |
+| Azure Foundry NLP | F1 Score, ROUGE-1, BLEU, METEOR |
+| Azure Foundry Safety | Violence, Sexual, Self-Harm, Hate/Unfairness |
+| DSPy Deterministic | Keyword presence, Fallback detection, PDF grounding, Formatting constraints, LLM answer quality |
+
+---
+
+### Complete DeepEval Metrics Cross-Check (54 Metrics)
+
+#### RAG Metrics (9 total)
+
+| Metric | Covered? | How | Gap / Note |
+|--------|----------|-----|------------|
+| AnswerRelevancyMetric | YES | RAGAS | Duplicate coverage — can consolidate |
+| FaithfulnessMetric | YES | RAGAS | Duplicate coverage |
+| ContextualPrecisionMetric | YES | RAGAS | Duplicate coverage |
+| ContextualRecallMetric | YES | RAGAS | Duplicate coverage |
+| ContextualRelevancyMetric | YES | RAGAS | Duplicate coverage |
+| RAGASAnswerRelevancyMetric | YES | RAGAS (direct) | Same as above via RAGAS wrapper |
+| RAGASFaithfulnessMetric | YES | RAGAS (direct) | Same as above |
+| RAGASContextualPrecisionMetric | YES | RAGAS (direct) | Same as above |
+| RAGASContextualRecallMetric | YES | RAGAS (direct) | Same as above |
+| **RAGASContextualEntitiesRecall** | **NO** | — | **MISSING** — measures entity-level recall, not just passage recall. Important for factual answers citing specific policy entities |
+
+#### Core LLM Judge / Custom Metrics (6 total)
+
+| Metric | Covered? | How | Gap / Note |
+|--------|----------|-----|------------|
+| **GEval** | **NO** | — | **MISSING** — define PlayReady-specific rubrics in plain English (e.g. "Does response cite the correct policy?", "Does response correctly identify KB source?") |
+| **ArenaGEval** | **NO** | — | **MISSING** — compare responses from different bot versions side-by-side |
+| **ConversationalGEval** | **NO** | — | **MISSING** — custom evaluation criteria for multi-turn chatbot sessions |
+| **DAGMetric** | **NO** | — | **MISSING** — compose multiple checks into a single metric graph (e.g. first check grounding, then check KB scope, then check formatting) |
+| **ConversationalDAGMetric** | **NO** | — | **MISSING** — DAG metric for multi-turn flows |
+| ExactMatchMetric | Partial | DSPy keyword check | DSPy keyword presence is similar but not identical — ExactMatch is stricter |
+| PatternMatchMetric | Partial | DSPy formatting check | DSPy formatting constraints cover this partially |
+| JsonCorrectnessMetric | **NO** | — | **MISSING** — if bot returns structured JSON responses, this validates schema correctness |
+
+#### Content Quality & Safety Metrics (10 total)
+
+| Metric | Covered? | How | Gap / Note |
+|--------|----------|-----|------------|
+| **HallucinationMetric** | **NO** | — | **MISSING** — distinct from Faithfulness. Detects fabricated facts not grounded in any context. High priority for policy bot |
+| **BiasMetric** | **NO** | — | **MISSING** — Azure Foundry covers hate/unfairness but not subtle bias in framing or wording |
+| **ToxicityMetric** | **NO** | — | **MISSING** — Azure Foundry covers violence/sexual/self-harm but not general toxicity of language |
+| **SummarizationMetric** | **NO** | — | **MISSING** — if bot summarizes documents, this evaluates coverage and accuracy |
+| **PIILeakageMetric** | **NO** | — | **MISSING — CRITICAL** for Customer and Private bots. If customer KB contains personal data, this detects whether bot leaks it in responses |
+| **NonAdviceMetric** | **NO** | — | **MISSING** — prevents bot from giving legal, financial, or compliance advice. Essential for a PlayReady policy bot |
+| **MisuseMetric** | **NO** | — | **MISSING** — detects if bot is manipulated into acting outside its purpose |
+| **RoleViolationMetric** | **NO** | — | **MISSING** — detects when bot breaks its assigned role (e.g. acts as a general assistant instead of PlayReady bot) |
+| **RoleAdherenceMetric** | **NO** | — | **MISSING** — verifies bot stays in character across a full session |
+| RAGASFaithfulnessMetric | YES | RAGAS | Covered |
+
+#### Task-Specific Metrics (6 total)
+
+| Metric | Covered? | How | Gap / Note |
+|--------|----------|-----|------------|
+| **ToolCorrectnessMetric** | **NO** | — | **MISSING** — Foundry agent uses internal tools (search, retrieval). We never verify if it called the right tool |
+| **ArgumentCorrectnessMetric** | **NO** | — | **MISSING** — even if tool is correct, arguments passed to it may be wrong |
+| **TaskCompletionMetric** | **NO** | — | **MISSING** — did the bot actually complete the user's task? Requires trace data |
+| **PromptAlignmentMetric** | **NO** | — | **MISSING** — does bot follow its system prompt instructions? |
+| **KnowledgeRetentionMetric** | **NO** | — | **MISSING** — in multi-turn sessions, does bot remember facts stated earlier? |
+| RagasMetric (wrapper) | YES | RAGAS | Generic wrapper — covered |
+
+#### Agentic Metrics (6 total)
+
+| Metric | Covered? | How | Gap / Note |
+|--------|----------|-----|------------|
+| **TopicAdherenceMetric** | **NO** | — | **MISSING** — does bot stay on PlayReady-related topics and refuse off-topic requests? |
+| **StepEfficiencyMetric** | **NO** | — | **MISSING** — does the Foundry agent complete tasks in a reasonable number of steps? |
+| **PlanAdherenceMetric** | **NO** | — | **MISSING** — does agent follow its retrieval-then-answer plan? Requires trace |
+| **PlanQualityMetric** | **NO** | — | **MISSING** — is the agent's plan (retrieval strategy) good? |
+| **GoalAccuracyMetric** | **NO** | — | **MISSING** — in a conversation, does the bot achieve the user's stated goal? |
+| **ToolUseMetric** | **NO** | — | **MISSING** — conversational equivalent of ToolCorrectnessMetric across turns |
+
+#### Conversational Metrics (6 total — none covered)
+
+| Metric | Covered? | Gap / Note |
+|--------|----------|------------|
+| **TurnRelevancyMetric** | **NO** | Each turn's response relevance to that turn's input — we test single-turn only |
+| **TurnFaithfulnessMetric** | **NO** | Per-turn grounding check across a session |
+| **TurnContextualPrecisionMetric** | **NO** | Per-turn retrieval precision in multi-turn |
+| **TurnContextualRecallMetric** | **NO** | Per-turn retrieval recall in multi-turn |
+| **TurnContextualRelevancyMetric** | **NO** | Per-turn context relevance |
+| **ConversationCompletenessMetric** | **NO** | Did the full conversation address all user intents? |
+
+#### MCP Metrics (3 total — Not Applicable)
+
+| Metric | Status |
+|--------|--------|
+| MCPTaskCompletionMetric | N/A — not using MCP protocol |
+| MCPUseMetric | N/A |
+| MultiTurnMCPUseMetric | N/A |
+
+#### Multimodal Metrics (5 total — Not Applicable)
+
+| Metric | Status |
+|--------|--------|
+| TextToImageMetric | N/A — chatbot is text-only |
+| ImageEditingMetric | N/A |
+| ImageCoherenceMetric | N/A |
+| ImageHelpfulnessMetric | N/A |
+| ImageReferenceMetric | N/A |
+
+---
+
+### Missing Metrics Summary — Prioritised for PlayReady
+
+| Priority | Metric | Why It Matters for PlayReady |
+|----------|--------|------------------------------|
+| **P0** | PIILeakageMetric | Customer/Private bot MUST NOT leak personal data from KB |
+| **P0** | NonAdviceMetric | Policy bot must not give legal/financial/compliance advice |
+| **P1** | HallucinationMetric | Bot fabricating policy details is a critical failure |
+| **P1** | TopicAdherenceMetric | Bot must stay on PlayReady topics, refuse off-topic |
+| **P1** | GEval | Custom rubrics: KB boundary check, policy citation correctness |
+| **P1** | RoleViolationMetric | Bot must stay in its assigned role |
+| **P2** | ToolCorrectnessMetric | Foundry agent tool calls are untested today |
+| **P2** | ArgumentCorrectnessMetric | Tool arguments may be wrong even if tool is correct |
+| **P2** | TaskCompletionMetric | Did the bot actually help the user? |
+| **P2** | ConversationCompletenessMetric | Are all user intents addressed in a session? |
+| **P2** | KnowledgeRetentionMetric | Multi-turn: does bot remember context? |
+| **P2** | PromptAlignmentMetric | Does bot follow its system prompt? |
+| **P2** | RAGASContextualEntitiesRecall | Entity-level factual recall — more precise than passage recall |
+| **P3** | BiasMetric | Beyond Azure safety — subtle framing bias |
+| **P3** | ToxicityMetric | General language toxicity beyond Azure safety categories |
+| **P3** | MisuseMetric | Adversarial prompt resistance |
+| **P3** | PlanAdherenceMetric | Agent retrieval strategy quality (requires trace) |
+| **P3** | StepEfficiencyMetric | Agent efficiency |
+| **P3** | ArenaGEval | Compare public vs customer bot responses on same query |
+| **P3** | All 5 Turn-level metrics | Full multi-turn evaluation (TurnRelevancy, TurnFaithfulness, etc.) |
+
+---
+
+### Tracing Gaps
+
+#### What PlayReady QA Has Today
+- Playwright browser traces (screenshots, DOM snapshots) — UI layer only
+- Basic latency via `latency_seconds` in RAGAS eval dataset
+- No LLM-level span tracking
+- No token usage per query
+- No cost tracking per evaluation run
+- No retriever span data (what chunks were retrieved, top_k, embedder used)
+
+#### What DeepEval Tracing Provides (Not Wired In)
+
+| Feature | DeepEval Capability | PlayReady Gap |
+|---------|--------------------|--------------| 
+| `@observe` decorator | Auto-instruments any function into a named span | Not applied to any PlayReady code |
+| LLM spans | Captures model, provider, input/output tokens, cost per token | No token or cost tracking today |
+| Retriever spans | Captures embedder, top_k, chunk_size, retrieved chunks | No retrieval tracing |
+| Tool spans | Captures tool name, args, result per Foundry tool call | No tool-level tracing |
+| Agent spans | Captures agent handoffs, available tools, decision steps | No agent-level tracing |
+| OpenAI auto-patch | `patch_openai_client()` auto-captures all LLM calls | Not applied |
+| OpenTelemetry export | OTLP-compatible trace export | Not configured |
+| Trace → Test case link | Traces auto-associate with test cases for per-query drill-down | Not connected |
+| Offline eval on trace | Run metrics on stored traces without re-querying the bot | Not available |
+| `evaluate_trace()` | Evaluate stored traces against any metric | Not used |
+| Cost per run tracking | Total token cost per evaluation run | Not tracked |
+| Sampling rate | Control what % of production calls are traced | Not configured |
+
+**Impact:** Without tracing, the dashboard's bug detector cannot fire LATENCY, COST, TOOL, AGENT, or CHUNKING bug categories for PlayReady runs. Those 5 of 12 bug categories are completely blind.
+
+---
+
+### Synthetic Test Case Generation Gaps
+
+#### What PlayReady QA Has Today
+- `scripts/generate_ragas_testset.py` — generates test cases via RAGAS testset generator
+- `scripts/generate_conversational_testcases.py` — basic multi-turn generation
+- `scripts/generate_negative_testcases.py` — negative scenario generation
+- `scripts/generate_smart_testcases.py` — smart case generation
+- All generators write to `data/test_cases_*.json`
+
+#### What DeepEval Synthesizer Provides (Not Used)
+
+| Feature | DeepEval Synthesizer | PlayReady Gap |
+|---------|---------------------|---------------|
+| `generate_goldens_from_docs()` | Feed PDFs from `data/kb/` directly — auto-chunks, embeds, generates Q&A pairs | Current generators don't read PDFs directly |
+| 7 evolution strategies | REASONING, MULTICONTEXT, CONCRETIZING, CONSTRAINED, COMPARATIVE, HYPOTHETICAL, IN_BREADTH | Current generators have no evolution strategies |
+| Quality filtering | `FiltrationConfig` with LLM-judged quality threshold per generated case | No quality scoring on generated cases today |
+| Context deduplication | `context_similarity_threshold` removes near-duplicate test cases | No deduplication today |
+| `generate_conversational_goldens_from_docs()` | Generates full multi-turn scenarios directly from KB PDFs | Current conversational generator is manual/template-based |
+| `ConversationalGolden` output | Produces structured multi-turn test cases with scenario + expected_outcome + turns | No structured conversational goldens today |
+| `generate_goldens_from_scratch()` | Generates test cases with no source document (tests bot's general knowledge boundary) | Not done — important for testing fallback behaviour |
+| `EvolutionConfig` weights | Control probability of each evolution type per run | No evolution control today |
+| `StylingConfig` | Control format, tone, complexity of generated inputs | No style control today |
+| Ground truth via LLM judge | Expected output generated and scored by a critic LLM | Current ground truth is manually written |
+| Export to CSV/JSON/JSONL | `synthesizer.save_as()` | Current output is always JSON |
+| `generate_goldens_from_goldens()` | Evolve existing test cases into harder variants | Not done — useful for red teaming |
+
+**Most valuable for PlayReady:** `generate_goldens_from_docs(data/kb/*.pdf)` with MULTICONTEXT evolution would auto-generate cross-document test cases that test KB boundary enforcement — exactly what the multi-bot scenario needs.
+
+---
+
 *Last updated: 2026-06-06*
