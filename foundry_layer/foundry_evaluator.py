@@ -452,7 +452,7 @@ def generate_foundry_report(output_dir=None, report_dir=None):
     from openpyxl.styles import PatternFill, Font, Alignment
 
     output_dir = Path(output_dir or (PROJECT_ROOT / "artifacts" / "foundry"))
-    report_dir = Path(report_dir or (PROJECT_ROOT / "reports" / "bridge"))
+    report_dir = Path(report_dir or (PROJECT_ROOT / "reports" / "foundry"))
     report_dir.mkdir(parents=True, exist_ok=True)
 
     report_path = report_dir / "Foundry_Evaluation_Report.xlsx"
@@ -735,5 +735,12 @@ def run_all_foundry_evaluations(dataset_path=None, output_dir=None):
 
     # Generate Excel report
     generate_foundry_report(output_dir=output_path)
+
+    # Push results to DeepEval dashboard
+    try:
+        from foundry_layer.foundry_to_dashboard import save_foundry_to_dashboard
+        save_foundry_to_dashboard(output_dir=output_path)
+    except Exception as _bridge_err:
+        print(f"  [foundry-bridge] skipped: {_bridge_err}")
 
     return results

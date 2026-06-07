@@ -33,6 +33,7 @@ credentials/
 
 # === Run artifacts ===
 artifacts/
+gen_*.py
 reports/
 eval_history/test_run_*.json
 eval_history/trace_*.json

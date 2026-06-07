@@ -17,10 +17,23 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-HIST = Path(os.getenv(
-    "DEEPEVAL_RESULTS_FOLDER",
-    r"C:\Users\v-snistane\tools\deepeval-dashboard\eval_history",
-))
+
+
+def _find_eval_history() -> Path:
+    """Mirror the bridge modules' dashboard discovery so this script finds the
+    real eval_history folder regardless of which machine/user account it runs under."""
+    env_path = os.getenv("DEEPEVAL_RESULTS_FOLDER")
+    if env_path:
+        return Path(env_path)
+    for root in (ROOT.parent, ROOT.parent.parent, Path.home()):
+        for name in ("deepeval-dashboard", "deepeval_dashboard", "Deepeval_Foundry_dashboard"):
+            candidate = root / name
+            if (candidate / "backend" / "main.py").exists():
+                return candidate / "eval_history"
+    return ROOT / "eval_history"
+
+
+HIST = _find_eval_history()
 
 
 def section(title):

@@ -373,6 +373,7 @@ def build_test_summary_report(summary, sla_status, benchmark_targets, verdict, r
     # 1. Test Info
     rows.append({"Section": "TEST INFORMATION", "Item": "", "Value": ""})
     rows.append({"Section": "", "Item": "Agent", "Value": f"{summary['agent_name']}:{summary['agent_version']}"})
+    rows.append({"Section": "", "Item": "Bot Type", "Value": summary.get('bot_type', 'public')})
     rows.append({"Section": "", "Item": "Environment", "Value": summary['project_endpoint']})
     rows.append({"Section": "", "Item": "Input File", "Value": summary['input_file']})
     rows.append({"Section": "", "Item": "Test Date", "Value": time.strftime("%Y-%m-%d %H:%M:%S")})
@@ -437,7 +438,7 @@ def build_test_summary_report(summary, sla_status, benchmark_targets, verdict, r
 # =========================================================
 # MAIN LOAD TEST
 # =========================================================
-def run_load_test(input_path, output_dir, users, repeat, limit, offset, ramp_pause_seconds):
+def run_load_test(input_path, output_dir, users, repeat, limit, offset, ramp_pause_seconds, bot_type="public"):
     print(f"Loading test cases from: {input_path}")
 
     raw_cases = load_queries_from_json(input_path, limit, offset)
@@ -512,6 +513,7 @@ def run_load_test(input_path, output_dir, users, repeat, limit, offset, ramp_pau
     summary = {
         "agent_name": agent_name,
         "agent_version": agent_version,
+        "bot_type": bot_type,
         "project_endpoint": os.environ.get("FOUNDRY_PROJECT_ENDPOINT", ""),
         "input_file": str(input_path),
         "users": users,
@@ -600,7 +602,10 @@ def run_load_test(input_path, output_dir, users, repeat, limit, offset, ramp_pau
     recommendations_df = pd.DataFrame({"Recommendations": recommendations})
     verdict_df = pd.DataFrame([{"Final Verdict": verdict}])
 
+    test_report_df = build_test_summary_report(summary, sla_status, benchmark_targets, verdict, rca, recommendations)
+
     with pd.ExcelWriter(excel_path, engine="openpyxl") as writer:
+        safe_to_excel(writer, test_report_df, "Test Report")
         safe_to_excel(writer, summary_df, "Summary")
         safe_to_excel(writer, sla_status_df, "Evaluation")
         safe_to_excel(writer, benchmark_df, "SLA Benchmarks")
@@ -647,26 +652,36 @@ def run_load_test(input_path, output_dir, users, repeat, limit, offset, ramp_pau
     print(f"Bridge Excel Report   : {excel_path}")
     print("==================================================")
 
-    return full_summary_package, all_results
+    return full_summary_package, all_results, details_json_path, summary_path
 
 
 # =========================================================
 # ENTRY
 # =========================================================
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--input", default=str(PROJECT_ROOT / "data" / "test_cases.json"))
-    parser.add_argument("--output-dir", default=str(PROJECT_ROOT / "reports" / "bridge"))
-    parser.add_argument("--users", type=int, default=5)
-    parser.add_argument("--repeat", type=int, default=1)
-    parser.add_argument("--limit", type=int, default=10)
-    parser.add_argument("--offset", type=int, default=0)
-    parser.add_argument("--ramp-pause", type=float, default=0.0)
+    parser = argparse.ArgumentParser(
+        description="Run PlayReady agent load test and optionally push results to DeepEval dashboard."
+    )
+    parser.add_argument("--input",         default=str(PROJECT_ROOT / "data" / "test_cases.json"))
+    parser.add_argument("--output-dir",    default=str(PROJECT_ROOT / "reports" / "load_testing"))
+    parser.add_argument("--users",         type=int,   default=5)
+    parser.add_argument("--repeat",        type=int,   default=1)
+    parser.add_argument("--limit",         type=int,   default=10)
+    parser.add_argument("--offset",        type=int,   default=0)
+    parser.add_argument("--ramp-pause",    type=float, default=0.0)
+    parser.add_argument("--bot-type",      default="public", choices=["public", "customer", "private"])
+    parser.add_argument(
+        "--dashboard-dir",
+        default=None,
+        help="Path to the DeepEval dashboard eval_history folder. "
+             "When provided the results are automatically pushed to the dashboard "
+             "after the load test completes (single-command workflow).",
+    )
 
     args = parser.parse_args()
 
     try:
-        run_load_test(
+        result = run_load_test(
             input_path=Path(args.input),
             output_dir=Path(args.output_dir),
             users=args.users,
@@ -674,7 +689,21 @@ def main():
             limit=args.limit,
             offset=args.offset,
             ramp_pause_seconds=args.ramp_pause,
+            bot_type=args.bot_type,
         )
+        _, _, details_path, summary_path = result
+
+        if args.dashboard_dir:
+            print("\n[Dashboard] Pushing results to dashboard …")
+            from scripts.load_test_to_dashboard import convert as _lt_convert
+            out = _lt_convert(
+                details_path=details_path,
+                summary_path=summary_path,
+                bot_type=args.bot_type,
+                output_dir=args.dashboard_dir,
+            )
+            print(f"[Dashboard] Done → {out}")
+
     except Exception as e:
         print(f"FATAL: {type(e).__name__}: {e}")
         sys.exit(1)

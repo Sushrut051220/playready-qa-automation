@@ -773,6 +773,12 @@ def _sync_canonical_outputs_to_reports(root: Path, report_mode: str = "all") -> 
                 _copy_file_if_exists(trace_zip, dest)
         _copy_file_if_exists(root / "artifacts" / "dspy" / "dspy_results.json", ui_report_dir / "dspy_results.json")
         _copy_file_if_exists(root / "artifacts" / "dspy" / "dspy_score_summary.json", ui_report_dir / "dspy_score_summary.json")
+        # Mirror DSPy's canonical results into their own evaluator folder (reports/dspy/),
+        # alongside the bundled UI/E2E copy above.
+        dspy_report_dir = reports_dir / "dspy"
+        dspy_report_dir.mkdir(parents=True, exist_ok=True)
+        _copy_file_if_exists(root / "artifacts" / "dspy" / "dspy_results.json", dspy_report_dir / "dspy_results.json")
+        _copy_file_if_exists(root / "artifacts" / "dspy" / "dspy_score_summary.json", dspy_report_dir / "dspy_score_summary.json")
 
     if generate_bridge:
         bridge_report_dir.mkdir(parents=True, exist_ok=True)

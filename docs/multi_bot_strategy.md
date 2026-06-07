@@ -199,6 +199,51 @@ hyperparameters = {
 
 ## Dashboard Integration (DeepEval Dashboard)
 
+### Enterprise Dashboard — Completed Features (2026-06-06)
+
+All three dashboard pages have been upgraded to enterprise grade.
+
+#### Metrics & Trends Page — DONE
+
+Four tabs replacing the original 2-chart view:
+
+| Tab | Features |
+|-----|----------|
+| **Trends** | Avg score multi-line chart, Pass Rate multi-line chart, Pass/Fail stacked bar per run, Score distribution histogram (per selected metric), Enhanced per-metric cards (Best/Avg/Worst + visual pass rate bar + trend arrow) |
+| **Comparison** | Bot vs bot grouped bar chart (public/customer/private side-by-side per metric), Bot × Metric detail table with avg score and pass % |
+| **Heatmap** | Color-coded Metric × Run grid — green=high score, red=low; shows quality drift at a glance across all runs |
+| **Regressions** | Live list of PASS→FAIL flips and score drops >0.15 with context; or "all clear" if none |
+
+KPI row: Eval Runs / Metrics Tracked / Overall Pass Rate / Regressions count / Bot Coverage
+
+New backend endpoints added:
+- `GET /api/metrics/bot-comparison` — per-bot per-metric avg score and pass rate
+- `GET /api/metrics/heatmap` — metric × run grid for heatmap rendering
+- Load-test runs excluded from metric analytics (filter in `_filtered()`)
+
+#### Tracer View Page — DONE
+
+Enterprise span waterfall with filters, KPIs, and charts replacing the original 6-column flat table:
+
+| Section | Features |
+|---------|---------|
+| **Filter bar** | Status (OK/Errored), Span Type (LLM/Retriever/Tool/Agent/Base), full-text search (trace name + test case + input) |
+| **KPI row** | Total Traces, Errored count, Error Rate %, Total Spans, Avg Spans/Trace, Avg Duration, P95 Duration, Total Tokens |
+| **Charts** | Span Type Distribution (donut: llm/retriever/tool/agent/base counts), Trace Duration Distribution (histogram: <1s/1-5s/5-10s/10-30s/30s+) |
+| **Enhanced table** | Trace Name + input preview, Run, Status badge, Duration (red if >10s), Span type badges (LLM:N / Retriever:N), Tokens, Time |
+| **Span Waterfall** | Click any row → expands inline; horizontal timeline bars per span proportional to duration, color-coded by type, shows model name + token count + error message per span |
+
+New backend additions:
+- `GET /api/traces/stats` — KPI aggregates (total, errored, span counts, duration histogram)
+- Enhanced `GET /api/traces` — added `?span_type=`, `?status=`, `?min_ms=`, `?max_ms=` filters; response includes `durationMs`, `spanTypeCounts`, `totalTokens`, `errorMsg`, `input` preview
+- New aggregator function: `compute_trace_stats()`, `_span_type_counts()`, `_trace_duration_ms()`, `_trace_tokens()`, `_first_error()`
+
+#### Load Test Tab (Latency Page) — DONE (previously logged)
+
+Single command, enterprise metrics (P50–P99, Apdex, StdDev, histogram, run-over-run deltas), SLA breach detection — see Load Testing section below.
+
+---
+
 The dashboard at `http://localhost:5000` supports the following which maps directly to our multi-bot needs:
 
 ### How Bot Types Will Appear in the Dashboard
@@ -566,87 +611,181 @@ All three bots (Public, Customer, Private) use MCP (Model Context Protocol) for 
 
 ## Load Testing — Dashboard Integration
 
-### Current State
+### Status: COMPLETE (2026-06-06)
 
-The PlayReady QA project has `scripts/run_agent_load_test.py` which runs concurrent load tests against the Azure Foundry agent endpoint. It produces:
-
-| Output File | Contents |
-|-------------|----------|
-| `agent_load_summary_TIMESTAMP.json` | Overall stats — P50/P95/P99, throughput, SLA evaluation, RCA, recommendations |
-| `agent_load_details_TIMESTAMP.json` | Per-request records — `latency_seconds`, `token_usage`, `run_status`, `error_type` |
-| `agent_load_details_TIMESTAMP.csv` | Flattened CSV version |
-| `agent_load_bridge_TIMESTAMP.xlsx` | Excel report with latency percentiles, SLA, errors |
-
-**Problem:** These results are not appearing on the dashboard Latency page.
+The full enterprise load testing pipeline is implemented and operational.
 
 ---
 
-### Why It Does Not Show on the Dashboard
-
-The dashboard Latency page reads latency exclusively from **span timestamps** nested inside `trace.llmSpans[].startTime` and `endTime` (ISO8601). The load test outputs a flat `latency_seconds` number in files with the wrong name.
-
-| Issue | Load Test Output | Dashboard Expects |
-|-------|-----------------|-------------------|
-| File name | `agent_load_details_*.json` | `test_run_*.json` |
-| Latency format | `"latency_seconds": 5.2` (flat float) | `startTime` + `endTime` ISO8601 on each span |
-| Structure | Flat request list | `testCases[].trace.llmSpans[]` |
-| Span types | None | `llm`, `retriever`, `tool`, `agent`, `base` |
-
-The dashboard's aggregator (`aggregator.py`) computes latency as:
-```
-duration_ms = (datetime.fromisoformat(endTime) - datetime.fromisoformat(startTime)) * 1000
-```
-It only reads files named `test_run_*.json` from `eval_history/`. Load test files never reach it.
-
----
-
-### Integration Approach — Non-Disruptive Bridge
-
-The fix is a **bridge script** that converts what the load test already produces into what the dashboard expects. Zero changes to `run_agent_load_test.py` or the existing RAGAS/Foundry eval pipeline.
+### Architecture Overview
 
 ```
-run_agent_load_test.py              (unchanged)
+scripts/run_agent_load_test.py --bot-type public --users 5 --limit 10 \
+    --dashboard-dir "C:\Users\SushrutNistane\deepeval-dashboard\eval_history"
         |
-        v
-agent_load_details_TIMESTAMP.json   (unchanged output)
-        |
-        v
-scripts/load_test_to_dashboard.py   ← NEW bridge script
-        |
-        v
-eval_history/test_run_loadtest_TIMESTAMP.json
-        |
-        v
-Dashboard Latency Page              (now shows load test data)
+        ├─► reports/bridge/agent_load_details_TIMESTAMP.json   (raw per-request records)
+        ├─► reports/bridge/agent_load_summary_TIMESTAMP.json   (SLA verdict, RCA, targets)
+        └─► [auto-calls load_test_to_dashboard.py]
+                |
+                v
+        eval_history/test_run_loadtest_TIMESTAMP.json           (dashboard-ready format)
+                |
+                v
+        Dashboard Latency Page → Load Test tab                  (live data)
 ```
 
-**What the bridge does:**
-- Reads `agent_load_details_*.json`
-- For each request record, reconstructs span timestamps:
-  - `startTime = recorded request_time` (ISO8601)
-  - `endTime = startTime + latency_seconds`
-- Wraps each request as a test case with one `llmSpan` of type `"llm"`
-- Writes to `eval_history/test_run_loadtest_TIMESTAMP.json`
-- Sets `project: "playready-loadtest"` in hyperparameters — load test runs appear as a **separate project** in the dashboard, completely isolated from regular eval runs
-
-**Bot type support:** Pass `--bot-type` to the bridge so load test runs for each bot appear under their own project:
-```
-playready-loadtest-public
-playready-loadtest-customer
-playready-loadtest-private
+**Single command** — run load test AND push to dashboard in one step:
+```bash
+python scripts\run_agent_load_test.py --bot-type public --users 5 --limit 10 \
+    --dashboard-dir "C:\Users\SushrutNistane\deepeval-dashboard\eval_history"
 ```
 
 ---
 
-### What Shows on Dashboard After Integration
+### Output Files
 
-| Dashboard Section | What Appears |
-|------------------|--------------|
-| Latency page | P50, P95, P99 per span type from load test runs |
-| Projects filter | `playready-loadtest-*` isolated from regular eval projects |
-| SLOs | Set `latency_p95 ≤ 5000ms` for load test project independently |
-| Bug detector | LATENCY bug category fires if P95 exceeds 2× SLO threshold |
-| Regular eval runs | Completely unaffected — different file prefix, different project |
+| File | Contents | Git |
+|------|----------|-----|
+| `reports/bridge/agent_load_details_TIMESTAMP.json` | Per-request: latency, tokens, error type, status | Gitignored |
+| `reports/bridge/agent_load_summary_TIMESTAMP.json` | P50/P95/P99, Apdex, RCA, SLA verdict, recommendations | Gitignored |
+| `eval_history/test_run_loadtest_TIMESTAMP.json` | Dashboard-ready: spans, metrics, hyperparameters | Gitignored |
+
+---
+
+### Enterprise Dashboard Features (Load Test Tab)
+
+The Latency page has two tabs: **Infrastructure** (eval run traces) and **Load Test** (load test runs). The Load Test tab includes:
+
+#### KPI Summary Row 1 — Run-level Metrics
+| Card | Description |
+|------|-------------|
+| Total Runs | Number of load test runs pushed to dashboard |
+| Total Requests | Sum of all requests across runs |
+| Avg Throughput | Requests per second across runs |
+| Avg Failure Rate | Failed requests / total requests |
+| SLA Status | PASS/FAIL badge based on targets |
+| Apdex | Score badge (Excellent ≥0.94 / Good ≥0.85 / Fair ≥0.70 / Poor <0.70) |
+
+#### KPI Summary Row 2 — Percentile Tiles
+| Tile | Metric |
+|------|--------|
+| P50 | Median latency (ms) |
+| P75 | 75th percentile latency (ms) |
+| P90 | 90th percentile latency (ms) |
+| P95 | 95th percentile latency — primary SLA target (ms) |
+| P99 | 99th percentile latency (ms) |
+| Avg | Mean latency (ms) |
+| Min | Fastest response (ms) |
+| Max | Slowest response (ms) |
+| StdDev | Latency standard deviation — consistency indicator (ms) |
+
+#### Charts
+| Chart | Description |
+|-------|-------------|
+| Percentile Trends | P50/P75/P90/P95/P99 over time with SLA reference line |
+| Throughput & Concurrency | Requests/sec (bar) + Virtual Users (line), dual-axis |
+| Failure Rate & Apdex | Failure % (bar) + Apdex score (line), dual-axis |
+| Avg/Min/Max/StdDev Trends | All 4 stats per run on one chart |
+| Response Time Distribution | Histogram: 0-1s / 1-3s / 3-5s / 5-8s / 8-12s / 12s+ (color-coded green→red) |
+| Per-Bot Latency | Grouped bars P50/P75/P90/P95/P99 per bot type |
+| Token Usage | Avg tokens per run |
+| Error Breakdown | Donut chart + detail table with % bars |
+
+#### Tables
+| Table | Columns |
+|-------|---------|
+| Per-Bot Summary | Bot, Runs, Requests, P50, P75, P90, P95, P99, Avg, Min, Max, StdDev, Apdex, Fail%, Tokens (15 cols) |
+| All Runs | Run, Date, Bot, Users, Requests, P50, P75, P90, P95, P99, Avg, Min, Max, StdDev, Apdex, Fail%, Tput, Tokens, ΔP95, ΔFail, SLA, Duration (22 cols with ▲▼ run-over-run deltas) |
+| Slowest 15 | Request, latency, "over SLA by Xms" column |
+
+#### Filters
+- **Bot filter**: All / public / customer / private
+- **Virtual Users filter**: All / 1 / 5 / 10 / 20 / 50 (auto-detected from runs)
+
+---
+
+### Apdex Score Guide
+
+Apdex (Application Performance Index) — industry-standard score from 0 to 1.
+
+**Formula:** `(satisfied + tolerating × 0.5) / total`
+
+| Zone | Latency | Contributes |
+|------|---------|-------------|
+| Satisfied | ≤ 3000 ms | 1.0 per request |
+| Tolerating | 3001 – 12000 ms | 0.5 per request |
+| Frustrated | > 12000 ms | 0.0 per request |
+
+| Score | Rating | Meaning |
+|-------|--------|---------|
+| 0.94 – 1.00 | Excellent | Users are satisfied |
+| 0.85 – 0.93 | Good | Minor issues |
+| 0.70 – 0.84 | Fair | Noticeable degradation |
+| 0.50 – 0.69 | Poor | Many users frustrated |
+| < 0.50 | Unacceptable | Production risk |
+
+> PlayReady conversational RAG target: **Apdex ≥ 0.70**
+
+---
+
+### How Daily Runs Accumulate in Trends
+
+Each time you run the single command, a new `test_run_loadtest_TIMESTAMP.json` is written. The dashboard auto-detects all files (30-second cache refresh). All charts show **run-over-run trends** — run 1, run 2, … run N on the X-axis. The "All Runs" table shows ▲▼ deltas versus the previous run so regressions are immediately visible.
+
+Daily workflow example:
+```
+Day 1: python scripts\run_agent_load_test.py --users 5  --limit 10 --dashboard-dir ...
+Day 2: python scripts\run_agent_load_test.py --users 10 --limit 10 --dashboard-dir ...
+Day 3: python scripts\run_agent_load_test.py --users 20 --limit 10 --dashboard-dir ...
+```
+After 3 days, trends show how P95 and Apdex change as concurrency doubles.
+
+---
+
+### SLA Dashboard — Load Test SLOs
+
+#### Assessment: YES — improvements were needed and are now implemented
+
+The existing SLO system was missing load-test-specific SLO types. Improvements made:
+
+**New SLO types added** (in `backend/routers/sla.py` and `backend/services/sla_calculator.py`):
+
+| SLO Type | What It Measures | Auto-filters to |
+|----------|-----------------|-----------------|
+| `loadtest_apdex` | Apdex score across all load test spans | `test_run_loadtest_*` files only |
+| `loadtest_failure_rate` | Failed requests / total requests | `test_run_loadtest_*` files only |
+| `latency_p95` (existing) | P95 span latency | All runs (use project filter to scope) |
+| `latency_p99` (existing) | P99 span latency | All runs (use project filter to scope) |
+
+**New default SLOs seeded** (4 load-test SLOs added to `seed_defaults()`):
+
+| SLO Name | Type | Target | Window |
+|----------|------|--------|--------|
+| Load Test P95 Latency | `latency_p95` (llm span) | ≤ 12000 ms | last 5 runs |
+| Load Test P99 Latency | `latency_p99` (llm span) | ≤ 15000 ms | last 5 runs |
+| Load Test Apdex | `loadtest_apdex` | ≥ 0.70 | last 5 runs |
+| Load Test Failure Rate | `loadtest_failure_rate` | ≤ 5% | last 5 runs |
+
+**To activate** (if SLOs already seeded, add individually):
+```bash
+# Re-seed on fresh install (deletes slos.json first)
+del "C:\Users\SushrutNistane\deepeval-dashboard\eval_history\slos.json"
+curl -X POST http://localhost:5000/api/sla/seed-defaults
+
+# Or add individually via API
+curl -X POST http://localhost:5000/api/sla/slos \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Load Test Apdex","type":"loadtest_apdex","operator":">=","target":0.7,"windowRuns":5}'
+```
+
+**Project-scoped SLA views** — use the `?project=` filter to isolate load test SLIs:
+```
+GET /api/sla/status?project=playready-loadtest-public
+GET /api/sla/compliance?project=playready-loadtest-customer
+```
+
+#### SLO Breach Behaviour
+When a new load test run is pushed, `check_and_fire_breaches()` auto-fires. If P95 exceeds 12000ms or Apdex drops below 0.70, a breach is recorded in `eval_history/sla_breaches.json` and a webhook event `slo_breach` is emitted. Breaches are visible on the SLA dashboard page and can be resolved manually.
 
 ---
 
@@ -654,10 +793,242 @@ playready-loadtest-private
 
 | File | Change |
 |------|--------|
+| `scripts/run_agent_load_test.py` | Added `--bot-type`, `--dashboard-dir` CLI args; single command pushes to dashboard |
 | `scripts/load_test_to_dashboard.py` | NEW — bridge that converts load test JSON → `test_run_loadtest_*.json` |
-| `scripts/run_agent_load_test.py` | No change — output format stays as-is |
-| `eval_history/` | Receives new `test_run_loadtest_*.json` files from bridge |
-| `.env` | No change needed |
+| `deepeval-dashboard/backend/services/aggregator.py` | Added `_apdex()`, `_stddev()`, `_hist_buckets()` helpers; rewrote `compute_loadtest_summary()` with enterprise metrics |
+| `deepeval-dashboard/backend/routers/latency.py` | Added `/api/latency/loadtest` and `/api/latency/loadtest/trends` endpoints |
+| `deepeval-dashboard/backend/routers/sla.py` | Added `loadtest_apdex`, `loadtest_failure_rate` SLO types; added 4 load test default SLOs |
+| `deepeval-dashboard/backend/services/sla_calculator.py` | Added compute handlers for new SLO types |
+| `deepeval-dashboard/backend/static/dashboard.html` | Enterprise Load Test tab with 8 charts, 3 tables, 22-column runs view |
+
+---
+
+### SLA Benchmark Targets (PlayReady Conversational RAG)
+
+| Metric | Target | Rationale |
+|--------|--------|-----------|
+| Avg Latency | ≤ 10 s | Acceptable conversational wait |
+| P95 Latency | ≤ 12 s | 95% of users see acceptable response |
+| P99 Latency | ≤ 15 s | Worst-case ceiling |
+| Failure Rate | ≤ 5% | Reliability baseline |
+| Throughput | ≥ 1 req/s | Concurrency baseline |
+| Apdex (T=3s) | ≥ 0.70 | Fair — acceptable for enterprise RAG |
+| Avg Tokens | ≤ 8000 | Cost efficiency |
+
+---
+
+## DeepEval Advanced Features — PlayReady Use Cases
+
+### Overview of Span Types (5 total)
+
+| Span Type | DeepEval Class | What It Tracks |
+|-----------|---------------|----------------|
+| `llm` | `LLMSpan` | LLM API calls — model, tokens, latency, cost |
+| `retriever` | `RetrieverSpan` | RAG retrieval — embeddings model, top_k, chunks returned |
+| `tool` | `ToolSpan` | MCP tool / function calls — tool name, input args, output |
+| `agent` | `AgentSpan` | Agent orchestration steps — reasoning steps, sub-task chains |
+| `base` | `BaseSpan` | Generic/custom spans — any other instrumented step |
+
+The dashboard's Tracer View handles all 5. Current bridges synthesize `llmSpans` from latency data.
+
+---
+
+### GEval — LLM-as-Judge with Custom Criteria
+
+**What it is:** GEval uses a second LLM (the "judge") to score each response on a free-text rubric. Unlike fixed metrics (F1, ROUGE), it can evaluate nuanced domain-specific rules.
+
+**How to configure:**
+```python
+from deepeval.metrics import GEval
+from deepeval.test_case import LLMTestCaseParams
+
+metric = GEval(
+    name="PlayReadyDomainAdherence",
+    criteria=(
+        "The response must only reference PlayReady DRM concepts, "
+        "license acquisition, key delivery, or content protection. "
+        "Score 0 if the response discusses unrelated topics. "
+        "Score 1 if it correctly answers within the PlayReady domain."
+    ),
+    evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT],
+    threshold=0.7,
+    model="gpt-4o",   # judge model — can differ from the bot's model
+)
+```
+
+**PlayReady-specific GEval metrics:**
+
+| GEval Name | Criteria Summary | Why Useful |
+|------------|-----------------|------------|
+| `KBScopeEnforcement` | Response must not reference Customer KB content for Public Bot queries | Tests bot isolation — critical for data leakage |
+| `PlayReadyDomainAdherence` | Response stays in DRM / license / content protection domain | Catches hallucinations into unrelated topics |
+| `PolicyCitationAccuracy` | If a policy or PDF is cited, the citation matches the actual source | Validates PDF grounding claims |
+| `NonAdviceCompliance` | Response does not give legal or security advice; stays factual | Regulatory / liability guard |
+| `FallbackQuality` | When bot falls back ("I don't know"), the fallback is graceful and directs user appropriately | Tests graceful degradation |
+| `MCPScopeRespect` | Response does not reveal data from MCP tools the user's bot tier does not have access to | MCP scoping enforcement |
+
+**Integration example:**
+```python
+from deepeval import evaluate
+from deepeval.test_case import LLMTestCase
+
+test_case = LLMTestCase(
+    input="What is my customer account limit?",
+    actual_output=bot_response,
+    retrieval_context=retrieved_chunks,
+)
+evaluate([test_case], [kb_scope_metric, domain_adherence_metric])
+```
+
+---
+
+### DAGMetric — Chained Evaluation Logic
+
+**What it is:** DAGMetric runs evaluation as a Directed Acyclic Graph — each node is a check, and the next node runs only if the previous passes. This models sequential quality gates cleanly.
+
+**PlayReady DAG example — Grounding → Scope → Format:**
+```python
+from deepeval.metrics.dag import (
+    DAGMetric, TaskNode, BinaryJudgementNode, NonBinaryJudgementNode
+)
+
+grounding_check = BinaryJudgementNode(
+    criteria="Is the response grounded in the retrieved chunks? Answer Yes/No.",
+)
+scope_check = BinaryJudgementNode(
+    criteria="Does the response stay within the bot's KB scope (no leaked KB data)? Yes/No.",
+    children=[grounding_check],  # only runs if grounding passes
+)
+format_check = NonBinaryJudgementNode(
+    criteria="Rate 1-5: Is the response well-structured and free of jargon?",
+    children=[scope_check],
+)
+
+dag_metric = DAGMetric(
+    name="PlayReadyQualityGate",
+    dag=format_check,
+    threshold=0.7,
+)
+```
+
+**Why DAG over standalone metrics:**
+- Short-circuits: if grounding fails, don't waste LLM calls on format scoring
+- Models real review flow: grounding → safety → format → tone
+- Single pass/fail verdict with per-node explanations visible in dashboard
+
+---
+
+### MCPTaskCompletionMetric
+
+**What it is:** DeepEval's built-in metric for evaluating whether an MCP agent completed its assigned task. Checks tool call correctness, output alignment with goal.
+
+**PlayReady use case:**
+```python
+from deepeval.metrics import MCPTaskCompletionMetric
+
+mcp_metric = MCPTaskCompletionMetric(
+    threshold=0.8,
+    model="gpt-4o",
+)
+# Use with ConversationalTestCase where messages include tool call turns
+```
+
+Useful for testing Public/Customer/Private bot MCP tool routing — e.g., verify that a Public Bot never calls a Customer KB MCP tool.
+
+---
+
+### ConversationalGEval
+
+**What it is:** GEval applied to a multi-turn conversation. Evaluates the full conversation thread, not just the last turn.
+
+**PlayReady use case:** Test that in a multi-turn session, the bot maintains consistent KB scope. If it cited a Customer KB doc in turn 2, it should not pretend it doesn't know that in turn 4.
+
+```python
+from deepeval.metrics import ConversationalGEval
+from deepeval.test_case import ConversationalTestCase, Message
+
+metric = ConversationalGEval(
+    name="SessionScopeConsistency",
+    criteria=(
+        "Across all turns, does the bot consistently respect its KB scope? "
+        "It must not reveal Customer KB content to a Public Bot user in any turn."
+    ),
+    threshold=0.8,
+)
+```
+
+---
+
+### Recommended Addition: 4 New GEval Metrics for This Project
+
+These can be added to the RAGAS layer (`ragas_layer/ragas_runner.py`) or as a standalone DeepEval suite:
+
+```python
+# ragas_layer/geval_metrics.py  (new file to create when ready)
+from deepeval.metrics import GEval
+from deepeval.test_case import LLMTestCaseParams
+
+KB_SCOPE_METRIC = GEval(
+    name="KBScopeEnforcement",
+    criteria=(
+        "The response must not include content exclusively available "
+        "in Customer or Private KB when the bot_type is 'public'. "
+        "Score 1 if scope is respected, 0 if leaked."
+    ),
+    evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT,
+                       LLMTestCaseParams.RETRIEVAL_CONTEXT],
+    threshold=0.9,
+)
+
+DOMAIN_METRIC = GEval(
+    name="PlayReadyDomainAdherence",
+    criteria=(
+        "The response discusses only PlayReady DRM, license acquisition, "
+        "content protection, key delivery, or related Microsoft DRM topics. "
+        "Score 0 for off-domain answers."
+    ),
+    evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT],
+    threshold=0.8,
+)
+
+CITATION_METRIC = GEval(
+    name="PolicyCitationAccuracy",
+    criteria=(
+        "If the response cites a document or policy, the citation must "
+        "appear in the retrieval context. Score 0 for hallucinated citations."
+    ),
+    evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT,
+                       LLMTestCaseParams.RETRIEVAL_CONTEXT],
+    threshold=0.85,
+)
+
+FALLBACK_METRIC = GEval(
+    name="FallbackQuality",
+    criteria=(
+        "When the bot responds with a fallback ('I don't know', 'I can't help'), "
+        "the fallback must be graceful, not abrupt, and suggest next steps. "
+        "Score 1 for graceful fallback or for non-fallback answers."
+    ),
+    evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT],
+    threshold=0.75,
+)
+```
+
+These 4 GEval metrics + the existing RAGAS bridge = **32 total evaluation signals** per test case.
+
+---
+
+### Dashboard Bridge Compatibility
+
+All three framework bridges now write to eval_history:
+
+| Framework | Bridge File | Output File Pattern | Status |
+|-----------|-------------|---------------------|--------|
+| RAGAS (8 metrics) | `ragas_layer/dashboard_bridge.py` | `test_run_<epoch>.json` | ✅ Working |
+| Azure Foundry (13 metrics) | `foundry_layer/foundry_to_dashboard.py` | `test_run_foundry_<epoch>.json` | ✅ Added |
+| DSPy (5 metrics + composite) | `dspy_layer/dspy_to_dashboard.py` | `test_run_dspy_<epoch>.json` | ✅ Added |
+
+All bridges synthesize `llmSpans` so every test case appears in the Tracer View.
 
 ---
 

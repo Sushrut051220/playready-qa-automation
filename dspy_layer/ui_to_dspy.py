@@ -438,4 +438,12 @@ def run_dspy_evaluation(
     (output_dir / f"dspy_results_{timestamp}.json").write_text(results_json, encoding="utf-8")
     (output_dir / "dspy_score_summary.json").write_text(summary_json, encoding="utf-8")
     (output_dir / f"dspy_score_summary_{timestamp}.json").write_text(summary_json, encoding="utf-8")
+
+    # Push results to DeepEval dashboard
+    try:
+        from dspy_layer.dspy_to_dashboard import save_dspy_to_dashboard
+        save_dspy_to_dashboard(payload)
+    except Exception as _bridge_err:
+        print(f"  [dspy-bridge] skipped: {_bridge_err}")
+
     return payload

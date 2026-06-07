@@ -16,10 +16,29 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-_HIST = Path(os.getenv(
-    "DEEPEVAL_RESULTS_FOLDER",
-    r"C:\Users\v-snistane\tools\deepeval-dashboard\eval_history",
-))
+def _find_eval_history() -> Path:
+    """Mirror the same discovery logic used by dashboard_bridge.py."""
+    env_val = os.getenv("DEEPEVAL_RESULTS_FOLDER")
+    if env_val:
+        return Path(env_val)
+    dashboard_names = ["deepeval-dashboard", "deepeval_dashboard"]
+    search_roots = [
+        Path(__file__).parent.parent,
+        Path(__file__).parent.parent.parent,
+        Path.home(),
+    ]
+    for root in search_roots:
+        for name in dashboard_names:
+            candidate = root / name
+            if (candidate / "backend" / "main.py").exists():
+                hist = candidate / "eval_history"
+                hist.mkdir(parents=True, exist_ok=True)
+                return hist
+    fallback = Path(__file__).parent / "artifacts" / "eval_history"
+    fallback.mkdir(parents=True, exist_ok=True)
+    return fallback
+
+_HIST = _find_eval_history()
 
 
 def _now_iso() -> str:
@@ -158,7 +177,7 @@ class LocalTracer:
             "spans":  [root_dict],
             "case_key": case_key,
             "hyperparameters": {
-                "project": "playready-foundry",
+                "project": "playready",
                 "source": "local-tracer",
             },
         }
