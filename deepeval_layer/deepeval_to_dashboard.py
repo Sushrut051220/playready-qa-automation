@@ -269,6 +269,42 @@ def _build_test_case(row: dict, model: str, latency_s: float = 1.0) -> dict:
     }
 
 
+# ── Conversational test case builder (Track 2) ───────────────────────────────
+
+def _build_conversational_test_case(session: dict, model: str, latency_s: float = 1.0) -> dict:
+    """
+    session can be:
+      - dict with keys: name, turns (list of {role, content, ...}), context,
+        metrics (list of Metric objects or dicts), success, tags, metadata
+    """
+    turns = session.get("turns") or []
+    raw_metrics = session.get("metrics") or []
+    metrics_data = [_normalise_metric(m) for m in raw_metrics]
+    metrics_data = [m for m in metrics_data if m is not None]
+
+    success = session.get("success")
+    if success is None:
+        success = bool(metrics_data) and all(m["success"] for m in metrics_data)
+
+    row_lat = session.get("latency_s") or latency_s
+
+    return {
+        "name":            str(session.get("name", "")),
+        "success":         success,
+        "metricsData":     metrics_data,
+        "runDuration":     row_lat,
+        "evaluationCost":  sum(m.get("evaluationCost", 0.0) for m in metrics_data),
+        "turns":           [
+            {"role": t.get("role"), "content": t.get("content", "")}
+            for t in turns
+        ],
+        "scenario":        session.get("scenario"),
+        "context":         [str(c) for c in (session.get("context") or [])],
+        "tags":            session.get("tags") or ["deepeval", "conversational"],
+        "metadata":        session.get("metadata") or {},
+    }
+
+
 # ── metricsScores rollup ──────────────────────────────────────────────────────
 
 def _build_metrics_scores(test_cases: list[dict]) -> list[dict]:
@@ -297,7 +333,8 @@ def _build_metrics_scores(test_cases: list[dict]) -> list[dict]:
 # ── Public entry point ────────────────────────────────────────────────────────
 
 def save_deepeval_to_dashboard(
-    results: list[dict],
+    results: list[dict] | None = None,
+    conversational_results: list[dict] | None = None,
     model: str = "gpt-4o",
     project: str = "playready",
     environment: str = "production",
@@ -308,8 +345,12 @@ def save_deepeval_to_dashboard(
     Write a test_run_deepeval_<epoch>.json to the dashboard's eval_history.
 
     Args:
-        results:     List of row dicts. Each row must have at least:
-                       question, answer/actual_output, metrics (list).
+        results:               List of single-turn row dicts (Track 1). Each
+                                 row must have at least: question,
+                                 answer/actual_output, metrics (list).
+        conversational_results: List of multi-turn session dicts (Track 2).
+                                 Each session must have at least: name,
+                                 turns (list of {role, content}), metrics (list).
         model:       LLM model name used for responses.
         project:     Project name shown in dashboard.
         environment: "production" | "staging" | "dev".
@@ -319,11 +360,16 @@ def save_deepeval_to_dashboard(
     Returns:
         Path to the written JSON file.
     """
-    test_cases = [_build_test_case(r, model) for r in results]
-    ms = _build_metrics_scores(test_cases)
+    results = results or []
+    conversational_results = conversational_results or []
 
-    passed = sum(1 for tc in test_cases if tc["success"])
-    failed = len(test_cases) - passed
+    test_cases = [_build_test_case(r, model) for r in results]
+    conv_cases = [_build_conversational_test_case(r, model) for r in conversational_results]
+    all_cases = test_cases + conv_cases
+    ms = _build_metrics_scores(all_cases)
+
+    passed = sum(1 for tc in all_cases if tc["success"])
+    failed = len(all_cases) - passed
 
     hyper: dict = {
         "framework":   "deepeval",
@@ -343,14 +389,15 @@ def save_deepeval_to_dashboard(
         "datasetAlias":   "playready-deepeval-dataset",
         "testPassed":     passed,
         "testFailed":     failed,
-        "runDuration":    sum(tc.get("runDuration") or 0.0 for tc in test_cases),
-        "evaluationCost": sum(tc.get("evaluationCost") or 0.0 for tc in test_cases),
+        "runDuration":    sum(tc.get("runDuration") or 0.0 for tc in all_cases),
+        "evaluationCost": sum(tc.get("evaluationCost") or 0.0 for tc in all_cases),
         "metricsScores":  ms,
         "testCases":      test_cases,
-        "conversationalTestCases": [],
+        "conversationalTestCases": conv_cases,
     }
 
     dest = _find_eval_history() / f"test_run_deepeval_{epoch}.json"
     dest.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"  [deepeval-bridge] wrote {len(test_cases)} cases -> {dest.name} (pass={passed}, fail={failed})")
+    print(f"  [deepeval-bridge] wrote {len(test_cases)} case(s) + {len(conv_cases)} conversational session(s) "
+          f"-> {dest.name} (pass={passed}, fail={failed})")
     return dest

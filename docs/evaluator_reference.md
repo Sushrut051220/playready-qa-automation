@@ -412,19 +412,19 @@ lands entirely in `deepeval_layer/deepeval_evaluator.py`. The table below shows 
 | 4 | `AnswerRelevancyMetric` | ✅ existing | Standard | Generic relevance (cross-checks RAGAS/Foundry) |
 | 5 | `FaithfulnessMetric` | ✅ existing | Standard | Generic faithfulness (cross-checks RAGAS/Foundry) |
 | 6 | `HallucinationMetric` | ✅ existing | Standard | Fabricated-fact detection |
-| 7 | `PIILeakageMetric` | 🆕 Tier 1 (P0) | Standard | Personal-data leak detection — Customer/Private bots |
-| 8 | `NonAdviceMetric` | 🆕 Tier 1 (P0) | Standard | Blocks unauthorized legal/financial/compliance advice |
+| 7 | `PIILeakageMetric` | ✅ implemented (Track 1) | Standard | Personal-data leak detection — Customer/Private bots |
+| 8 | `NonAdviceMetric` | ✅ implemented (Track 1) | Standard | Blocks unauthorized legal/financial/compliance advice |
 | 9 | `MCPUseMetric` | 🆕 Tier 1 (P1) | Standard | MCP resource/tool scope verification per persona tier |
 | 10 | `MCPTaskCompletionMetric` | 🆕 Tier 1 (P1) | Standard | Confirms task completed via correctly-scoped MCP tools |
-| 11 | `TopicAdherenceMetric` | 🆕 Tier 1 (P1) | Standard | Stays on PlayReady topic, refuses off-topic/adversarial prompts |
-| 12 | `RoleViolationMetric` | 🆕 Tier 1 (P1) | Standard | Detects persona break (e.g. Public bot acting like Private bot) |
+| 11 | `TopicAdherenceMetric` | ✅ implemented (Track 2) | Conversational | Stays on PlayReady topic, refuses off-topic/adversarial prompts |
+| 12 | `RoleViolationMetric` | ✅ implemented (Track 1) | Standard | Detects persona break (e.g. Public bot acting like Private bot) |
 | 13 | `MultiTurnMCPUseMetric` | 🆕 Tier 2 (P2) | Conversational | MCP-scope leak detection across multi-turn sessions |
 | 14 | `ToolCorrectnessMetric` | 🆕 Tier 2 (P2) | Standard | Foundry agent's internal tool-call correctness |
 | 15 | `ArgumentCorrectnessMetric` | 🆕 Tier 2 (P2) | Standard | Validates tool-call arguments, not just tool choice |
 | 16 | `TaskCompletionMetric` | 🆕 Tier 2 (P2) | Standard | Did the bot resolve the user's actual request? |
-| 17 | `ConversationCompletenessMetric` | 🆕 Tier 2 (P2) | Conversational | Were all user intents addressed across the session? |
-| 18 | `KnowledgeRetentionMetric` | 🆕 Tier 2 (P2) | Conversational | Does the bot remember earlier-session facts? |
-| 19 | `PromptAlignmentMetric` | 🆕 Tier 2 (P2) | Standard | Adherence to system-prompt instructions |
+| 17 | `ConversationCompletenessMetric` | ✅ implemented (Track 2) | Conversational | Were all user intents addressed across the session? |
+| 18 | `KnowledgeRetentionMetric` | ✅ implemented (Track 2) | Conversational | Does the bot remember earlier-session facts? |
+| 19 | `PromptAlignmentMetric` | ✅ implemented (Track 1) | Standard | Adherence to system-prompt instructions |
 
 **Net effect:** DeepEval's footprint in this project would roughly **triple** (6 → 19 active
 metrics), making it the layer specifically responsible for guarding **persona-scope
@@ -476,6 +476,48 @@ each group needs:
 3. **Then:** `MCPUseMetric` + `MCPTaskCompletionMetric` (Track 1, now unblocked by step 2)
 4. **Then:** Build the conversational/session test-case path (infrastructure work, unlocks Track 2)
 5. **Finally:** `MultiTurnMCPUseMetric`, `ConversationCompletenessMetric`, `KnowledgeRetentionMetric`
+
+### 8c. What actually shipped (post-implementation correction)
+
+Direct inspection of the upstream `deepeval` source (constructors + base classes) corrected
+two assumptions in 8a/8b above:
+
+- **`TopicAdherenceMetric` is `BaseConversationalMetric`**, not a single-turn standard metric —
+  it requires `ConversationalTestCase`/`Turn` and belongs in **Track 2**, not Track 1. The
+  roster table in §8 has been updated to reflect this (row 11).
+- **`ToolCorrectnessMetric`, `ArgumentCorrectnessMetric`, `TaskCompletionMetric`,
+  `MCPUseMetric`, `MCPTaskCompletionMetric`** all need data this project doesn't capture yet
+  (`tools_called`/`expected_tools` fields, or `requires_trace=True` MCP spans) — they remain
+  unimplemented pending the tracer/tool-call instrumentation work described in Track 3.
+
+**Track 1 — shipped (4 metrics added, 6 → 10 active):**
+`PIILeakageMetric`, `NonAdviceMetric`, `RoleViolationMetric`, `PromptAlignmentMetric` —
+landed as plain `STANDARD_METRICS` entries exactly as predicted, config grounded in
+`BOT_ROLE_DESCRIPTIONS` (from `multi_bot_strategy.md` persona definitions),
+`PROMPT_ALIGNMENT_INSTRUCTIONS`, and `NON_ADVICE_TYPES = ["legal", "financial"]`.
+
+**Track 2 — shipped (3 metrics added, 10 → 13 active):**
+`TopicAdherenceMetric`, `ConversationCompletenessMetric`, `KnowledgeRetentionMetric` —
+landed via a new parallel path:
+- `_build_conversational_sessions()`: groups every `CONVERSATION_SESSION_SIZE = 3`
+  consecutive single-turn dataset rows into one multi-turn session (`question` → user
+  `Turn`, `ground_truth` → assistant `Turn`), since the dataset stores independent Q&A
+  rows rather than pre-grouped sessions.
+- `RELEVANT_TOPICS`: grounded in the PlayReady documentation categories the dataset's
+  `expected_pdfs` actually cite (Compliance Rules, License Samples, SL3000 Playbook, Dev
+  Clients, Content Protection Whitepaper, EV Certificates, WhatsNew/release notes).
+- `run_deepeval_conversational_evaluation()` / `..._deterministic()`: parallel to the
+  existing single-turn runners, invoked via `--conversational` on the CLI.
+- `deepeval_to_dashboard.save_deepeval_to_dashboard()` extended with a
+  `conversational_results` parameter and `_build_conversational_test_case()`, populating
+  the `conversationalTestCases` array (previously always empty) alongside `testCases`.
+- `deepeval_excel_report.generate_deepeval_report_from_json()` now also maps
+  `conversationalTestCases` into report rows (one row per session, using its first user
+  turn / last assistant turn as a stand-in question/answer).
+- Verified end-to-end with `--deterministic --conversational`: produced 3 sessions ×
+  6 turns, all 3 new metrics populated, visible in both the Excel Scorecard and the
+  dashboard's conversational case view (chat-bubble turn rendering already existed in
+  `dashboard.html` from the span-model upgrade — just needed real data to display).
 
 This sequencing front-loads the 8 zero-infrastructure wins, then tackles the two
 infrastructure investments (MCP tracing, conversational test cases) each exactly once —

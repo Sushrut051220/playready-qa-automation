@@ -579,31 +579,47 @@ def generate_deepeval_report_from_json(json_path: Path, output_dir: Path | None 
     """Load a test_run_deepeval_*.json and generate the Excel report from it."""
     raw = json.loads(Path(json_path).read_text(encoding="utf-8"))
     test_cases = raw.get("testCases") or []
+    conv_cases = raw.get("conversationalTestCases") or []
     hyper = raw.get("hyperparameters") or {}
+
+    def _map_metrics(metrics_raw: list[dict]) -> list[dict]:
+        return [{
+            "name":            m.get("name", ""),
+            "score":           m.get("score"),
+            "threshold":       m.get("threshold", 0.5),
+            "success":         m.get("success", False),
+            "reason":          m.get("reason", ""),
+            "evaluation_cost": m.get("evaluationCost", 0.0),
+            "model":           m.get("evaluationModel", ""),
+        } for m in metrics_raw]
 
     results = []
     for tc in test_cases:
-        metrics_raw = tc.get("metricsData") or []
-        metrics = []
-        for m in metrics_raw:
-            metrics.append({
-                "name":            m.get("name", ""),
-                "score":           m.get("score"),
-                "threshold":       m.get("threshold", 0.5),
-                "success":         m.get("success", False),
-                "reason":          m.get("reason", ""),
-                "evaluation_cost": m.get("evaluationCost", 0.0),
-                "model":           m.get("evaluationModel", ""),
-            })
-        trace = tc.get("trace")
         results.append({
             "name":     tc.get("name", ""),
             "question": tc.get("input", ""),
             "answer":   tc.get("actualOutput", ""),
             "contexts": tc.get("retrievalContext") or [],
             "success":  tc.get("success", False),
-            "metrics":  metrics,
-            "trace":    trace,
+            "metrics":  _map_metrics(tc.get("metricsData") or []),
+            "trace":    tc.get("trace"),
+        })
+
+    # Conversational sessions (Track 2: TopicAdherence/ConversationCompleteness/
+    # KnowledgeRetention) have no single question/answer or trace — represent
+    # each multi-turn session as one row using its first/last turn content.
+    for cc in conv_cases:
+        turns = cc.get("turns") or []
+        first_user = next((t.get("content", "") for t in turns if t.get("role") == "user"), "")
+        last_assistant = next((t.get("content", "") for t in reversed(turns) if t.get("role") == "assistant"), "")
+        results.append({
+            "name":     cc.get("name", ""),
+            "question": f"[{len(turns)}-turn session] {first_user}",
+            "answer":   last_assistant,
+            "contexts": cc.get("context") or [],
+            "success":  cc.get("success", False),
+            "metrics":  _map_metrics(cc.get("metricsData") or []),
+            "trace":    None,
         })
 
     run_meta = {
