@@ -17,6 +17,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
+from azure.core.exceptions import HttpResponseError
 
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill, Font, Alignment
@@ -164,6 +165,15 @@ def _iso_now() -> str:
 def query_agent(client, agent_name, agent_version, question, request_id):
     start_time = time.time()
     start_iso = _iso_now()
+    # HTTP error-code → human label mapping
+    _HTTP_LABELS = {
+        402: ("BillingExpired",   "Azure AI package or subscription billing has expired (HTTP 402)"),
+        403: ("BillingExpired",   "Azure AI subscription expired or access denied (HTTP 403)"),
+        404: ("AgentNotFound",    "Agent not found — check FOUNDRY_AGENT_NAME / VERSION (HTTP 404)"),
+        429: ("QuotaExceeded",    "Rate limit or quota exceeded — reduce concurrency or wait (HTTP 429)"),
+        503: ("ServiceDown",      "Azure AI service temporarily unavailable (HTTP 503)"),
+    }
+
     try:
         response = client.responses.create(
             input=[{"role": "user", "content": question}],
@@ -175,33 +185,56 @@ def query_agent(client, agent_name, agent_version, question, request_id):
                 }
             },
         )
+    except HttpResponseError as e:
+        end_iso = _iso_now()
+        code = getattr(e, "status_code", 0) or 0
+        label, hint = _HTTP_LABELS.get(code, (f"HttpError{code}", str(e)[:500]))
+        return {
+            "request_id":        request_id,
+            "question":          question,
+            "answer":            f"[{label}: {hint}]",
+            "citations":         [],
+            "citation_quotes":   [],
+            "run_status":        "failed",
+            "latency_seconds":   round(time.time() - start_time, 4),
+            "request_start_iso": start_iso,
+            "request_end_iso":   end_iso,
+            "token_usage":       {"total_tokens": 0, "prompt_tokens": 0, "completion_tokens": 0},
+            "error_type":        label,
+            "error_message":     f"HTTP {code}: {hint}",
+            "answer_length":     0,
+            "citation_count":    0,
+        }
     except Exception as e:
         end_iso = _iso_now()
         return {
-            "request_id": request_id,
-            "question": question,
-            "answer": f"[AGENT CALL FAILED: {type(e).__name__}: {str(e)[:500]}]",
-            "citations": [],
-            "citation_quotes": [],
-            "run_status": "failed",
-            "latency_seconds": round(time.time() - start_time, 4),
+            "request_id":        request_id,
+            "question":          question,
+            "answer":            f"[AGENT CALL FAILED: {type(e).__name__}: {str(e)[:500]}]",
+            "citations":         [],
+            "citation_quotes":   [],
+            "run_status":        "failed",
+            "latency_seconds":   round(time.time() - start_time, 4),
             "request_start_iso": start_iso,
-            "request_end_iso": end_iso,
-            "token_usage": {"total_tokens": 0, "prompt_tokens": 0, "completion_tokens": 0},
-            "error_type": type(e).__name__,
-            "error_message": str(e)[:1000],
-            "answer_length": 0,
-            "citation_count": 0,
+            "request_end_iso":   end_iso,
+            "token_usage":       {"total_tokens": 0, "prompt_tokens": 0, "completion_tokens": 0},
+            "error_type":        type(e).__name__,
+            "error_message":     str(e)[:1000],
+            "answer_length":     0,
+            "citation_count":    0,
         }
 
     latency = round(time.time() - start_time, 4)
     end_iso = _iso_now()
     usage = getattr(response, "usage", None)
     token_usage = {
-        "total_tokens": getattr(usage, "total_tokens", 0),
-        "prompt_tokens": getattr(usage, "input_tokens", 0),
+        "total_tokens":    getattr(usage, "total_tokens", 0),
+        "prompt_tokens":   getattr(usage, "input_tokens", 0),
         "completion_tokens": getattr(usage, "output_tokens", 0),
     }
+    if token_usage["total_tokens"] == 0:
+        print(f"  [WARN] {request_id}: response succeeded but token usage = 0 "
+              f"— retrieval billing package may be inactive or usage reporting disabled")
 
     answer_text, citations, citation_quotes = extract_answer_and_citations(response)
 
