@@ -24,6 +24,7 @@ import json
 import os
 import time
 import uuid
+from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -95,7 +96,8 @@ def _build_test_case(record: dict, agent_name: str, agent_version: str,
     status      = record.get("run_status", "failed")
     latency     = float(record.get("latency_seconds", 0.0))
     token_usage = record.get("token_usage") or {}
-    error_msg   = record.get("error_message", "")
+    error_type  = record.get("error_type", "")     # e.g. BillingExpired, QuotaExceeded
+    error_msg   = record.get("error_message", "")  # full description with HTTP code
 
     start_iso = record.get("request_start_iso")
     end_iso   = record.get("request_end_iso")
@@ -129,17 +131,31 @@ def _build_test_case(record: dict, agent_name: str, agent_version: str,
     ]
 
     if not success:
+        # RequestSuccess carries the full error description (type + message)
+        reason = (f"[{error_type}] {error_msg[:300]}" if error_type
+                  else f"Request failed: {error_msg[:300]}")
         metrics_data.append({
             "name":            "RequestSuccess",
             "score":           0.0,
             "success":         False,
             "threshold":       1.0,
-            "reason":          f"Request failed: {error_msg[:200]}",
+            "reason":          reason,
             "evaluationModel": "sla-check",
             "evaluationCost":  0.0,
         })
+        # ErrorCode — one metric per failure type so dashboard metricsScores shows breakdown
+        if error_type:
+            metrics_data.append({
+                "name":            f"ErrorCode:{error_type}",
+                "score":           0.0,
+                "success":         False,
+                "threshold":       1.0,
+                "reason":          error_msg[:300] or error_type,
+                "evaluationModel": "error-classifier",
+                "evaluationCost":  0.0,
+            })
 
-    span_uuid = str(uuid.uuid4())
+    span_uuid  = str(uuid.uuid4())
     trace_uuid = str(uuid.uuid4())
 
     llm_span = {
@@ -157,7 +173,11 @@ def _build_test_case(record: dict, agent_name: str, agent_version: str,
         "outputTokenCount":   token_usage.get("completion_tokens", 0),
         "costPerInputToken":  0.0,
         "costPerOutputToken": 0.0,
-        "metadata":           {"request_id": request_id, "error": error_msg or None},
+        "metadata":           {
+            "request_id": request_id,
+            "error_type": error_type or None,
+            "error_message": error_msg[:300] or None,
+        },
     }
 
     trace = {
@@ -168,8 +188,13 @@ def _build_test_case(record: dict, agent_name: str, agent_version: str,
         "endTime":         end_iso,
         "input":           question,
         "output":          answer,
-        "metadata":        {"request_id": request_id},
-        "tags":            ["load-test"],
+        "metadata":        {
+            "request_id":    request_id,
+            "error_type":    error_type or None,
+            "error_message": error_msg[:300] or None,
+            "run_status":    status,
+        },
+        "tags":            ["load-test"] + ([f"error:{error_type}"] if error_type else []),
         "llmSpans":        [llm_span],
         "retrieverSpans":  [],
         "toolSpans":       [],
@@ -177,6 +202,10 @@ def _build_test_case(record: dict, agent_name: str, agent_version: str,
         "baseSpans":       [],
         "metricsData":     [],
     }
+
+    case_tags = ["load-test", f"status:{status}"]
+    if error_type:
+        case_tags.append(f"error:{error_type}")
 
     return {
         "name":             request_id,
@@ -186,7 +215,7 @@ def _build_test_case(record: dict, agent_name: str, agent_version: str,
         "success":          success and latency_pass,
         "runDuration":      latency,
         "evaluationCost":   0.0,
-        "tags":             ["load-test", f"status-{status}"],
+        "tags":             case_tags,
         "metricsData":      metrics_data,
         "trace":            trace,
     }
@@ -195,39 +224,22 @@ def _build_test_case(record: dict, agent_name: str, agent_version: str,
 # ── Build aggregated metricsScores block ──────────────────────────────────────
 
 def _build_metrics_scores(test_cases: list[dict]) -> list[dict]:
-    latency_scores, latency_passes, latency_fails = [], 0, 0
-    token_scores, token_passes, token_fails = [], 0, 0
-
+    """Generic rollup — automatically covers Latency, TokenUsage, RequestSuccess,
+    and any ErrorCode:* metrics added for failed requests."""
+    acc: dict = defaultdict(lambda: {"scores": [], "passes": 0, "fails": 0})
     for tc in test_cases:
         for m in tc.get("metricsData", []):
-            if m["name"] == "Latency":
-                latency_scores.append(m["score"])
-                if m["success"]:
-                    latency_passes += 1
-                else:
-                    latency_fails += 1
-            elif m["name"] == "TokenUsage":
-                token_scores.append(m["score"])
-                if m["success"]:
-                    token_passes += 1
-                else:
-                    token_fails += 1
-
+            n = m["name"]
+            if m.get("score") is not None:
+                acc[n]["scores"].append(m["score"])
+            if m.get("success"):
+                acc[n]["passes"] += 1
+            else:
+                acc[n]["fails"] += 1
     return [
-        {
-            "metric":  "Latency",
-            "scores":  latency_scores,
-            "passes":  latency_passes,
-            "fails":   latency_fails,
-            "errors":  0,
-        },
-        {
-            "metric":  "TokenUsage",
-            "scores":  token_scores,
-            "passes":  token_passes,
-            "fails":   token_fails,
-            "errors":  0,
-        },
+        {"metric": name, "scores": d["scores"], "passes": d["passes"],
+         "fails": d["fails"], "errors": 0}
+        for name, d in sorted(acc.items())
     ]
 
 
