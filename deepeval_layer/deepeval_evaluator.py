@@ -377,6 +377,27 @@ def _build_tool_calls_for_row(
     return called, expected, task, mcp_data
 
 
+# ── Azure DeepEval model builder ─────────────────────────────────────────────
+
+def _build_azure_deepeval_model():
+    """Return an AzureOpenAIModel using Entra ID (DefaultAzureCredential) — no API key."""
+    from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+    from deepeval.models import AzureOpenAIModel
+    credential = DefaultAzureCredential()
+    token_provider = get_bearer_token_provider(
+        credential, "https://cognitiveservices.azure.com/.default"
+    )
+    endpoint = (os.getenv("AZURE_OPENAI_ENDPOINT") or "").replace("/openai/v1", "").rstrip("/")
+    deployment = os.getenv("AZURE_OPENAI_CHAT_DEPLOYMENT", "gpt-4.1-mini")
+    return AzureOpenAIModel(
+        deployment_name=deployment,
+        model=deployment,
+        base_url=endpoint,
+        api_version=os.getenv("AZURE_OPENAI_API_VERSION", "2024-12-01-preview"),
+        azure_ad_token_provider=token_provider,
+    )
+
+
 # ── DeepEval evaluation (native) ──────────────────────────────────────────────
 
 def run_deepeval_evaluation(
@@ -393,11 +414,18 @@ def run_deepeval_evaluation(
         return []
 
     from deepeval import evaluate
+    from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
     from deepeval.metrics import GEval, AnswerRelevancyMetric, FaithfulnessMetric, HallucinationMetric
     from deepeval.metrics import ContextualRelevancyMetric
     from deepeval.metrics import PIILeakageMetric, NonAdviceMetric, RoleViolationMetric, PromptAlignmentMetric
-    from deepeval.test_case import LLMTestCase
+    from deepeval.test_case import LLMTestCase, LLMTestCaseParams
     from deepeval.models import DeepEvalBaseLLM
+
+    try:
+        azure_model = _build_azure_deepeval_model()
+    except Exception as _azure_err:
+        print(f"  [deepeval] Azure model init failed, using model string: {_azure_err}")
+        azure_model = model
 
     if dataset_path is None:
         dataset_path = PROJECT_ROOT / "data" / "ragas_eval_dataset_full.json"
@@ -420,7 +448,8 @@ def run_deepeval_evaluation(
                 criteria=g["criteria"],
                 evaluation_steps=g["evaluation_steps"],
                 threshold=g["threshold"],
-                model=model,
+                model=azure_model,
+                evaluation_params=[LLMTestCaseParams.INPUT, LLMTestCaseParams.ACTUAL_OUTPUT],
             ))
         except Exception as e:
             print(f"  [deepeval] GEval '{g['name']}' init failed: {e}")
@@ -431,20 +460,20 @@ def run_deepeval_evaluation(
         try:
             t = sm["threshold"]
             if sm["type"] == "AnswerRelevancy":
-                standard.append(AnswerRelevancyMetric(threshold=t, model=model))
+                standard.append(AnswerRelevancyMetric(threshold=t, model=azure_model))
             elif sm["type"] == "Faithfulness":
-                standard.append(FaithfulnessMetric(threshold=t, model=model))
+                standard.append(FaithfulnessMetric(threshold=t, model=azure_model))
             elif sm["type"] == "Hallucination":
-                standard.append(HallucinationMetric(threshold=t, model=model))
+                continue  # disabled: dataset has no 'context' field
             elif sm["type"] == "PIILeakage":
-                standard.append(PIILeakageMetric(threshold=t, model=model))
+                standard.append(PIILeakageMetric(threshold=t, model=azure_model))
             elif sm["type"] == "NonAdvice":
-                standard.append(NonAdviceMetric(advice_types=NON_ADVICE_TYPES, threshold=t, model=model))
+                standard.append(NonAdviceMetric(advice_types=NON_ADVICE_TYPES, threshold=t, model=azure_model))
             elif sm["type"] == "RoleViolation":
                 role = BOT_ROLE_DESCRIPTIONS.get(bot_type, BOT_ROLE_DESCRIPTIONS["public"])
-                standard.append(RoleViolationMetric(role=role, threshold=t, model=model))
+                standard.append(RoleViolationMetric(role=role, threshold=t, model=azure_model))
             elif sm["type"] == "PromptAlignment":
-                standard.append(PromptAlignmentMetric(prompt_instructions=PROMPT_ALIGNMENT_INSTRUCTIONS, threshold=t, model=model))
+                standard.append(PromptAlignmentMetric(prompt_instructions=PROMPT_ALIGNMENT_INSTRUCTIONS, threshold=t, model=azure_model))
         except Exception as e:
             print(f"  [deepeval] {sm['type']} init failed: {e}")
 
@@ -472,7 +501,11 @@ def run_deepeval_evaluation(
 
     # Evaluate
     try:
-        results_obj = evaluate(test_cases, all_metrics, run_async=False, print_results=False)
+        results_obj = evaluate(
+            test_cases, all_metrics,
+            async_config=AsyncConfig(run_async=False),
+            display_config=DisplayConfig(print_results=False),
+        )
     except Exception as e:
         print(f"[deepeval] evaluate() failed: {e}")
         return []
@@ -515,7 +548,7 @@ def run_deepeval_evaluation(
         from deepeval_layer.deepeval_to_dashboard import save_deepeval_to_dashboard
         dest = save_deepeval_to_dashboard(
             results=result_rows,
-            model=model,
+            model=str(azure_model),
             project="playready",
             environment=environment,
             version=version,
@@ -548,8 +581,15 @@ def run_deepeval_conversational_evaluation(
         return []
 
     from deepeval import evaluate
+    from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
     from deepeval.metrics import TopicAdherenceMetric, ConversationCompletenessMetric, KnowledgeRetentionMetric
     from deepeval.test_case import ConversationalTestCase
+
+    try:
+        azure_model = _build_azure_deepeval_model()
+    except Exception as _azure_err:
+        print(f"  [deepeval-conv] Azure model init failed, using model string: {_azure_err}")
+        azure_model = model
 
     if dataset_path is None:
         dataset_path = PROJECT_ROOT / "data" / "ragas_eval_dataset_full.json"
@@ -573,9 +613,9 @@ def run_deepeval_conversational_evaluation(
 
     metrics = []
     try:
-        metrics.append(TopicAdherenceMetric(relevant_topics=RELEVANT_TOPICS, threshold=0.5, model=model))
-        metrics.append(ConversationCompletenessMetric(threshold=0.5, model=model))
-        metrics.append(KnowledgeRetentionMetric(threshold=0.5, model=model))
+        metrics.append(TopicAdherenceMetric(relevant_topics=RELEVANT_TOPICS, threshold=0.5, model=azure_model))
+        metrics.append(ConversationCompletenessMetric(threshold=0.5, model=azure_model))
+        metrics.append(KnowledgeRetentionMetric(threshold=0.5, model=azure_model))
     except Exception as e:
         print(f"  [deepeval-conv] metric init failed: {e}")
     if not metrics:
@@ -590,7 +630,11 @@ def run_deepeval_conversational_evaluation(
         session_map[i] = s
 
     try:
-        evaluate(test_cases, metrics, run_async=False, print_results=False)
+        evaluate(
+            test_cases, metrics,
+            async_config=AsyncConfig(run_async=False),
+            display_config=DisplayConfig(print_results=False),
+        )
     except Exception as e:
         print(f"[deepeval-conv] evaluate() failed: {e}")
         return []
@@ -628,7 +672,7 @@ def run_deepeval_conversational_evaluation(
         from deepeval_layer.deepeval_to_dashboard import save_deepeval_to_dashboard
         dest = save_deepeval_to_dashboard(
             conversational_results=result_sessions,
-            model=model,
+            model=str(azure_model),
             project="playready",
             environment=environment,
             version=version,
@@ -665,6 +709,7 @@ def run_deepeval_tooluse_evaluation(
         return []
 
     from deepeval import evaluate
+    from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
     from deepeval.metrics import (
         ToolCorrectnessMetric, ArgumentCorrectnessMetric, TaskCompletionMetric,
         MCPUseMetric, MCPTaskCompletionMetric,
@@ -672,6 +717,12 @@ def run_deepeval_tooluse_evaluation(
     from deepeval.test_case import LLMTestCase, ToolCall
     from deepeval.test_case.llm_test_case import MCPServer, MCPToolCall, MCPResourceCall
     from mcp.types import Tool as MCPTypeTool, Resource as MCPTypeResource
+
+    try:
+        azure_model = _build_azure_deepeval_model()
+    except Exception as _azure_err:
+        print(f"  [deepeval-tooluse] Azure model init failed, using model string: {_azure_err}")
+        azure_model = model
 
     if dataset_path is None:
         dataset_path = PROJECT_ROOT / "data" / "ragas_eval_dataset_full.json"
@@ -739,22 +790,30 @@ def run_deepeval_tooluse_evaluation(
 
     # Pass 1: standard tool metrics
     std_metrics = [
-        ToolCorrectnessMetric(available_tools=catalog, threshold=0.5, model=model),
-        ArgumentCorrectnessMetric(threshold=0.5, model=model),
+        ToolCorrectnessMetric(available_tools=catalog, threshold=0.5, model=azure_model),
+        ArgumentCorrectnessMetric(threshold=0.5, model=azure_model),
     ]
     try:
-        evaluate(std_cases, std_metrics, run_async=False, print_results=False)
+        evaluate(
+            std_cases, std_metrics,
+            async_config=AsyncConfig(run_async=False),
+            display_config=DisplayConfig(print_results=False),
+        )
     except Exception as e:
         print(f"[deepeval-tooluse] standard tool evaluate() failed: {e}")
         std_metrics = []
 
     # Pass 2: MCP metrics
     mcp_metrics = [
-        MCPUseMetric(threshold=0.5, model=model),
-        MCPTaskCompletionMetric(threshold=0.5, model=model),
+        MCPUseMetric(threshold=0.5, model=azure_model),
+        MCPTaskCompletionMetric(threshold=0.5, model=azure_model),
     ]
     try:
-        evaluate(mcp_cases, mcp_metrics, run_async=False, print_results=False)
+        evaluate(
+            mcp_cases, mcp_metrics,
+            async_config=AsyncConfig(run_async=False),
+            display_config=DisplayConfig(print_results=False),
+        )
     except Exception as e:
         print(f"[deepeval-tooluse] MCP evaluate() failed: {e}")
         mcp_metrics = []
@@ -781,7 +840,7 @@ def run_deepeval_tooluse_evaluation(
 
         # TaskCompletionMetric — run individually (needs per-row task string)
         try:
-            tm = TaskCompletionMetric(task=task, threshold=0.5, model=model)
+            tm = TaskCompletionMetric(task=task, threshold=0.5, model=azure_model)
             tm.measure(std_cases[i])
             metric_dicts.append({
                 "name": "TaskCompletionMetric", "score": getattr(tm, "score", None),
@@ -824,7 +883,7 @@ def run_deepeval_tooluse_evaluation(
     try:
         from deepeval_layer.deepeval_to_dashboard import save_deepeval_to_dashboard
         dest = save_deepeval_to_dashboard(
-            results=result_rows, model=model, project="playready",
+            results=result_rows, model=str(azure_model), project="playready",
             environment=environment, version=version, bot_type=bot_type,
         )
         print(f"  [deepeval-bridge] dashboard JSON -> {dest}")
@@ -851,10 +910,17 @@ def run_deepeval_mcp_conversational_evaluation(
         return []
 
     from deepeval import evaluate
+    from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
     from deepeval.metrics import MultiTurnMCPUseMetric
     from deepeval.test_case import ConversationalTestCase
     from deepeval.test_case.llm_test_case import MCPServer
     from mcp.types import Tool as MCPTypeTool, Resource as MCPTypeResource
+
+    try:
+        azure_model = _build_azure_deepeval_model()
+    except Exception as _azure_err:
+        print(f"  [deepeval-mcpconv] Azure model init failed, using model string: {_azure_err}")
+        azure_model = model
 
     if dataset_path is None:
         dataset_path = PROJECT_ROOT / "data" / "ragas_eval_dataset_full.json"
@@ -869,7 +935,7 @@ def run_deepeval_mcp_conversational_evaluation(
     print(f"[deepeval-mcpconv] Evaluating {len(sessions)} sessions with MultiTurnMCPUseMetric...")
     role        = BOT_ROLE_DESCRIPTIONS.get(bot_type, BOT_ROLE_DESCRIPTIONS["public"])
     allowed_set = MCP_ALLOWED_RESOURCES.get(bot_type, MCP_ALLOWED_RESOURCES["public"])
-    metric      = MultiTurnMCPUseMetric(threshold=0.5, model=model)
+    metric      = MultiTurnMCPUseMetric(threshold=0.5, model=azure_model)
 
     mcp_server_obj = MCPServer(
         server_name="playready-kb-mcp",
@@ -889,7 +955,11 @@ def run_deepeval_mcp_conversational_evaluation(
     ]
 
     try:
-        evaluate(test_cases, [metric], run_async=False, print_results=False)
+        evaluate(
+            test_cases, [metric],
+            async_config=AsyncConfig(run_async=False),
+            display_config=DisplayConfig(print_results=False),
+        )
     except Exception as e:
         print(f"[deepeval-mcpconv] evaluate() failed: {e}")
         return []
@@ -921,7 +991,7 @@ def run_deepeval_mcp_conversational_evaluation(
     try:
         from deepeval_layer.deepeval_to_dashboard import save_deepeval_to_dashboard
         dest = save_deepeval_to_dashboard(
-            conversational_results=result_sessions, model=model, project="playready",
+            conversational_results=result_sessions, model=str(azure_model), project="playready",
             environment=environment, version=version, bot_type=bot_type,
         )
         print(f"  [deepeval-bridge] dashboard JSON -> {dest}")

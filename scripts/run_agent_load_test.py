@@ -27,6 +27,7 @@ from openpyxl.utils import get_column_letter
 # PROJECT SETUP
 # =========================================================
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT))
 load_dotenv(PROJECT_ROOT / ".env", override=True)
 
 os.environ.pop("AZURE_OPENAI_API_KEY", None)

@@ -1,3 +1,6 @@
+# === DeepEval cache — contains internal PlayReady content, NEVER push ===
+.deepeval/
+
 # === Python ===
 __pycache__/
 *.py[cod]
