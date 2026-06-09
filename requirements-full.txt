@@ -19,4 +19,5 @@ azure-identity>=1.16.0
 azure-ai-agents>=1.1.0
 azure-ai-projects>=1.0.0
 azure-ai-evaluation>=1.0.0
-deepeval>=2.0.0
+deepeval>=4.0.0
+mcp>=1.0.0

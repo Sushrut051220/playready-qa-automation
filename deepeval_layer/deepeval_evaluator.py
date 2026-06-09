@@ -28,6 +28,16 @@ Conversational metrics (Track 2, run with --conversational; needs Conversational
     - ConversationCompleteness: Are the user's intentions fully addressed across turns?
     - KnowledgeRetention: Does the bot retain/avoid contradicting earlier-stated facts?
 
+Tool-use metrics (Track 3, run with --tooluse; needs tools_called/expected_tools):
+    - ToolCorrectnessMetric: Were the correct MCP tools called for the request?
+    - ArgumentCorrectnessMetric: Were tool arguments valid and correctly scoped?
+    - TaskCompletionMetric: Did the bot fully resolve the user's request via tools?
+    - MCPUseMetric: Were MCP resources accessed within the bot's persona scope?
+    - MCPTaskCompletionMetric: Was the task completed via correctly-scoped MCP resources?
+
+MCP conversational (Track 3, run with --mcp-conversational):
+    - MultiTurnMCPUseMetric: MCP scope adherence across all turns of a session?
+
 Note: GEval requires an OpenAI/Azure-OpenAI LLM. Falls back to
       deterministic scoring if the LLM is unavailable.
 """
@@ -166,6 +176,55 @@ RELEVANT_TOPICS = [
     "PlayReady product releases, version changes and what's-new updates",
 ]
 
+# ── Track 3: MCP tool-use config ─────────────────────────────────────────────
+# Maps substrings of expected_pdf filenames → MCP knowledge-base resource IDs.
+# Grounded in the dataset's actual PDF taxonomy (41 unique expected_pdfs).
+PDF_TO_MCP_RESOURCE: list[tuple[str, str]] = [
+    ("Compliance_Rules",              "compliance-rules-kb"),
+    ("Content_Protection_Whitepaper", "content-protection-kb"),
+    ("Dev_Clients",                   "dev-clients-kb"),
+    ("EV_Certificate",                "ev-certificates-kb"),
+    ("Final_Product_License",         "license-samples-kb"),
+    ("Intermediate_Product_License",  "license-samples-kb"),
+    ("Master_Agreement",              "license-samples-kb"),
+    ("Server_Agreement",              "license-samples-kb"),
+    ("IPLA_Licensing",                "licensing-portal-kb"),
+    ("LiveTV_Protection",             "livetv-protection-kb"),
+    ("SL3000_Playbook",               "sl3000-playbook-kb"),
+    ("WhatsNew",                      "release-notes-kb"),
+]
+_DEFAULT_MCP_RESOURCE = "public-playready-docs"
+
+# MCP resources each bot persona is authorised to access (persona-scope fence).
+# Grounded in BOT_ROLE_DESCRIPTIONS above and multi_bot_strategy.md.
+MCP_ALLOWED_RESOURCES: dict[str, set[str]] = {
+    "public": {
+        "public-playready-docs",
+        "release-notes-kb",
+    },
+    "customer": {
+        "public-playready-docs", "release-notes-kb",
+        "compliance-rules-kb", "content-protection-kb",
+        "dev-clients-kb", "ev-certificates-kb",
+        "license-samples-kb", "livetv-protection-kb",
+        "licensing-portal-kb",
+    },
+    "private": {
+        "public-playready-docs", "release-notes-kb",
+        "compliance-rules-kb", "content-protection-kb",
+        "dev-clients-kb", "ev-certificates-kb",
+        "license-samples-kb", "livetv-protection-kb",
+        "licensing-portal-kb",
+        "sl3000-playbook-kb", "internal-playready-kb",
+    },
+}
+
+MCP_TOOL_DEFINITIONS: dict[str, str] = {
+    "kb_search":         "Semantic search over a PlayReady knowledge-base MCP resource",
+    "document_fetch":    "Fetch a PlayReady document section by title or reference ID",
+    "compliance_lookup": "Look up a PlayReady compliance rule clause by topic keyword",
+}
+
 STANDARD_METRICS = [
     {"type": "AnswerRelevancy", "threshold": 0.7},
     {"type": "Faithfulness",    "threshold": 0.7},
@@ -220,6 +279,102 @@ def _build_conversational_sessions(
             "row_ids": [r.get("id") for r in chunk],
         })
     return sessions
+
+
+def _build_tool_calls_for_row(
+    row: dict, bot_type: str
+) -> tuple[list[dict], list[dict], str, dict]:
+    """
+    Synthesise tool-use data for a dataset row. Returns a 4-tuple:
+      (tools_called, expected_tools, task, mcp_data)
+
+    tools_called / expected_tools  — ToolCall-shaped dicts for standard
+        tool metrics (ToolCorrectnessMetric, ArgumentCorrectnessMetric,
+        TaskCompletionMetric).  fields: name, description, input_parameters, output.
+    mcp_data — keys: mcp_servers, mcp_tools_called, mcp_resources_called.
+        Used by MCPUseMetric and MCPTaskCompletionMetric which read from
+        LLMTestCase.mcp_tools_called / mcp_resources_called / mcp_servers.
+
+    ~20 % of rows get a synthetic scope violation so MCP metrics produce
+    realistic failing cases (determinised via SHA-256 of question + bot_type).
+    """
+    import hashlib
+
+    expected_pdfs = row.get("expected_pdfs") or []
+    question      = row.get("question", "")
+
+    resources: list[str] = []
+    for pdf in expected_pdfs:
+        for substr, resource in PDF_TO_MCP_RESOURCE:
+            if substr.lower() in pdf.lower():
+                resources.append(resource)
+                break
+        else:
+            resources.append(_DEFAULT_MCP_RESOURCE)
+    resources = list(dict.fromkeys(resources)) or [_DEFAULT_MCP_RESOURCE]
+    primary = resources[0]
+
+    # ── Standard ToolCall dicts ────────────────────────────────────────────────
+    expected: list[dict] = [
+        {
+            "name":             "kb_search",
+            "description":      MCP_TOOL_DEFINITIONS["kb_search"],
+            "input_parameters": {"query": question[:120], "resource": primary, "top_k": 5},
+            "output":           f"Retrieved top-5 chunks from {primary}",
+        },
+    ]
+    if len(resources) > 1:
+        expected.append({
+            "name":             "kb_search",
+            "description":      MCP_TOOL_DEFINITIONS["kb_search"],
+            "input_parameters": {"query": question[:120], "resource": resources[1], "top_k": 3},
+            "output":           f"Retrieved top-3 chunks from {resources[1]}",
+        })
+    expected.append({
+        "name":             "document_fetch",
+        "description":      MCP_TOOL_DEFINITIONS["document_fetch"],
+        "input_parameters": {"resource": primary, "reference": (expected_pdfs[0] if expected_pdfs else "unknown")},
+        "output":           f"Fetched document section from {primary}",
+    })
+
+    h = int(hashlib.sha256((question + bot_type).encode()).hexdigest(), 16)
+    scope_violation = (h % 5 == 0)
+    if scope_violation:
+        allowed_set = MCP_ALLOWED_RESOURCES.get(bot_type, MCP_ALLOWED_RESOURCES["public"])
+        wrong = next(
+            (r for r in MCP_ALLOWED_RESOURCES["private"] if r not in allowed_set),
+            "internal-playready-kb",
+        )
+        first = {k: v for k, v in expected[0].items() if k != "input_parameters"}
+        first["input_parameters"] = {**expected[0]["input_parameters"], "resource": wrong}
+        called = [first]
+        called += expected[1:]
+        mcp_accessed_resource = wrong
+    else:
+        called = list(expected)
+        mcp_accessed_resource = primary
+
+    # ── MCP-specific dicts (MCPToolCall and MCPResourceCall kwargs) ─────────────
+    # mcp_servers is NOT included here — runners build it directly using
+    # mcp.types.Tool / mcp.types.Resource (required by deepeval's validator).
+    mcp_tools_called = [
+        {"name": "kb_search",      "args": {"query": question[:120], "resource": mcp_accessed_resource}, "result": f"Retrieved top-5 chunks from {mcp_accessed_resource}"},
+        {"name": "document_fetch", "args": {"resource": mcp_accessed_resource, "reference": (expected_pdfs[0] if expected_pdfs else "unknown")}, "result": f"Fetched section from {mcp_accessed_resource}"},
+    ]
+    mcp_accessed = list(dict.fromkeys([mcp_accessed_resource] + ([resources[1]] if len(resources) > 1 else [])))
+    mcp_resources_called = [
+        {"uri": f"mcp://playready-kb/{r}", "result": f"Accessed {r}"} for r in mcp_accessed
+    ]
+
+    task = (
+        f"Answer a PlayReady DRM question using "
+        f"{', '.join(resources[:2])} knowledge-base resource(s)"
+    )
+    mcp_data = {
+        "mcp_tools_called":     mcp_tools_called,
+        "mcp_resources_called": mcp_resources_called,
+    }
+    return called, expected, task, mcp_data
 
 
 # ── DeepEval evaluation (native) ──────────────────────────────────────────────
@@ -486,6 +641,295 @@ def run_deepeval_conversational_evaluation(
     return result_sessions
 
 
+# ── DeepEval evaluation (Track 3: tool-use metrics) ─────────────────────────
+
+def run_deepeval_tooluse_evaluation(
+    dataset_path: Path | None = None,
+    limit: int = 20,
+    bot_type: str = "public",
+    model: str = "gpt-4o",
+    environment: str = "production",
+    version: str = "1.0.0",
+) -> list[dict]:
+    """
+    Run Track-3 single-turn tool-use metrics (all 5 confirmed in deepeval 4.x):
+      ToolCorrectnessMetric, ArgumentCorrectnessMetric, TaskCompletionMetric
+        → use LLMTestCase.tools_called / expected_tools (ToolCall objects)
+      MCPUseMetric, MCPTaskCompletionMetric
+        → use LLMTestCase.mcp_servers / mcp_tools_called / mcp_resources_called
+
+    All data is synthesised from each row's expected_pdfs → MCP resource mapping.
+    """
+    if not _check_deepeval():
+        print("[deepeval-tooluse] deepeval not installed. Run: pip install deepeval")
+        return []
+
+    from deepeval import evaluate
+    from deepeval.metrics import (
+        ToolCorrectnessMetric, ArgumentCorrectnessMetric, TaskCompletionMetric,
+        MCPUseMetric, MCPTaskCompletionMetric,
+    )
+    from deepeval.test_case import LLMTestCase, ToolCall
+    from deepeval.test_case.llm_test_case import MCPServer, MCPToolCall, MCPResourceCall
+    from mcp.types import Tool as MCPTypeTool, Resource as MCPTypeResource
+
+    if dataset_path is None:
+        dataset_path = PROJECT_ROOT / "data" / "ragas_eval_dataset_full.json"
+        if not dataset_path.exists():
+            dataset_path = PROJECT_ROOT / "data" / "ragas_eval_dataset.json"
+
+    rows = _load_dataset(dataset_path, limit)
+    if not rows:
+        print(f"[deepeval-tooluse] No rows loaded from {dataset_path}")
+        return []
+
+    print(f"[deepeval-tooluse] Evaluating {len(rows)} cases with 5 tool-use / MCP metrics...")
+
+    from mcp.types import CallToolResult, TextContent, ReadResourceResult, TextResourceContents
+
+    catalog = [ToolCall(name=n, description=d) for n, d in MCP_TOOL_DEFINITIONS.items()]
+    allowed_set = MCP_ALLOWED_RESOURCES.get(bot_type, MCP_ALLOWED_RESOURCES["public"])
+    mcp_server_obj = MCPServer(
+        server_name="playready-kb-mcp",
+        transport="sse",
+        available_tools=[MCPTypeTool(name=n, description=d, inputSchema={"type": "object", "properties": {}}) for n, d in MCP_TOOL_DEFINITIONS.items()],
+        available_resources=[MCPTypeResource(name=r, uri=f"mcp://playready-kb/{r}") for r in sorted(allowed_set)],
+    )
+
+    # Two test-case sets: standard (tools_called/expected_tools) and MCP (mcp_* fields).
+    # deepeval's validator requires these to be separate — mcp_servers presence changes
+    # the expected type of tools_called from ToolCall to MCPToolCall+CallToolResult.
+    std_cases, mcp_cases, row_map, tool_data_map = [], [], {}, {}
+    for i, row in enumerate(rows):
+        q   = row.get("question", "")
+        a   = row.get("ground_truth", "")
+        ctx = row.get("contexts") or row.get("retrieved_contexts") or []
+        called_dicts, expected_dicts, task, mcp_data = _build_tool_calls_for_row(row, bot_type)
+
+        std_cases.append(LLMTestCase(
+            input=q, actual_output=a, expected_output=a,
+            retrieval_context=[str(c) for c in ctx],
+            tools_called=[ToolCall(**d) for d in called_dicts],
+            expected_tools=[ToolCall(**d) for d in expected_dicts],
+        ))
+        mcp_tools = [
+            MCPToolCall(
+                name=t["name"],
+                args=t["args"],
+                result=CallToolResult(content=[TextContent(type="text", text=t["result"])]),
+            )
+            for t in mcp_data["mcp_tools_called"]
+        ]
+        mcp_res = [
+            MCPResourceCall(
+                uri=r["uri"],
+                result=ReadResourceResult(contents=[TextResourceContents(uri=r["uri"], text=r["result"])]),
+            )
+            for r in mcp_data["mcp_resources_called"]
+        ]
+        mcp_cases.append(LLMTestCase(
+            input=q, actual_output=a, expected_output=a,
+            retrieval_context=[str(c) for c in ctx],
+            mcp_servers=[mcp_server_obj],
+            mcp_tools_called=mcp_tools,
+            mcp_resources_called=mcp_res,
+        ))
+        row_map[i] = row
+        tool_data_map[i] = (called_dicts, expected_dicts, task, mcp_data)
+
+    # Pass 1: standard tool metrics
+    std_metrics = [
+        ToolCorrectnessMetric(available_tools=catalog, threshold=0.5, model=model),
+        ArgumentCorrectnessMetric(threshold=0.5, model=model),
+    ]
+    try:
+        evaluate(std_cases, std_metrics, run_async=False, print_results=False)
+    except Exception as e:
+        print(f"[deepeval-tooluse] standard tool evaluate() failed: {e}")
+        std_metrics = []
+
+    # Pass 2: MCP metrics
+    mcp_metrics = [
+        MCPUseMetric(threshold=0.5, model=model),
+        MCPTaskCompletionMetric(threshold=0.5, model=model),
+    ]
+    try:
+        evaluate(mcp_cases, mcp_metrics, run_async=False, print_results=False)
+    except Exception as e:
+        print(f"[deepeval-tooluse] MCP evaluate() failed: {e}")
+        mcp_metrics = []
+
+    result_rows = []
+    for i in range(len(rows)):
+        row = row_map[i]
+        called_dicts, expected_dicts, task, mcp_data = tool_data_map[i]
+        metric_dicts = []
+
+        for m in std_metrics:
+            try:
+                metric_dicts.append({
+                    "name":            getattr(m, "name", type(m).__name__),
+                    "score":           getattr(m, "score", None),
+                    "threshold":       getattr(m, "threshold", 0.5),
+                    "success":         getattr(m, "success", None),
+                    "reason":          getattr(m, "reason", None) or "",
+                    "model":           model,
+                    "evaluation_cost": getattr(m, "evaluation_cost", 0.0) or 0.0,
+                })
+            except Exception:
+                pass
+
+        # TaskCompletionMetric — run individually (needs per-row task string)
+        try:
+            tm = TaskCompletionMetric(task=task, threshold=0.5, model=model)
+            tm.measure(std_cases[i])
+            metric_dicts.append({
+                "name": "TaskCompletionMetric", "score": getattr(tm, "score", None),
+                "threshold": 0.5, "success": getattr(tm, "success", None),
+                "reason": getattr(tm, "reason", None) or "",
+                "model": model, "evaluation_cost": getattr(tm, "evaluation_cost", 0.0) or 0.0,
+            })
+        except Exception as e:
+            print(f"  [deepeval-tooluse] TaskCompletionMetric row {i} failed: {e}")
+
+        for m in mcp_metrics:
+            try:
+                metric_dicts.append({
+                    "name":            getattr(m, "name", type(m).__name__),
+                    "score":           getattr(m, "score", None),
+                    "threshold":       getattr(m, "threshold", 0.5),
+                    "success":         getattr(m, "success", None),
+                    "reason":          getattr(m, "reason", None) or "",
+                    "model":           model,
+                    "evaluation_cost": getattr(m, "evaluation_cost", 0.0) or 0.0,
+                })
+            except Exception:
+                pass
+
+        result_rows.append({
+            "name":            row.get("id") or std_cases[i].input[:60],
+            "question":        std_cases[i].input,
+            "answer":          std_cases[i].actual_output,
+            "expected_output": std_cases[i].expected_output,
+            "contexts":        std_cases[i].retrieval_context or [],
+            "tools_called":    called_dicts,
+            "expected_tools":  expected_dicts,
+            "task":            task,
+            "tags":            [f"bot:{bot_type}", "deepeval", "tooluse"],
+            "metrics":         metric_dicts,
+            "metadata":        {"source_row_id": row.get("id"), "mcp_resources": mcp_data["mcp_resources_called"]},
+        })
+
+    print(f"[deepeval-tooluse] Evaluation complete: {len(result_rows)} cases")
+    try:
+        from deepeval_layer.deepeval_to_dashboard import save_deepeval_to_dashboard
+        dest = save_deepeval_to_dashboard(
+            results=result_rows, model=model, project="playready",
+            environment=environment, version=version, bot_type=bot_type,
+        )
+        print(f"  [deepeval-bridge] dashboard JSON -> {dest}")
+    except Exception as e:
+        print(f"  [deepeval-bridge] skipped: {e}")
+    return result_rows
+
+
+def run_deepeval_mcp_conversational_evaluation(
+    dataset_path: Path | None = None,
+    limit: int = 20,
+    bot_type: str = "public",
+    model: str = "gpt-4o",
+    environment: str = "production",
+    version: str = "1.0.0",
+) -> list[dict]:
+    """
+    Run Track-3 MCP conversational metric (MultiTurnMCPUseMetric) against
+    multi-turn sessions. Passes mcp_servers on ConversationalTestCase so the
+    metric can verify MCP scope across all turns.
+    """
+    if not _check_deepeval():
+        print("[deepeval-mcpconv] deepeval not installed.")
+        return []
+
+    from deepeval import evaluate
+    from deepeval.metrics import MultiTurnMCPUseMetric
+    from deepeval.test_case import ConversationalTestCase
+    from deepeval.test_case.llm_test_case import MCPServer
+    from mcp.types import Tool as MCPTypeTool, Resource as MCPTypeResource
+
+    if dataset_path is None:
+        dataset_path = PROJECT_ROOT / "data" / "ragas_eval_dataset_full.json"
+        if not dataset_path.exists():
+            dataset_path = PROJECT_ROOT / "data" / "ragas_eval_dataset.json"
+
+    rows = _load_dataset(dataset_path, limit)
+    sessions = _build_conversational_sessions(rows)
+    if not sessions:
+        return []
+
+    print(f"[deepeval-mcpconv] Evaluating {len(sessions)} sessions with MultiTurnMCPUseMetric...")
+    role        = BOT_ROLE_DESCRIPTIONS.get(bot_type, BOT_ROLE_DESCRIPTIONS["public"])
+    allowed_set = MCP_ALLOWED_RESOURCES.get(bot_type, MCP_ALLOWED_RESOURCES["public"])
+    metric      = MultiTurnMCPUseMetric(threshold=0.5, model=model)
+
+    mcp_server_obj = MCPServer(
+        server_name="playready-kb-mcp",
+        transport="sse",
+        available_tools=[MCPTypeTool(name=n, description=d, inputSchema={"type": "object", "properties": {}}) for n, d in MCP_TOOL_DEFINITIONS.items()],
+        available_resources=[MCPTypeResource(name=r, uri=f"mcp://playready-kb/{r}") for r in sorted(allowed_set)],
+    )
+
+    test_cases = [
+        ConversationalTestCase(
+            turns=s["turns"],
+            context=s["context"],
+            chatbot_role=role,
+            mcp_servers=[mcp_server_obj],
+        )
+        for s in sessions
+    ]
+
+    try:
+        evaluate(test_cases, [metric], run_async=False, print_results=False)
+    except Exception as e:
+        print(f"[deepeval-mcpconv] evaluate() failed: {e}")
+        return []
+
+    result_sessions = []
+    for s in sessions:
+        try:
+            md = {
+                "name":            getattr(metric, "name", "MultiTurnMCPUseMetric"),
+                "score":           getattr(metric, "score", None),
+                "threshold":       getattr(metric, "threshold", 0.5),
+                "success":         getattr(metric, "success", None),
+                "reason":          getattr(metric, "reason", None) or "",
+                "model":           model,
+                "evaluation_cost": getattr(metric, "evaluation_cost", 0.0) or 0.0,
+            }
+        except Exception:
+            md = {}
+        result_sessions.append({
+            "name":     s["name"],
+            "turns":    s["turns"],
+            "context":  s["context"] or [],
+            "tags":     [f"bot:{bot_type}", "deepeval", "mcp-conversational"],
+            "metrics":  [md] if md else [],
+            "metadata": {"row_ids": s["row_ids"], "allowed_resources": sorted(allowed_set)},
+        })
+
+    print(f"[deepeval-mcpconv] Done: {len(result_sessions)} sessions")
+    try:
+        from deepeval_layer.deepeval_to_dashboard import save_deepeval_to_dashboard
+        dest = save_deepeval_to_dashboard(
+            conversational_results=result_sessions, model=model, project="playready",
+            environment=environment, version=version, bot_type=bot_type,
+        )
+        print(f"  [deepeval-bridge] dashboard JSON -> {dest}")
+    except Exception as e:
+        print(f"  [deepeval-bridge] skipped: {e}")
+    return result_sessions
+
+
 # ── Fallback: deterministic scoring (no LLM needed) ──────────────────────────
 
 def run_deepeval_evaluation_deterministic(
@@ -688,18 +1132,26 @@ if __name__ == "__main__":
     ap.add_argument("--env",     type=str,  default="production")
     ap.add_argument("--version", type=str,  default="1.0.0")
     ap.add_argument("--deterministic", action="store_true",
-                    help="Use deterministic heuristic scoring (no LLM)")
+                    help="Use deterministic heuristic scoring (no LLM needed, for pipeline testing)")
     ap.add_argument("--conversational", action="store_true",
                     help="Run Track-2 conversational metrics (TopicAdherence, "
-                         "ConversationCompleteness, KnowledgeRetention) on multi-turn "
-                         "sessions instead of the single-turn metric set")
+                         "ConversationCompleteness, KnowledgeRetention)")
+    ap.add_argument("--tooluse", action="store_true",
+                    help="Run Track-3 single-turn tool-use / MCP metrics "
+                         "(ToolCorrectness, ArgumentCorrectness, TaskCompletion, "
+                         "MCPUse, MCPTaskCompletion) with synthesised tool-call data")
+    ap.add_argument("--mcp-conversational", action="store_true",
+                    help="Run Track-3 MCP conversational metric (MultiTurnMCPUseMetric) "
+                         "across multi-turn sessions with synthesised mcp_servers scope")
     args = ap.parse_args()
 
-    use_deterministic = args.deterministic or not _check_deepeval()
-    if use_deterministic and not args.deterministic:
-        print("[deepeval] deepeval not installed, falling back to deterministic mode")
+    use_deterministic = args.deterministic
 
-    if args.conversational:
+    if args.mcp_conversational:
+        runner = run_deepeval_mcp_conversational_evaluation
+    elif args.tooluse:
+        runner = run_deepeval_tooluse_evaluation
+    elif args.conversational:
         runner = (run_deepeval_conversational_evaluation_deterministic if use_deterministic
                   else run_deepeval_conversational_evaluation)
     else:
