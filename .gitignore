@@ -105,3 +105,5 @@ data/testcase_generation_summary.json
 patch_*.py
 fix_*.py
 backups/
+
+.vs/
