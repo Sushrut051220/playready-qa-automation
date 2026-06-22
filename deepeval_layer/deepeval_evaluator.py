@@ -508,7 +508,40 @@ def run_deepeval_evaluation(
         )
     except Exception as e:
         print(f"[deepeval] evaluate() failed: {e}")
-        return []
+        print("[deepeval] Building failure-placeholder results so Excel + dashboard still get generated...")
+        err_msg = str(e)
+        # Check for content filter specifically (Azure responsible AI)
+        is_filtered = "content_filter" in err_msg.lower() or "jailbreak" in err_msg.lower()
+        results_obj = None
+        result_rows_built = []
+        for tc in test_cases:
+            failed_metrics = []
+            for m in all_metrics:
+                metric_name = getattr(m, "__name__", None) or m.__class__.__name__
+                failed_metrics.append({
+                    "name": metric_name,
+                    "score": 0.0,
+                    "threshold": float(getattr(m, "threshold", 0.5)),
+                    "success": False,
+                    "reason": "BLOCKED by Azure content filter (responsible AI)" if is_filtered else f"Metric not evaluated: {err_msg[:200]}",
+                    "error": err_msg[:500],
+                    "evaluation_model": str(getattr(m, "model", "unknown")),
+                    "evaluation_cost": 0.0,
+                })
+            result_rows_built.append({
+                "test_case_id": getattr(tc, "name", "unknown"),
+                "input": getattr(tc, "input", "") or "",
+                "actual_output": getattr(tc, "actual_output", "") or "",
+                "expected_output": getattr(tc, "expected_output", "") or "",
+                "context": getattr(tc, "context", []) or [],
+                "retrieval_context": getattr(tc, "retrieval_context", []) or [],
+                "success": False,
+                "error": err_msg[:500],
+                "metrics": failed_metrics,
+            })
+        # Set results_obj to None and use result_rows_built instead of returning early
+        result_rows = result_rows_built
+        results_obj = None
 
     # Collect results
     result_rows = []
@@ -637,7 +670,33 @@ def run_deepeval_conversational_evaluation(
         )
     except Exception as e:
         print(f"[deepeval-conv] evaluate() failed: {e}")
-        return []
+        print("[deepeval-conv] Building failure-placeholder sessions so Excel + dashboard still get generated...")
+        err_msg = str(e)
+        is_filtered = "content_filter" in err_msg.lower() or "jailbreak" in err_msg.lower()
+        result_sessions_built = []
+        for tc in test_cases:
+            failed_metrics = []
+            for m in metrics:
+                metric_name = getattr(m, "__name__", None) or m.__class__.__name__
+                failed_metrics.append({
+                    "name": metric_name,
+                    "score": 0.0,
+                    "threshold": float(getattr(m, "threshold", 0.5)),
+                    "success": False,
+                    "reason": "BLOCKED by Azure content filter (responsible AI)" if is_filtered else f"Metric not evaluated: {err_msg[:200]}",
+                    "error": err_msg[:500],
+                    "evaluation_model": str(getattr(m, "model", "unknown")),
+                    "evaluation_cost": 0.0,
+                })
+            result_sessions_built.append({
+                "session_id": getattr(tc, "name", "unknown"),
+                "turns": [],
+                "success": False,
+                "error": err_msg[:500],
+                "metrics": failed_metrics,
+            })
+        result_sessions = result_sessions_built
+        results_obj = None
 
     result_sessions = []
     for i, tc in enumerate(test_cases):
@@ -962,7 +1021,32 @@ def run_deepeval_mcp_conversational_evaluation(
         )
     except Exception as e:
         print(f"[deepeval-mcpconv] evaluate() failed: {e}")
-        return []
+        print("[deepeval-mcpconv] Building failure-placeholder sessions so Excel + dashboard still get generated...")
+        err_msg = str(e)
+        is_filtered = "content_filter" in err_msg.lower() or "jailbreak" in err_msg.lower()
+        result_sessions_built = []
+        for s in sessions:
+            failed_metrics = []
+            for m in metrics:
+                metric_name = getattr(m, "__name__", None) or m.__class__.__name__
+                failed_metrics.append({
+                    "name": metric_name,
+                    "score": 0.0,
+                    "threshold": float(getattr(m, "threshold", 0.5)),
+                    "success": False,
+                    "reason": "BLOCKED by Azure content filter (responsible AI)" if is_filtered else f"Metric not evaluated: {err_msg[:200]}",
+                    "error": err_msg[:500],
+                    "evaluation_model": str(getattr(m, "model", "unknown")),
+                    "evaluation_cost": 0.0,
+                })
+            result_sessions_built.append({
+                "session_id": s.get("session_id", "unknown") if isinstance(s, dict) else "unknown",
+                "success": False,
+                "error": err_msg[:500],
+                "metrics": failed_metrics,
+            })
+        result_sessions = result_sessions_built
+        results_obj = None
 
     result_sessions = []
     for s in sessions:

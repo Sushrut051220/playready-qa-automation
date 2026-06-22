@@ -100,3 +100,8 @@ data/testcase_generation_summary.json
 # === Excel reports ===
 *.xlsx
 *.xls
+
+# Debug + patcher scripts (not committed, but kept on disk for reference)
+patch_*.py
+fix_*.py
+backups/
