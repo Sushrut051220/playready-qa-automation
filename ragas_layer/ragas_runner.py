@@ -38,7 +38,7 @@ from ragas import evaluate
 from ragas.run_config import RunConfig
 
 from audit.reporting import create_enterprise_reporting_assets
-from llm_provider import build_ragas_dependencies, get_llm_provider, get_metrics_profile
+from llm_provider import build_ragas_dependencies, get_metrics_profile
 from ragas_layer.dashboard_bridge import save_to_dashboard
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -289,10 +289,7 @@ def _execute_metric(
         if col_map:
             eligible_dataset = eligible_dataset.rename_columns(col_map)
 
-        provider = get_llm_provider()
-        run_config = RunConfig(
-            max_workers=1 if provider in {"ollama"} else 2,
-        )
+        run_config = RunConfig(max_workers=2)
 
         eval_kwargs = dict(
             dataset=eligible_dataset,
